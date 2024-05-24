@@ -33,7 +33,7 @@ const Dashboard = () => {
   return (
     <div className="#FFFFFF p-3 h-screen w-screen">
       <div className="xl:text-black h-full w-full flex">
-        <nav className="overflow-y-scroll h-full w-[15%] bg-[#3B76EF] rounded-[50px] flex justify-between pl-8 py-7 flex-col text-white text-3xl">
+        <nav className="overflow-y-scroll   h-full w-[15%] bg-[#3B76EF] rounded-[50px] flex justify-between pl-8 py-7 flex-col text-white text-3xl">
           
           <div>
             <ul className="flex flex-col gap-14">

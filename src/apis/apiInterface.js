@@ -24,6 +24,17 @@ export const createUser = async (formData) => {
     throw error;
   }
 };
+export const createVisit = async (formData) => {
+  try {
+    const response = await apiService(
+      "create-visit",
+      "POST",formData
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 export const getAllVisits = async () => {
   try {
     const response = await apiService("get-all-visits", "GET");
