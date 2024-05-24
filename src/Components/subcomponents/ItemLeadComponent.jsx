@@ -108,12 +108,19 @@ function ItemLeadComponent({ userData }) {
       }
     };
     LeadsData();
-  }, []);
+    console.log("Maindashboarddiv mounted");
+  }, [addLead]);
+
+  const closeleadform = ()=>{
+    setaddLead(false);
+  }
   if(leadsData==null){
+    
     <main className="h-full w-[90%] px-4 pt-4 bg-[#F4FAFF] rounded-[50px] -ml-[5%]">
     <h2 className="text-white text-[21px] font-semibold font-mono bg-blue-800 rounded-md p-2">No Leads found !!</h2>
 
 </main>
+
   }
 
   return (
@@ -213,7 +220,7 @@ function ItemLeadComponent({ userData }) {
                 </tr>
               </thead>
               <tbody className="bg-white  divide-gray-200">
-                {leadsData != null &&
+                {leadsData && leadsData.status != "fail" &&
                   leadsData.data.map((user, index) => (
                     <tr
                       key={index}
@@ -332,7 +339,8 @@ function ItemLeadComponent({ userData }) {
             </div>
           </div>
         )}
-        {addLead &&  <><CreateNewLead /><p className="absolute top-6 left-[75%] cursor-pointer" onClick={()=>setaddLead(false)}>❌</p></>}
+
+        {addLead &&  <><CreateNewLead close={closeleadform}/><p className="absolute top-6 left-[75%] cursor-pointer" onClick={()=>setaddLead(false)}>❌</p></>}
         
       </div>
  

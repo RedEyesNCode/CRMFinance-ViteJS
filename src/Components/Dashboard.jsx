@@ -15,6 +15,8 @@ import VisitTable from "./VisitTable";
 import UserTable from "./UserTable";
 import { BiLogoMongodb } from "react-icons/bi";
 import LoanMasterComponent from "./page/LoanMasterComponent";
+import RecycleBinView from "./page/RecycleBinView";
+import { FaRecycle } from "react-icons/fa";
 
 const Dashboard = () => {
   const [selected, setSelected] = useState('Home');
@@ -28,6 +30,8 @@ const Dashboard = () => {
     { component: <TbHomeSearch />, name: "Visit" },
     { component: <IoPerson />, name: "Users" },
     { component: <MdOutlineCoPresent />, name: "Attendence" },
+    { component: <FaRecycle />, name: "Recycle Bin" },
+
   ];
 
   return (
@@ -57,9 +61,7 @@ const Dashboard = () => {
               ))}
             </ul>
           </div>
-          <div>
-            <IoIosSettings />
-          </div>
+          
         </nav>
         {selected=='Home' && <> <Maindashboarddiv/> <AsideDivForDashBoard/></>}
         {selected=='Leads' && <FilterLeadComponent/>}
@@ -67,7 +69,8 @@ const Dashboard = () => {
         {selected=='Users' && <UserTable/>}
         {selected=='Attendence' && <AttendenceTable/>}
         {selected=='Loan Master' && <LoanMasterComponent/>}
-        
+        {selected=='Recycle Bin' && <RecycleBinView/>}
+
       </div>
     </div>
   );
