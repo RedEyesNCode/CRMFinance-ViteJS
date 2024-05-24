@@ -47,7 +47,11 @@ function ItemLeadComponent({ userData }) {
   const callLeadApi = async () => {
     try {
       const response = await getAllLeads();
-      setLeadsData(response);
+      if(response.status=='success'){
+        setLeadsData(response);
+      }else{
+        setLeadsData(null);
+      }
       console.log(response);
     } catch (error) {
       console.log(error);
@@ -68,7 +72,7 @@ function ItemLeadComponent({ userData }) {
     try {
       const rawJson = { leadId: currentLead._id };
       const response = await deleteLead(rawJson);
-      if (response.code == 200) {
+      if (response.status == 200) {
         window.alert(response.message);
         handleCloseDeleteLead();
 
@@ -91,15 +95,26 @@ function ItemLeadComponent({ userData }) {
     const LeadsData = async () => {
       try {
         const response = await getAllLeads();
-        setLeadsData(response);
+        if(response.status=='success'){
+          setLeadsData(response);
+
+        }else{
+          setLeadsData(null);
+
+        }
         console.log(response);
       } catch (error) {
         console.log(error);
       }
     };
     LeadsData();
-    console.log("Maindashboarddiv mounted");
   }, []);
+  if(leadsData==null){
+    <main className="h-full w-[90%] px-4 pt-4 bg-[#F4FAFF] rounded-[50px] -ml-[5%]">
+    <h2 className="text-white text-[21px] font-semibold font-mono bg-blue-800 rounded-md p-2">No Leads found !!</h2>
+
+</main>
+  }
 
   return (
    

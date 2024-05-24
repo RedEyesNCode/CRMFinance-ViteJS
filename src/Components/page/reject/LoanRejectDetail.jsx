@@ -1,12 +1,13 @@
 import React, { useState, useEffect,useRef,useMemo } from 'react';
 import { FaBeer } from 'react-icons/fa';
 import { GiFastBackwardButton } from 'react-icons/gi';
-import { deleteLead, getLeadDetails, updateLeadStatus } from '../../apis/apiInterface';
+import EmiCalculator from '../EmiCalculator';
+import { deleteApprovalLoan, deleteDisburseLoan, deleteRejectedLoan, getApprovalLoanDetails, getDisburseLoanDetail,  getRejectedLoanDetail, updateLoanApprovalStatus, updateLoanDisbursalStatus } from '../../../apis/apiInterface';
 
 
 
 
-function LeadDetailsComponent({ lead_data,handleCloseCallback }) {
+function LoanRejectDetail({ lead_data,handleCloseCallback }) {
     const [activeTab, setActiveTab] = useState('approveLoans'); // Default active tab
     const [activeTabDocs, setActiveTabDocs] = useState('pancard'); // Default active tab
 
@@ -17,34 +18,41 @@ function LeadDetailsComponent({ lead_data,handleCloseCallback }) {
 
     const[openLeadStatusDialog,setLeadStatusDialog] = useState(false);
 
+    const handleOpenLeadStatusDialog = () => {
+      setLeadStatusDialog(true);
+
+
+    }
+    const handleCloseLeadStatusDialog = () => {
+      setLeadStatusDialog(false);
+
+
+    }
+
     const[openDeleteLeadDialog,setDeleteLeadDialog] = useState(false);
 
     const HandleopenDeleteLeadDialog = () => {
       setDeleteLeadDialog(true);
     }
+
     const CloseDeleteLeadDialog = () => {
       setDeleteLeadDialog(false);
 
     }
-    const deleteCurrentLead = async () => {
+    const deleteCurrentLead = async (lead_current_data) => {
 
       try{
-        const rawJson = {
-          leadId : lead_current_data._id
-        }
-        const responseDelete = await deleteLead(rawJson);
-        if(responseDelete.code==200){
-          window.alert(responseDelete.message);
-          setDeleteLeadDialog(false);
+        const rawJson = {rejected_loan_id : lead_current_data._id}
+        const response = await deleteRejectedLoan(rawJson);
+        if(response.code==200){
+          window.alert(response.message);
           handleCloseCallback();
-
-        }else{
-          window.alert(responseDelete.message);
+          
+  
         }
-
-
-
-      }catch (error){
+  
+  
+      }catch(error){
         console.log(error);
       }
 
@@ -53,11 +61,11 @@ function LeadDetailsComponent({ lead_data,handleCloseCallback }) {
     const callLeadDetailsAPI = async () => {
       try{
         const rawJson = {
-          leadId : lead_data._id
+            rejected_loan_id : lead_data._id
         }
-        const leadDetailsResponse = await getLeadDetails(rawJson);
+        const leadDetailsResponse = await getRejectedLoanDetail(rawJson);
         if(leadDetailsResponse.code==200){
-          setLeadCurrentData(leadDetailsResponse.data)
+          setLeadCurrentData(leadDetailsResponse.data);
         }else{
           setLeadCurrentData(lead_data);
         }
@@ -69,12 +77,6 @@ function LeadDetailsComponent({ lead_data,handleCloseCallback }) {
 
     };
     
-    useEffect(() => {
-      callLeadDetailsAPI();
-    }, [openLeadStatusDialog]);
-
-    
-
     const [updateLeadForm,setUpdateLeadForm] = useState(
       {
         leadId : lead_data._id,
@@ -91,32 +93,23 @@ function LeadDetailsComponent({ lead_data,handleCloseCallback }) {
         [name]: value 
       }));
     };
-
-
-    const handleOpen = () => setLeadStatusDialog(true);
-    const handleClose = () => {
-        setLeadStatusDialog(false);
-
-
-    };
-    const handleBackpress = () => {
-        handleCloseCallback();
-    };
-    const handleUpdateLeadStatus =  async() => {
+    const handleUpdateLoanApprovalStatus =  async() => {
 
       try{
         const rawJson = {
-          leadId : updateLeadForm.leadId,
+            disbursal_loan_id : updateLeadForm.leadId,
           status : leads_status,
           amount : updateLeadForm.amount,
           feesAmount : updateLeadForm.feesAmount,
           interestRate : updateLeadForm.interestRate
         }
         console.log(rawJson);
-        const responseJson = await updateLeadStatus(rawJson);
+        const responseJson = await updateLoanDisbursalStatus(rawJson);
         if(responseJson.code==200){
           // window.alert(responseJson.message);
           setLeadStatusDialog(false);
+          callLeadDetailsAPI();
+
 
         }else{
           setLeadCurrentData(lead_data);
@@ -133,50 +126,57 @@ function LeadDetailsComponent({ lead_data,handleCloseCallback }) {
 
     }
 
+    
+    const handleBackpress = () => {
+        handleCloseCallback();
+    };
+    
+
 
     
       const leadStatusClass = useMemo(() => {
         return `w-[100%] p-6 rounded-b-lg flex items-center justify-center ${
-          lead_current_data.lead_status === 'APPROVED' ? 'bg-green-500' :
-          lead_current_data.lead_status === 'PENDING' ? 'bg-yellow-400' :
           lead_current_data.lead_status === 'REJECTED' ? 'bg-red-400' :
+          lead_current_data.lead_status === 'ONGOING' ? 'bg-blue-800' :
           lead_current_data.lead_status === 'DISBURSED' ? 'bg-blue-800' :
 
           'bg-gray-200' // Default
         }`;
       }, [lead_current_data]);
 
-      const showFinancialFields = leads_status === 'APPROVED';
+      const showFinancialFields = leads_status === 'DISBURSED';
 
       if(lead_current_data==null){
         return (
-          <h2 className="text-white text-[21px] font-semibold font-mono bg-green-800 rounded-md p-2">No lead detail Found !!</h2>
+          <h2 className="text-white text-[21px] font-semibold font-mono bg-red-800 rounded-md p-2">No Loan Rejected Detail Found!!</h2>
       )
       }
 
   return (
-    <main>
+    <main >
         
-    <div className='relative'>
-        <div className='flex flex-row gap-[400px] items-center font-semibold rounded-md bg-blue-600 text-white'>
+    <div className='relative overflow-auto max-h-[560px]'>
+        <div className='flex flex-row gap-[400px] items-center font-mono rounded-md bg-red-800 border-2 border-red-500  text-white'>
         <GiFastBackwardButton onClick={() => handleBackpress()} className='text-[50px]  m-[10px] text-white'  />
-        <h2 className='text-2xl'>Lead Details Information</h2>
+        <h2 className='text-2xl'>Rejected Loan Details</h2>
 
 
         </div>
+        
 
          <div id="lead-status-card" className={leadStatusClass}>
-    <span className="text-xl font-semibold">Lead Status : {lead_current_data.lead_status}</span>
+    <span className="text-xl font-semibold text-white font-mono">Rejected Loan Status : {lead_current_data.lead_status}</span>
     </div>
-    <button onClick={handleOpen} class="m-[20px] rounded-[20px] bg-blue-500 hover:bg-purple-900 text-white font-bold py-2 px-4">Update Lead Status</button>
-
-        <button onClick={HandleopenDeleteLeadDialog} class="m-[20px] rounded-[2px] bg-rose-900 hover:bg-red-500 text-white font-bold py-2 px-4">DELETE LEAD</button>
+    <div  className='w-fit h-fit rounded-xl m-2 bg-red-600 text-white font-mono text-[21px] p-2'>
+    <span className="text-xl font-semibold">EMPLOYEE LEAD TABLE ID : {lead_current_data.employee_lead_id_linker}</span>
+    </div>
+        <button onClick={HandleopenDeleteLeadDialog} class="m-[20px] rounded-[2px] bg-rose-900 hover:bg-red-500 text-white font-bold py-2 px-4">DELETE REJECTED LOAN</button>
 
 
 
     <div className="flex">
         
-      <div className="w-1/3 m-[10px] border-r pr-4 bg-white rounded-lg shadow-lg p-6 text-gray-700 text-[12px]">
+      <div className="w-1/3 h-fit m-[10px] border-r pr-4 bg-white rounded-lg shadow-lg p-6 text-gray-700 text-[12px]">
         <h2 className='font-semibold text-[#ffffff] bg-blue-900 rounded-lg p-2 text-[15px]'> Basic User Information</h2>
         <ul>
           <li className='m-[10px]'>First Name {lead_current_data.firstName}</li>
@@ -193,7 +193,7 @@ function LeadDetailsComponent({ lead_data,handleCloseCallback }) {
          
         </ul>
       </div>
-      <div className="w-3/3 m-[10px] border-r pr-4 bg-white rounded-lg shadow-lg p-6 text-gray-700 text-[10px] ">
+      <div className="w-3/3 h-fit m-[10px] border-r pr-4 bg-white rounded-lg shadow-lg p-6 text-gray-700 text-[10px] ">
         <h2 className='font-semibold text-[#ffffff] bg-green-900 rounded-lg p-2 text-[12px]'>Lead Amount Information</h2>
         <ul>
           <li className='m-[10px]'>Customer Loan Amount ₹{lead_current_data.customerLoanAmount} </li>
@@ -208,47 +208,7 @@ function LeadDetailsComponent({ lead_data,handleCloseCallback }) {
 
         <div className="w-2/3 pl-4">
        
-        <h2 className='font-semibold text-[18px] text-[#ffffff] bg-blue-500 rounded-lg p-6 m-[20px]'>Loan Details</h2>
 
-        <div className="flex space-x-4 mb-4"> {/* Tab bar */}
-          <button 
-            className={`px-4 py-2 rounded-md ${activeTab === 'approveLoans' ? 'bg-blue-500 text-white' : 'bg-gray-400'}`}
-            onClick={() => setActiveTab('approveLoans')}
-          >
-            Approve Loans
-          </button>
-          <button
-            className={`px-4 py-2 rounded-md ${activeTab === 'ongoing' ? 'bg-blue-500 text-white' : 'bg-gray-400'}`}
-            onClick={() => setActiveTab('ongoing')}
-          >
-            Ongoing
-          </button>
-          <button
-            className={`px-4 py-2 rounded-md ${activeTab === 'closed' ? 'bg-blue-500 text-white' : 'bg-gray-400'}`}
-            onClick={() => setActiveTab('closed')}
-          >
-            Closed
-          </button>
-          {/* Add more buttons for 'ENACH' and 'UPDATE KYC' */}
-        </div>
-        <div>
-          {activeTab === 'approveLoans' && (
-            <div className="p-4 bg-white rounded-md shadow-md">
-              <h2 className="text-xl font-semibold mb-2">User Approved Loans</h2>
-            </div>
-          )}
-          {activeTab === 'ongoing' && (
-            <div className="p-4 bg-white rounded-md shadow-md">
-            <h2 className="text-xl font-semibold mb-2">User On-going loans</h2>
-          </div>
-          )}
-          {activeTab === 'closed' && (
-            <div className="p-4 bg-white rounded-md shadow-md">
-            <h2 className="text-xl font-semibold mb-2">User Closed loans</h2>
-            </div>
-          )}
-          {/* Add content for 'ENACH' and 'UPDATE KYC' tabs */}
-        </div>
         <h2 className='font-semibold text-[18px] text-[#ffffff] bg-purple-500 rounded-lg p-6 m-[20px]'>Leads-KYC Documents</h2>
 
         <div className="flex space-x-4 mb-4"> {/* Tab bar */}
@@ -314,17 +274,30 @@ function LeadDetailsComponent({ lead_data,handleCloseCallback }) {
     </div>
     </div>    
 
-    {openLeadStatusDialog && (
+   
+    {openDeleteLeadDialog && (
+      <div className="fixed z-10 inset-0 overflow-y-auto flex items-center justify-center">
+      <div className="bg-white rounded-lg shadow-lg p-8 max-w-sm">
+        <h2 className="text-xl font-semibold mb-4 text-gray-950">Are you sure?</h2>
+        <p className="mb-6 text-red-950 font-semibold">This action cannot be undone.</p>
+        <div className="flex justify-end">
+          <button onClick={() => CloseDeleteLeadDialog(lead_current_data)} className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md mr-2">Cancel</button>
+          <button onClick={() => deleteCurrentLead(lead_current_data)} className="px-4 py-2 bg-red-500 text-white rounded-md">Confirm</button>
+        </div>
+      </div>
+    </div>
+    )}
+     {openLeadStatusDialog && (
         <div className='absolute w-full h-full top-0 left-0 flex items-center justify-center'>
             <div>
             <div className="fixed inset-0 flex items-center justify-center z-150">
           <div className="bg-white p-10 rounded-md shadow-md">
-            <h2 className="text-xl font-semibold mb-4 text-gray-800">Update Lead Status</h2>
+            <h2 className="text-xl font-semibold mb-4 text-gray-800 font-mono">Update Loan Approval Status</h2>
             <div className="mb-4">
               <label className="block text-gray-500 font-bold mb-2"
                 
               >
-                Lead ID
+                Loan Approval ID
               </label>
               <input 
               name="leadId" 
@@ -334,7 +307,7 @@ function LeadDetailsComponent({ lead_data,handleCloseCallback }) {
                 type="text" 
               />
               <label className="block text-gray-500 font-bold mb-2">
-                Lead Status
+                Loan Approval Status
               </label>
               <select
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-blue-500"
@@ -342,18 +315,16 @@ function LeadDetailsComponent({ lead_data,handleCloseCallback }) {
                 value={leads_status}
                 onChange={(e) => setLeadsStatus(e.target.value)}
               >
-                <option value="APPROVED">APPROVED</option>
+                <option value="ONGOING">ONGOING</option>
                 <option value="REJECTED">REJECTED</option>
-                <option value="PENDING">PENDING</option>
-                <option value="DISBURSED">DISBURSED</option>
               </select>
               {showFinancialFields && (
               <>
-               <label className="block text-red-500 font-thin mb-2">
-                Note (IN APPROVED STATUS) : You will be moving this LEAD to Loan-Approval-Table (Loan Master Section)
+               <label className="block text-red-500 font-semibold mb-2">
+                Note (IN ONGOING STATUS) : You will be moving this LEAD to Loan-OnGOING-Table (Loan Master Section)
               </label>
               <label className="block text-gray-500 font-bold mb-2">
-                Lead Amount
+                Loan Approval Amount
               </label>
               <input
               name="amount" 
@@ -394,10 +365,10 @@ function LeadDetailsComponent({ lead_data,handleCloseCallback }) {
             </div>
 
             <div className="flex justify-end mt-8">
-              <button onClick={handleClose} className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
+              <button onClick={handleCloseLeadStatusDialog} className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
                 Cancel
               </button>
-              <button onClick={handleUpdateLeadStatus} className="px-4 py-2 bg-blue-500 text-white rounded-md">
+              <button onClick={handleUpdateLoanApprovalStatus} className="px-4 py-2 bg-blue-500 text-white rounded-md">
                 Save
               </button>
             </div>
@@ -408,22 +379,10 @@ function LeadDetailsComponent({ lead_data,handleCloseCallback }) {
         </div>
 
     )}
-    {openDeleteLeadDialog && (
-      <div className="fixed z-10 inset-0 overflow-y-auto flex items-center justify-center">
-      <div className="bg-white rounded-lg shadow-lg p-8 max-w-sm">
-        <h2 className="text-xl font-semibold mb-4 text-gray-950">Are you sure?</h2>
-        <p className="mb-6 text-red-950 font-semibold">This action cannot be undone.</p>
-        <div className="flex justify-end">
-          <button onClick={() => CloseDeleteLeadDialog(lead_current_data)} className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md mr-2">Cancel</button>
-          <button onClick={() => deleteCurrentLead(lead_current_data)} className="px-4 py-2 bg-red-500 text-white rounded-md">Confirm</button>
-        </div>
-      </div>
-    </div>
-    )}
         
    
     </main>
   );
 }
 
-export default LeadDetailsComponent;
+export default LoanRejectDetail;

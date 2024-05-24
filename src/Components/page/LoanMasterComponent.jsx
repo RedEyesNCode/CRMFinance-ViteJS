@@ -1,31 +1,58 @@
 import React, { useState,useEffect } from 'react';
-import LoanApprovalTable from './LoanApprovalTable';
-import LoanDisburseTable from './LoanDisburseTable';
-import LoanOngoingTable from './LoanOngoingTable';
+import LoanApprovalTable from './approval/LoanApprovalTable';
+import LoanDisburseTable from './disbursal/LoanDisburseTable';
+import LoanOngoingTable from './ongoing/LoanOngoingTable';
+import LoanRejectTable from './reject/LoanRejectTable';
 
 const LoanMasterComponent = () => {
     const [isApprovalFrame,setApprovalFrame] = useState(true);
     const [isDisburseFrame,setDisburseFrame] = useState(false);
     const [isOngoingFrame, setOnGoingFrame] = useState(false);
+    const [isRejectedFrame,setRejectedFrame] = useState(false);
+    const [isClosedFrame,setClosedFrame] = useState(false);
+
+
+
+    const handleClosedFrame = async() => {
+      setApprovalFrame(false);
+      setOnGoingFrame(false);
+      setDisburseFrame(false);
+      setRejectedFrame(false);
+      setClosedFrame(true);
+
+    }
+
+    const handleRejectedFrame = async() => {
+
+      setApprovalFrame(false);
+      setOnGoingFrame(false);
+      setDisburseFrame(false);
+      setRejectedFrame(true);
+      setClosedFrame(false);
+    }
 
     const handleDisburseFrame = async () => {
       setApprovalFrame(false);
       setOnGoingFrame(false);
       setDisburseFrame(true);
-
+      setRejectedFrame(false);
+      setClosedFrame(false);
     }
 
     const handleApprovalFrame = async () => {
         setApprovalFrame(true);
         setOnGoingFrame(false);
         setDisburseFrame(false);
+        setRejectedFrame(false);
+        setClosedFrame(false);
     }
 
 
     const handleOnGoingFrame = async () => {
       setApprovalFrame(false);
       setOnGoingFrame(true);
-
+      setRejectedFrame(false);
+      setClosedFrame(false);
       setDisburseFrame(false);
   }
   return (
@@ -48,8 +75,11 @@ const LoanMasterComponent = () => {
                 className=' p-2 rounded-lg w-fit m-2 text-white font-serif border-2 border-amber-700 bg-[#feb236] text-[21px]'>
                     <h2>Ongoing Loans</h2>
                 </div>
-                <div className=' p-2 rounded-lg w-fit m-2 text-white font-serif border-2 border-red-500 bg-red-800 text-[21px]'>
-                    <h2>Rejected Loans</h2>
+                <div 
+                                onClick={handleRejectedFrame}
+
+                className=' p-2 rounded-lg w-fit m-2 text-white font-serif border-2 border-red-500 bg-red-800 text-[21px]'>
+                    <h2>Reject Loans</h2>
                 </div>
                 <div className=' p-2 rounded-lg w-fit m-2 text-white font-serif border-2 border-black-500 bg-black text-[21px]'>
                     <h2>Closed Loans</h2>
@@ -59,6 +89,7 @@ const LoanMasterComponent = () => {
               {isApprovalFrame && <LoanApprovalTable/>}
               {isDisburseFrame && <LoanDisburseTable/>}
               {isOngoingFrame && <LoanOngoingTable/>}
+              {isRejectedFrame && <LoanRejectTable/>}
 
         </main>
   )

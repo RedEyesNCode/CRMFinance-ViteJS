@@ -73,6 +73,31 @@ export const getUserVisits = async (user_attendance_data) => {
   }
 };
 
+
+export const getAllRejectedLoans = async () => {
+  try {
+    const response = await apiService("get-all-rejected-loans", "GET", );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const deleteRejectedLoan = async (rejected_loan_id) => {
+  try {
+    const response = await apiService("delete-rejected-loan", "POST",rejected_loan_id );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getRejectedLoanDetail = async (rejected_loan_id) => {
+  try {
+    const response = await apiService("get-reject-detail", "POST",rejected_loan_id );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 export const deleteLead = async (lead_delete_data) => {
   try {
     const response = await apiService("delete-lead", "POST", lead_delete_data);
