@@ -99,7 +99,11 @@ function ItemLeadComponent({ userData }) {
     };
     LeadsData();
     console.log("Maindashboarddiv mounted");
-  }, []);
+  }, [addLead]);
+
+  const closeleadform = ()=>{
+    setaddLead(false);
+  }
 
   return (
    
@@ -198,7 +202,7 @@ function ItemLeadComponent({ userData }) {
                 </tr>
               </thead>
               <tbody className="bg-white  divide-gray-200">
-                {leadsData != null &&
+                {leadsData && leadsData.status != "fail" &&
                   leadsData.data.map((user, index) => (
                     <tr
                       key={index}
@@ -317,7 +321,8 @@ function ItemLeadComponent({ userData }) {
             </div>
           </div>
         )}
-        {addLead &&  <><CreateNewLead /><p className="absolute top-6 left-[75%] cursor-pointer" onClick={()=>setaddLead(false)}>❌</p></>}
+
+        {addLead &&  <><CreateNewLead close={closeleadform}/><p className="absolute top-6 left-[75%] cursor-pointer" onClick={()=>setaddLead(false)}>❌</p></>}
         
       </div>
  

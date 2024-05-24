@@ -246,33 +246,37 @@ export const updateLeadStatus = async (update_lead_data) => {
     throw error;
   }
 };
+// export const createUserLead = async (formData) => {
+//   try {
+//     const response = await fetch("https://megmab2b.com:3000/create-lead", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(formData),
+//     });
+
+//     if (!response.ok) {
+//       throw new Error("Network response was not ok");
+//     }
+//     const data = await response.json();
+//     console.log(data);
+//   } catch (error) {
+//     console.log(error);
+//   }
+
+// };
 export const createUserLead = async (formData) => {
   try {
-    console.log(formData);
-    const response = await fetch("http://192.168.1.6:3000/create-lead", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const data = await response.json();
-    console.log("Upload successful:", data);
-
+    const response = await apiService(
+      "create-lead",
+      "POST",formData
+    );
+    return response;
   } catch (error) {
     throw error;
   }
 };
-// export const createUserLead = async (formData) => {
-//   try {
-//     console.log("obj",JSON.stringify(formData) );
-//     const response = await apiService("create-lead", "POST",{body:formData});
-//     return response;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
 export const uploadImage = async (Userwithimage) => {
   try {
     console.log(Userwithimage.file);

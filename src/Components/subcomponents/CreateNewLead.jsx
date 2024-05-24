@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { createUserLead } from "../../apis/apiInterface";
+import React, { useEffect, useState } from "react";
+import { createUserLead, getAllUsers } from "../../apis/apiInterface";
 
-const CreateNewLead = () => {
+const CreateNewLead = ({close}) => {
+  const [AllUsers, setAllUsers] = useState(null)
   const [formData, setFormData] = useState({
-    userId: "664efd939f722439984134de",
+    userId: "6650239b0a8f5d8421610a49",
     firstName: "",
     lastName: "",
     middleName: "",
@@ -46,7 +47,6 @@ const CreateNewLead = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    console.log(formData);
   };
 
   const handleImageUpload = async (e, fieldName) => {
@@ -58,10 +58,10 @@ const CreateNewLead = () => {
 
     try {
       const formData = new FormData();
-      formData.append("user_id", "664efd939f722439984134de");
+      formData.append("user_id", "6650239b0a8f5d8421610a49");
       formData.append("file", file);
 
-      const response = await fetch("http://192.168.1.6:3000/upload-file", {
+      const response = await fetch("https://megmab2b.com:3000/upload-file", {
         method: "POST",
         body: formData,
       });
@@ -87,37 +87,40 @@ const CreateNewLead = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch("http://localhost:3000/hello", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+    
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.log(error);
+    if (!formData.aadhar_front || !formData.pancard_img ) {
+      alert("Please upload all required images.");
+      return;
     }
-
-
-    // if (!formData.aadhar_front || !formData.pancard_img) {
-    //   alert("Please upload all required images.");
-    //   return;
-    // }
-    // try {
-    //   const response = await createUserLead(formData);
-    //   console.log("User Lead response -> ", response);
-    //   // Reset form data or handle success state here
-    // } catch (error) {
-    //   console.error("Error creating user lead", error);
-    // }
+    try {
+      const response = await createUserLead(formData);
+      console.log("User Lead response -> ", response);
+      // Reset form data or handle success state here
+      
+    } catch (error) {
+      console.error("Error creating user lead", error);
+    }
+    close();
   };
+  useEffect(() => {
+    const UserData = async () => {
+      try {
+        const response = await getAllUsers();
+        if(response.code==200){
+          setAllUsers(response);
+
+        }else{
+          setAllUsers(null);
+        }
+        console.log("Users Fetched response -> ", response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    UserData();
+  }, []);
+
 
   return (
     <div className="absolute w-full h-full top-0 backdrop-blur-2xl overflow-y-scroll rounded-2xl">
@@ -211,14 +214,17 @@ const CreateNewLead = () => {
             />
           </div>
           <div className="flex justify-between">
-            <input
-              className="px-5 py-2 rounded-md border outline-none"
-              // onChange={handleChange}
+             <select
+              className="w-56 px-5 py-2 rounded-md border outline-none"
+              onChange={handleChange}
               value={formData.userId}
-              // type="text"
               name="userId"
-              placeholder="Enter user ID"
-            />
+              required={true}
+            >
+              {AllUsers && AllUsers.data.map((user) => (
+                <option key={user._id} value={user._id}>{user.fullName}</option>
+              ))}
+            </select>
             <input
               className="px-5 py-2 rounded-md border outline-none"
               onChange={handleChange}
