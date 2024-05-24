@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { createUserLead, getAllUsers } from "../../apis/apiInterface";
+import { RotatingLines } from "react-loader-spinner";
 
-const CreateNewLead = ({close}) => {
-  const [AllUsers, setAllUsers] = useState(null)
+const CreateNewLead = ({ close }) => {
+  const [AllUsers, setAllUsers] = useState(null);
   const [formData, setFormData] = useState({
     userId: "6650239b0a8f5d8421610a49",
     firstName: "",
@@ -23,7 +24,6 @@ const CreateNewLead = ({close}) => {
     state: "",
     aadhar_front: "",
     aadhar_back: "",
-    pancard: "",
     pancard_img: "",
     aadhar_card: "",
     selfie: "",
@@ -41,6 +41,8 @@ const CreateNewLead = ({close}) => {
   });
 
   const [imageUploading, setImageUploading] = useState(false);
+  const [formSubmitting, setFormSubmitting] = useState(false); // New state for loader
+  const [imageFiles, setImageFiles] = useState([]);
 
   const handleChange = (e) => {
     setFormData({
@@ -49,68 +51,78 @@ const CreateNewLead = ({close}) => {
     });
   };
 
-  const handleImageUpload = async (e, fieldName) => {
+  const handleImageUpload = (e, fieldName) => {
     const file = e.target.files[0];
-    console.log(file);
     if (!file) return;
 
-    setImageUploading(true);
+    setImageFiles((prevFiles) => [...prevFiles, { fieldName, file }]);
+  };
 
-    try {
+  const uploadImages = async () => {
+    const uploadedUrls = {};
+
+    for (const { fieldName, file } of imageFiles) {
       const formData = new FormData();
       formData.append("user_id", "6650239b0a8f5d8421610a49");
       formData.append("file", file);
 
-      const response = await fetch("https://megmab2b.com:3000/upload-file", {
-        method: "POST",
-        body: formData,
-      });
+      try {
+        const response = await fetch("https://megmab2b.com:3000/upload-file", {
+          method: "POST",
+          body: formData,
+        });
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        uploadedUrls[fieldName] = data.message;
+      } catch (error) {
+        console.error("Image upload failed", error);
       }
-      window.alert(fieldName + " uploaded successfully");
-      const data = await response.json();
-      console.log("Upload successful:", data);
-
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [fieldName]: data.message,
-      }));
-    } catch (error) {
-      console.error("Image upload failed", error);
-    } finally {
-      setImageUploading(false);
-      console.log("Current form data", formData);
     }
+
+    return uploadedUrls;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
 
-    if (!formData.aadhar_front || !formData.pancard_img ) {
+    if (imageFiles.length != 5) {
       alert("Please upload all required images.");
       return;
     }
+
+    setFormSubmitting(true); // Start loader
+    setImageUploading(true);
+    const uploadedUrls = await uploadImages();
+    setImageUploading(false);
+
+    const updatedFormData = {
+      ...formData,
+      ...uploadedUrls,
+    };
+
     try {
-      const response = await createUserLead(formData);
+      const response = await createUserLead(updatedFormData);
       console.log("User Lead response -> ", response);
       // Reset form data or handle success state here
-      
     } catch (error) {
       console.error("Error creating user lead", error);
     }
+
+    setFormSubmitting(false); // Stop loader
     close();
   };
+
   useEffect(() => {
-    const UserData = async () => {
+    const fetchUserData = async () => {
       try {
         const response = await getAllUsers();
-        if(response.code==200){
+        if (response.code === 200) {
           setAllUsers(response);
-
-        }else{
+        } else {
           setAllUsers(null);
         }
         console.log("Users Fetched response -> ", response);
@@ -118,9 +130,8 @@ const CreateNewLead = ({close}) => {
         console.log(error);
       }
     };
-    UserData();
+    fetchUserData();
   }, []);
-
 
   return (
     <div className="absolute w-full h-full top-0 backdrop-blur-2xl overflow-y-scroll rounded-2xl">
@@ -214,16 +225,19 @@ const CreateNewLead = ({close}) => {
             />
           </div>
           <div className="flex justify-between">
-             <select
+            <select
               className="w-56 px-5 py-2 rounded-md border outline-none"
               onChange={handleChange}
               value={formData.userId}
               name="userId"
               required={true}
             >
-              {AllUsers && AllUsers.data.map((user) => (
-                <option key={user._id} value={user._id}>{user.fullName}</option>
-              ))}
+              {AllUsers &&
+                AllUsers.data.map((user) => (
+                  <option key={user._id} value={user._id}>
+                    {user.fullName}
+                  </option>
+                ))}
             </select>
             <input
               className="px-5 py-2 rounded-md border outline-none"
@@ -287,38 +301,55 @@ const CreateNewLead = ({close}) => {
               placeholder="Enter relative number"
             />
           </div>
-          <div className="flex flex-col items-center gap-2">
+            <div className="flex justify-between items-center gap-2">
             <label htmlFor="aadhar_front" className="text-gray-600">
               Upload Aadhar Front
             </label>
             <input
-              className="px-5 py-2 rounded-md border outline-none"
+              className="px-3 py-2 rounded-md border outline-none"
               type="file"
               name="aadhar_front"
-              // onChange={handleImageUpload}
               onChange={(e) => handleImageUpload(e, "aadhar_front")}
             />
-          </div>
-          <div className="flex flex-col items-center gap-2">
             <label htmlFor="aadhar_back" className="text-gray-600">
               Upload Aadhar Back
             </label>
             <input
-              className="px-5 py-2 rounded-md border outline-none"
+              className="px-3 py-2 rounded-md border outline-none"
               type="file"
               name="aadhar_back"
               onChange={(e) => handleImageUpload(e, "aadhar_back")}
             />
           </div>
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex justify-between items-center gap-2">
             <label htmlFor="pancard_img" className="text-gray-600">
-              Upload PAN Card Image
+              Upload PAN Image
+            </label>
+            <input
+              className="px-4 py-2 rounded-md border outline-none w-72"
+              type="file"
+              name="pancard_img"
+              onChange={(e) => handleImageUpload(e, "pancard_img")}
+            />
+            <label htmlFor="pancard_img" className="text-gray-600">
+              Upload Selfie
             </label>
             <input
               className="px-5 py-2 rounded-md border outline-none"
               type="file"
-              name="pancard_img"
-              onChange={(e) => handleImageUpload(e, "pancard_img")}
+              name="selfie"
+              onChange={(e) => handleImageUpload(e, "selfie")}
+            />
+          </div>
+          <div className="flex  items-center gap-2">
+            <label htmlFor="pancard_img" className="text-gray-600">
+              Upload Additional Document
+            </label>
+            <input
+              className="px-5 py-2 rounded-md border outline-none"
+              type="file"
+              name="additional_document"
+              onChange={(e) => handleImageUpload(e, "additional_document")}
             />
           </div>
           {/* Add more file upload fields as needed */}
@@ -329,6 +360,21 @@ const CreateNewLead = ({close}) => {
           />
         </div>
       </form>
+      {formSubmitting && (
+        <div className="flex justify-center items-center h-[120vh] w-full backdrop-blur-xl absolute top-0 left-0">
+          <RotatingLines
+            visible={true}
+            height="96"
+            width="96"
+            color="grey"
+            strokeWidth="5"
+            animationDuration="0.75"
+            ariaLabel="rotating-lines-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+          />
+        </div>
+      )}
     </div>
   );
 };
