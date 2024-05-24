@@ -66,6 +66,9 @@ function LoanApprovalDetail({ lead_data,handleCloseCallback }) {
         const leadDetailsResponse = await getApprovalLoanDetails(rawJson);
         if(leadDetailsResponse.code==200){
           setLeadCurrentData(leadDetailsResponse.data)
+          window.alert(leadDetailsResponse.data.lead_status);
+          
+          setLeadsStatus(leadDetailsResponse.data.lead_status);
         }else{
           setLeadCurrentData(lead_data);
         }

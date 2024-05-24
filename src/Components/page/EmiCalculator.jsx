@@ -225,27 +225,30 @@ function EmiCalculator({}) {
                 value={loanDetails.interestAmount}
               />
             </td>
-            <td className="p-4">LEAD ID : {loanDetails.leadId}</td>
-            <td>{loanDetails.leadId}</td>
+            <td></td>
+            <td></td>
             <td></td> {/* Empty cell for alignment */}
           </tr>
           <tr className="p-4 bg-blue-500 text-white font-mono">
-            <td className="p-4">Status : {loanDetails.status}</td>
-            <td>{loanDetails.status}</td>
-            <td></td> {/* Empty cell for alignment */}
+
             <td className="p-4">CALCULATED EMI : {loanDetails.emi}</td>
-            <td></td> {/* Empty cell for alignment */}
-            <td></td> {/* Empty cell for alignment */}
-          </tr>
-          <tr className="p-4 bg-blue-500 text-white font-mono">
-            <td className="p-4">
-              Total Loan Amount : {loanDetails.loanAmount}
-            </td>
-            <td>{loanDetails.loanAmount}</td>
+            
             <td></td> {/* Empty cell for alignment */}
             <td className="p-4">
               Disbursement Amount : {loanDetails.disbursementAmount}
             </td>
+            <td></td> {/* Empty cell for alignment */}
+            <td className="p-4">
+              Total Loan Amount : {loanDetails.loanAmount}
+            </td>
+            <td></td> {/* Empty cell for alignment */}
+
+          </tr>
+          <tr className="p-4 bg-blue-500 text-white font-mono">
+            
+            <td>{loanDetails.loanAmount}</td>
+            <td></td> {/* Empty cell for alignment */}
+            
             <td></td> {/* Empty cell for alignment */}
             <td></td> {/* Empty cell for alignment */}
           </tr>
