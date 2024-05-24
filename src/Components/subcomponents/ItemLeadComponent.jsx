@@ -72,12 +72,12 @@ function ItemLeadComponent({ userData }) {
     try {
       const rawJson = { leadId: currentLead._id };
       const response = await deleteLead(rawJson);
-      if (response.status == 200) {
-        window.alert(response.message);
-        handleCloseDeleteLead();
+      window.alert(response.message);
+      callLeadApi();
 
-        callLeadApi();
-      }
+      handleCloseDeleteLead();
+
+     
     } catch (error) {
       console.log(error);
     }

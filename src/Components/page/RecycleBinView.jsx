@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { getRecycleBin } from '../../apis/apiInterface';
-
+import { MdContentCopy } from "react-icons/md";
+import { Bounce, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function RecycleBinView() {
   const [recycleItems, setRecycleItems] = useState([]);
-
+  const divRef = useRef(null);
   useEffect(() => {
     async function fetchRecycleItems() {
       try {
@@ -22,7 +24,35 @@ function RecycleBinView() {
 
     fetchRecycleItems(); 
   }, []); 
-  
+  const copyToClipboard = () => {
+    const range = document.createRange();
+    range.selectNodeContents(divRef.current);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    try {
+      const successful = document.execCommand('copy');
+      const msg = successful ? 'successful' : 'unsuccessful';
+      toast.info('🥷 Copied to clipboard!', {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+        });
+      console.log('Copy command was ' + msg);
+    } catch (err) {
+      console.log('Oops, unable to copy', err);
+    }
+
+    // Remove the selection
+    selection.removeAllRanges();
+  };
   const renderTable = (jsonData) => {
     try {
       const parsedData = JSON.parse(jsonData);
@@ -37,7 +67,7 @@ function RecycleBinView() {
       return (
         <table className="table-auto w-full">
           <thead>
-                
+
           </thead>
           <tbody>
             {Object.keys(parsedData).map((key) => (
@@ -72,20 +102,53 @@ function RecycleBinView() {
   }
 
   return (
-
+    
     <main className="h-full w-[90%] px-4 pt-4 bg-[#F4FAFF] rounded-[50px] -ml-[5%] overflow-hidden">
+    
+    <ToastContainer
+    position="top-right"
+    autoClose={5000}
+    hideProgressBar={false}
+    newestOnTop={false}
+    closeOnClick
+    rtl={false}
+    pauseOnFocusLoss
+    draggable
+    pauseOnHover
+    theme="colored"
+    
+    />
+
     <div className="overflow-hidden rounded-3xl border border-gray-300 relative">
     <div className="container mx-auto mt-8 p-4">
-      <h1 className="text-2xl font-bold mb-4">Recycle Bin</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <h1 className="text-2xl font-bold mb-4 bg-slate-600 text-white p-2 rounded-lg">Recycle Bin</h1>
+      <div className="relative overflow-auto max-h-[680px]">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 h-[340px]">
         {recycleItems!=null && recycleItems.map((item) => (
+           
           <div 
             key={item._id} 
             className="bg-white rounded-lg shadow-md p-4"
           >
-                        {renderTable(item.json_recycle)}
+            <div>
+                <div 
+                
+                onClick={copyToClipboard}
+                className='flex flex-row justify-between'>{item.json_type}
+                <MdContentCopy className='w-[30px] h-[30px]' />
+                    </div>
 
-            
+                
+
+                </div>
+                <div
+                                ref={divRef}
+
+                className='overflow-scroll bg-zinc-700 text-white p-2 border-2 rounded-xl'>
+                    <pre>
+                    {item.json_recycle}
+                    </pre>
+                </div>
             <div className="text-gray-600 text-xs mt-2">
               Created: {new Date(item.createdAt).toLocaleString()} 
               <br />
@@ -94,6 +157,8 @@ function RecycleBinView() {
           </div>
         ))}
       </div>
+     </div>
+     
     </div>
     </div>
 
