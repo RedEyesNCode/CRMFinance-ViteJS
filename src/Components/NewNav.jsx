@@ -18,6 +18,8 @@ import { MdReport } from "react-icons/md";
 import { GrHadoop } from "react-icons/gr";
 import { RiRecycleFill } from "react-icons/ri";
 import RecycleBinView from "./page/RecycleBinView";
+import LoanOngoingTable from "./page/ongoing/LoanOngoingTable";
+import LoanClosedTable from "./page/closed/LoanClosedTable";
 
 
 const NewNav = () => {
@@ -40,6 +42,8 @@ const NewNav = () => {
       { name: "Approval Loan", component: <LiaDotCircle /> },
       { name: "Disbursal Loan", component: <LiaDotCircle /> },
       { name: "Rejected Loans", component: <LiaDotCircle /> },
+      { name: "Ongoing Loans", component: <LiaDotCircle /> },
+
       { name: "Closed Loans", component: <LiaDotCircle /> },
 
     ] },
@@ -158,18 +162,23 @@ const NewNav = () => {
         {selected === "Attendence" && <AttendenceTable />}
         {selected === "Loan Master" && <LoanMasterComponent />}
         {selected === "Recycle Bin" && <RecycleBinView />}
+        {selected === "Ongoing Loans" && <LoanOngoingTable/>}
 
         {selected === "Approval Loan" && (
           <div>
             <LoanApprovalTable/>
           </div>
          )}
+         {selected === "Closed Loans" && (
+          <div>
+            <LoanClosedTable/>
+          </div>
+         )}
         {selected === "Disbursal Loan" && (
         <LoanDisburseTable/> )}
         {selected === "Rejected Loans" && (
         <LoanRejectTable/> )}
-        {selected === "Closed Loans" && (
-        <div className="m-10 bg-black text-white font-mono text-[21px] p-7 rounded-xl">Under development </div> )}
+
       </div>
     </div>
   );

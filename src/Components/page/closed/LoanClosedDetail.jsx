@@ -2,12 +2,12 @@ import React, { useState, useEffect,useRef,useMemo } from 'react';
 import { FaBeer } from 'react-icons/fa';
 import { GiFastBackwardButton } from 'react-icons/gi';
 import EmiCalculator from '../EmiCalculator';
-import { closeOngoingLoan, deleteApprovalLoan, deleteDisburseLoan, deleteOnGoingLoan, getApprovalLoanDetails, getDisburseLoanDetail, getOngoingLoanDetail, updateLoanApprovalStatus, updateLoanDisbursalStatus } from '../../../apis/apiInterface';
+import { deleteApprovalLoan, deleteDisburseLoan, deleteRejectedLoan, getApprovalLoanDetails, getClosedLoanDetail, getDisburseLoanDetail,  getRejectedLoanDetail, updateLoanApprovalStatus, updateLoanDisbursalStatus } from '../../../apis/apiInterface';
 
 
 
 
-function LoanOngoingDetail({ lead_data,handleCloseCallback }) {
+function LoanClosedDetail({ lead_data,handleCloseCallback }) {
     const [activeTab, setActiveTab] = useState('approveLoans'); // Default active tab
     const [activeTabDocs, setActiveTabDocs] = useState('pancard'); // Default active tab
 
@@ -42,8 +42,8 @@ function LoanOngoingDetail({ lead_data,handleCloseCallback }) {
     const deleteCurrentLead = async (lead_current_data) => {
 
       try{
-        const rawJson = {ongoing_loan_id : lead_current_data._id}
-        const response = await deleteOnGoingLoan(rawJson);
+        const rawJson = {rejected_loan_id : lead_current_data._id}
+        const response = await deleteRejectedLoan(rawJson);
         if(response.code==200){
           window.alert(response.message);
           handleCloseCallback();
@@ -61,11 +61,11 @@ function LoanOngoingDetail({ lead_data,handleCloseCallback }) {
     const callLeadDetailsAPI = async () => {
       try{
         const rawJson = {
-          ongoing_loan_id : lead_data._id
+            rejected_loan_id : lead_data._id
         }
-        const leadDetailsResponse = await getOngoingLoanDetail(rawJson);
+        const leadDetailsResponse = await getClosedLoanDetail(rawJson);
         if(leadDetailsResponse.code==200){
-          setLeadCurrentData(leadDetailsResponse.data)
+          setLeadCurrentData(leadDetailsResponse.data);
         }else{
           setLeadCurrentData(lead_data);
         }
@@ -97,14 +97,14 @@ function LoanOngoingDetail({ lead_data,handleCloseCallback }) {
 
       try{
         const rawJson = {
-          close_loan_id : updateLeadForm.leadId,
-          status : 'CLOSED',
-          amount : '',
-          feesAmount : '',
-          interestRate :''
+            disbursal_loan_id : updateLeadForm.leadId,
+          status : leads_status,
+          amount : updateLeadForm.amount,
+          feesAmount : updateLeadForm.feesAmount,
+          interestRate : updateLeadForm.interestRate
         }
         console.log(rawJson);
-        const responseJson = await closeOngoingLoan(rawJson);
+        const responseJson = await updateLoanDisbursalStatus(rawJson);
         if(responseJson.code==200){
           // window.alert(responseJson.message);
           setLeadStatusDialog(false);
@@ -148,7 +148,7 @@ function LoanOngoingDetail({ lead_data,handleCloseCallback }) {
 
       if(lead_current_data==null){
         return (
-          <h2 className="text-white text-[21px] font-semibold font-mono bg-green-800 rounded-md p-2">No Loan Ongoing Detail Found!!</h2>
+          <h2 className="text-white text-[21px] font-semibold font-mono bg-red-800 rounded-md p-2">No Loan Rejected Detail Found!!</h2>
       )
       }
 
@@ -156,22 +156,21 @@ function LoanOngoingDetail({ lead_data,handleCloseCallback }) {
     <main >
         
     <div className='relative overflow-auto max-h-[560px]'>
-        <div className='flex flex-row gap-[400px] items-center font-mono rounded-md bg-orange-400 border-2 border-red-500  text-white'>
+        <div className='flex flex-row gap-[400px] items-center font-mono rounded-md bg-red-800 border-2 border-red-500  text-white'>
         <GiFastBackwardButton onClick={() => handleBackpress()} className='text-[50px]  m-[10px] text-white'  />
-        <h2 className='text-2xl'>On going Loan Details</h2>
+        <h2 className='text-2xl'>Closed Loan Details</h2>
 
 
         </div>
         
 
          <div id="lead-status-card" className={leadStatusClass}>
-    <span className="text-xl font-semibold text-white font-mono">On Going Loan Status : {lead_current_data.lead_status}</span>
+    <span className="text-xl font-semibold text-white font-mono">Rejected Loan Status : {lead_current_data.lead_status}</span>
     </div>
     <div  className='w-fit h-fit rounded-xl m-2 bg-red-600 text-white font-mono text-[21px] p-2'>
     <span className="text-xl font-semibold">EMPLOYEE LEAD TABLE ID : {lead_current_data.employee_lead_id_linker}</span>
     </div>
-        <button onClick={HandleopenDeleteLeadDialog} class="m-[20px] rounded-[2px] bg-rose-900 hover:bg-red-500 text-white font-bold py-2 px-4">DELETE ONGOING LOAN</button>
-        <button onClick={handleOpenLeadStatusDialog} class="m-[20px] rounded-[12px] bg-cyan-900 hover:bg-yellow-500 text-white font-bold py-10 border-2 border-red-500 px-4">CLOSE THIS LOAN</button>
+        <button onClick={HandleopenDeleteLeadDialog} class="m-[20px] rounded-[2px] bg-rose-900 hover:bg-red-500 text-white font-bold py-2 px-4">DELETE REJECTED LOAN</button>
 
 
 
@@ -293,12 +292,12 @@ function LoanOngoingDetail({ lead_data,handleCloseCallback }) {
             <div>
             <div className="fixed inset-0 flex items-center justify-center z-150">
           <div className="bg-white p-10 rounded-md shadow-md">
-            <h2 className="text-xl font-semibold mb-4 text-gray-800 font-mono">Update On going Loan Status</h2>
+            <h2 className="text-xl font-semibold mb-4 text-gray-800 font-mono">Update Loan Approval Status</h2>
             <div className="mb-4">
               <label className="block text-gray-500 font-bold mb-2"
                 
               >
-                On Going Loan ID
+                Loan Approval ID
               </label>
               <input 
               name="leadId" 
@@ -308,7 +307,7 @@ function LoanOngoingDetail({ lead_data,handleCloseCallback }) {
                 type="text" 
               />
               <label className="block text-gray-500 font-bold mb-2">
-                Status
+                Loan Approval Status
               </label>
               <select
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-blue-500"
@@ -316,12 +315,52 @@ function LoanOngoingDetail({ lead_data,handleCloseCallback }) {
                 value={leads_status}
                 onChange={(e) => setLeadsStatus(e.target.value)}
               >
-                <option value="CLOSED">CLOSED</option>
+                <option value="ONGOING">ONGOING</option>
+                <option value="REJECTED">REJECTED</option>
               </select>
-              <label className="block text-red-500 font-semibold mb-2">
-                Note (IN CLOSED STATUS) : You will be moving this LEAD to LOAN-CLOSED-Table (Loan Master Section)
+              {showFinancialFields && (
+              <>
+               <label className="block text-red-500 font-semibold mb-2">
+                Note (IN ONGOING STATUS) : You will be moving this LEAD to Loan-OnGOING-Table (Loan Master Section)
               </label>
+              <label className="block text-gray-500 font-bold mb-2">
+                Loan Approval Amount
+              </label>
+              <input
+              name="amount" 
+              value={updateLeadForm.amount}
+              onChange={handleChange}  
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                id="amount" 
+                type="number" 
+              />
+              <label className="block text-gray-500 font-bold mb-2">
+                Fees Amount
+              </label>
+              <input 
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                id="feesAmount" 
+                onChange={handleChange}  
+
+                name="feesAmount" 
+                value={updateLeadForm.feesAmount}  
+                type="number" 
+              />
+              <label className="block text-gray-500 font-bold mb-2">
+                Interest Amount
+              </label>
+              <input 
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                id="interestRate" 
+                onChange={handleChange}  
+
+                name="interestRate" 
+                value={updateLeadForm.interestRate}  
+                type="text" 
+              />
               
+              </>
+            )}
               
             </div>
 
@@ -346,4 +385,4 @@ function LoanOngoingDetail({ lead_data,handleCloseCallback }) {
   );
 }
 
-export default LoanOngoingDetail;
+export default LoanClosedDetail;

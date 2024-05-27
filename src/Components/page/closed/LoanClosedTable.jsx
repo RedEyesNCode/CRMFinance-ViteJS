@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom"; // Import useHistory from react-router-dom
 import LeadDetailsComponent from "../LeadDetailsComponent";
-import { deleteApprovalLoan, getApprovalLoans } from "../../../apis/apiInterface";
-import LoanApprovalDetail from "./LoanApprovalDetail";
+import { deleteApprovalLoan, deleteClosedLoan, deleteDisburseLoan, deleteOnGoingLoan, deleteRejectedLoan, getAllClosedLoans, getAllRejectedLoans, getApprovalLoans, getDisburseLoans, getOnGoingLoans } from "../../../apis/apiInterface";
+import LoanClosedDetail from "./LoanClosedDetail";
 
-function LoanApprovalTable({ handle }) {
+
+function LoanClosedTable({ handle }) {
   const [leadsData, setLeadsData] = useState(null);
   const [currentLead, setcurrentLead] = useState(null)
   const [isLeadDetailFrame,setLeadDetailFrame] = useState(false);
@@ -54,7 +55,7 @@ function LoanApprovalTable({ handle }) {
   }
   const callLeadApi = async () => {
     try {
-      const response = await getApprovalLoans();
+      const response = await getAllClosedLoans();
       if(response.code==200){
         setLeadsData(response);
 
@@ -84,8 +85,8 @@ function LoanApprovalTable({ handle }) {
 
   const deleteCurrentLead = async () => {
     try{
-      const rawJson = {loan_approval_id : currentLead._id}
-      const response = await deleteApprovalLoan(rawJson);
+      const rawJson = {rejected_loan_id : currentLead._id}
+      const response = await deleteClosedLoan(rawJson);
       if(response.code==200){
         window.alert(response.message);
         handleCloseDeleteLead();
@@ -114,15 +115,16 @@ function LoanApprovalTable({ handle }) {
   useEffect(() => {
     const LeadsData = async () => {
       try {
-        const response = await getApprovalLoans();
-        if(response.code==200){
+        const response = await getAllClosedLoans();
+        if(response.status=='success'){
           setLeadsData(response);
           console.log(response);
         }else{
+
           setLeadsData(null);
 
         }
-      
+        
       } catch (error) {
         console.log(error);
       }
@@ -130,96 +132,94 @@ function LoanApprovalTable({ handle }) {
     LeadsData();
     console.log("Maindashboarddiv mounted");
   }, []);
-  if(leadsData==null || leadsData==undefined){
-    return (
-      <main>
-              <h2 className="text-white text-[21px] font-semibold font-mono bg-green-800 rounded-md p-2">No Approval loans Found !!</h2>
 
-        </main>
-  )
+  if(leadsData==null){
+    return (
+          <h2 className="m- text-white text-[21px] font-semibold font-mono bg-black rounded-md p-2 m-2">No Closed Loans Found !!</h2>
+      )
   }
 
   return (
-    <div className="overflow-hidden  border border-gray-300 relative m-2">
+    <div className="overflow-hidden m-2 border border-gray-300 relative">
 
       {!isLeadDetailFrame && (
         <div className="relative overflow-auto max-h-[680px] ">
-                            <h2 className="m-[10px] text-[14px]  font-sans font-bold  text-white p-2 rounded-md border-green-900 bg-[#86af49]">Pending for Approval Loans</h2>
+                            <h2 className="m-[10px] text-[16px]  font-sans font-bold  text-white p-2 rounded-md border-red-800 bg-black">All Rejected Loans</h2>
 
-        <table className="min-w-full table-auto p-1">
+        <table className="min-w-full rounded-3xl table-auto p-1">
           <thead className="border">
             <tr>
             <th
                 scope="col"
-                className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border bg-[#F3F4F7]"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border bg-[#F3F4F7]"
               >
                 SNO.
               </th>
-            
+           
               
               <th
                 scope="col"
-                className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
-                Loan Approval Id
+                Reject Loan ID
               </th>
               <th
                 scope="col"
-                className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 User Info
               </th>
               <th
                 scope="col"
-                className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 First Name
               </th>
               <th
                 scope="col"
-                className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 Last Name
               </th>
               <th
                 scope="col"
-                className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 Mobile Number
               </th>
               <th
                 scope="col"
-                className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 Gender
               </th>
               <th
                 scope="col"
-                className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 Status
               </th>
               <th
                 scope="col"
-                className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 Amount
               </th>
               <th
                 scope="col"
-                className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 Created At
               </th>
               <th
                 scope="col"
-                className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border whitespace-nowrap"
+                className="px-1 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border whitespace-nowrap"
               >
                 Disbursement Date
               </th>
               <th
                 scope="col"
-                className="px-3 py-3  text-[11px] font-medium text-gray-500 uppercase tracking-wider border text-center"
+                className="px-2 py-3  text-[11px] font-medium text-gray-500 uppercase tracking-wider border text-center"
               >
                 Action
               </th>
@@ -234,6 +234,7 @@ function LoanApprovalTable({ handle }) {
                     {index + 1}.
                   </td>
                   
+                 
                  
                   <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
                     {user._id}
@@ -254,9 +255,9 @@ function LoanApprovalTable({ handle }) {
                     {user.gender}
                   </td>
                   <td
-                      className={`px-2 py-2 whitespace-nowrap text-sm font-medium border 
+                      className={`px-2 py-2 whitespace-nowrap text-[11px] font-medium border 
                 ${user.lead_status === "PENDING" ? "bg-yellow-500 text-center text-white" : ""}
-                ${user.lead_status === "DISBURSED" ? "bg-blue-500 rounded-xl text-center text-white" : ""}
+                ${user.lead_status === "DISBURSED" ? "bg-blue-500  text-center text-white" : ""}
 
                 ${
                   user.lead_status === "APPROVED"
@@ -271,8 +272,7 @@ function LoanApprovalTable({ handle }) {
                     >
                       {user.lead_status}
                     </td>
-                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border
-                  ">
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
                     {user.leadAmount}
                   </td>
                   <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
@@ -284,7 +284,7 @@ function LoanApprovalTable({ handle }) {
                   <td className="px-2 py-4 whitespace-nowrap text-right text-[11px] font-medium flex gap-2">
                     <button
                       onClick={() => handleOpenLeadDetail(user)}
-                      className="text-white bg-yellow-500 px-3 py-2 rounded-lg font-mono border-"
+                      className="text-white bg-yellow-500 px-3 py-2 rounded-xl font-sans border-2 "
                     >
                       Loan Details
                     </button>
@@ -301,15 +301,13 @@ function LoanApprovalTable({ handle }) {
                       Delete
                     </button>
                   </td>
-                 
-                 
                 </tr>
               ))}
           </tbody>
         </table>
       </div>
       )}
-      {isLeadDetailFrame && (<LoanApprovalDetail lead_data={currentLead} handleCloseCallback={() => handleCloseLeadDetail()}/>)}
+      {isLeadDetailFrame && (<LoanClosedDetail lead_data={currentLead} handleCloseCallback={() => handleCloseLeadDetail()}/>)}
       {isLeadDeleteFrame && (
         <div className="fixed z-10 inset-0 overflow-y-auto flex items-center justify-center">
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-sm">
@@ -350,4 +348,4 @@ function LoanApprovalTable({ handle }) {
   );
 }
 
-export default LoanApprovalTable;
+export default LoanClosedTable;

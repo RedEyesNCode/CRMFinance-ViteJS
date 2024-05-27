@@ -208,6 +208,19 @@ export const getDisburseLoanDetail = async (delete_disbursal_loan_id) => {
     throw error;
   }
 };
+
+export const getOngoingLoanDetail = async (delete_disbursal_loan_id) => {
+  try {
+    const response = await apiService(
+      "get-ongoing-loan-detail",
+      "POST",
+      delete_disbursal_loan_id
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 export const deleteApprovalLoan = async (delete_approval_id) => {
   try {
     const response = await apiService(
@@ -295,7 +308,59 @@ export const getRecycleBin = async () => {
     throw error;
   }
 };
+export const getAllClosedLoans = async () => {
+  try {
+    const response = await apiService(
+      "get-all-closed-loans",
+      "GET",
+      
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const deleteClosedLoan = async (delete_loan_id) => {
+  try {
+    const response = await apiService(
+      "delete-closed-loan",
+      "POST",
+      delete_loan_id
+      
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getClosedLoanDetail = async (delete_loan_id) => {
+  try {
+    const response = await apiService(
+      "get-closed-detail",
+      "POST",
+      delete_loan_id
+      
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 
+
+export const closeOngoingLoan = async (delete_loan_id) => {
+  try {
+    const response = await apiService(
+      "close-ongoing-loan",
+      "POST",
+      delete_loan_id
+      
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 // export const createUserLead = async (formData) => {
 //   try {
 //     const response = await fetch("https://megmab2b.com:3000/create-lead", {
