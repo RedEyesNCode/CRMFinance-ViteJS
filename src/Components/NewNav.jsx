@@ -160,7 +160,10 @@ const NewNav = () => {
         {selected === "Recycle Bin" && <RecycleBinView />}
 
         {selected === "Approval Loan" && (
-        <LoanApprovalTable/> )}
+          <div>
+            <LoanApprovalTable/>
+          </div>
+         )}
         {selected === "Disbursal Loan" && (
         <LoanDisburseTable/> )}
         {selected === "Rejected Loans" && (

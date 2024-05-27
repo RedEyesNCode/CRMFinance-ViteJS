@@ -67,7 +67,7 @@ const VisitTable = () => {
       <div className="rounded-2xl border border-gray-300 border-r-0 h-full w-full">
         {VisitData ? (
           <div className="w-full text-[20px] font-mono font-bold bg-sky-500 text-white px-5 py-3  flex justify-between items-center">
-            View All Visits
+            View All Visits in DB.
             <button
               onClick={() => setaddVisit(true)}
               className="backdrop-blur-md text-lg font-normal border px-2 rounded-xl py-1"
