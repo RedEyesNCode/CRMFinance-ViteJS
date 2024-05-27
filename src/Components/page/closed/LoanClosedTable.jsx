@@ -144,7 +144,7 @@ function LoanClosedTable({ handle }) {
 
       {!isLeadDetailFrame && (
         <div className="relative overflow-auto max-h-[680px] ">
-                            <h2 className="m-[10px] text-[16px]  font-sans font-bold  text-white p-2 rounded-md border-red-800 bg-black">All Rejected Loans</h2>
+                            <h2 className="m-[10px] text-[16px]  font-sans font-bold  text-white p-2 rounded-md border-red-800 bg-black">All Closed Loans</h2>
 
         <table className="min-w-full rounded-3xl table-auto p-1">
           <thead className="border">

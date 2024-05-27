@@ -133,7 +133,7 @@ function LoanApprovalTable({ handle }) {
   if(leadsData==null || leadsData==undefined){
     return (
       <main>
-              <h2 className="text-white text-[21px] font-semibold font-mono bg-green-800 rounded-md p-2">No Approval loans Found !!</h2>
+              <h2 className="text-white text-[21px] font-semibold font-mono bg-green-800 rounded-md p-2 m-2">No Approval loans Found !!</h2>
 
         </main>
   )
@@ -144,7 +144,7 @@ function LoanApprovalTable({ handle }) {
 
       {!isLeadDetailFrame && (
         <div className="relative overflow-auto max-h-[680px] ">
-                            <h2 className="m-[10px] text-[14px]  font-sans font-bold  text-white p-2 rounded-md border-green-900 bg-[#86af49]">Pending for Approval Loans</h2>
+                            <h2 className="m-[10px] text-[14px]  font-sans font-bold  text-white p-2 rounded-md border-green-900 bg-[#86af49] ">Pending for Approval Loans</h2>
 
         <table className="min-w-full table-auto p-1">
           <thead className="border">
