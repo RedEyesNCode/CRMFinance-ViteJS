@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom"; // Import useHistory from react-router-dom
-import LeadDetailsComponent from "../page/LeadDetailsComponent";
-import { deleteApprovalLoan, deleteDisburseLoan, deleteOnGoingLoan, getApprovalLoans, getDisburseLoans, getOnGoingLoans } from "../../apis/apiInterface";
-import LoanApprovalDetail from "./LoanApprovalDetail";
-import LoanDisburseDetail from "./LoanDisburseDetail";
+import LeadDetailsComponent from "../LeadDetailsComponent";
+import { deleteApprovalLoan, deleteDisburseLoan, deleteOnGoingLoan, getApprovalLoans, getDisburseLoans, getOnGoingLoans } from "../../../apis/apiInterface";
+import LoanApprovalDetail from "../approval/LoanApprovalDetail";
+import LoanDisburseDetail from "../disbursal/LoanDisburseDetail";
 import LoanOngoingDetail from "./LoanOngoingDetail";
 
 function LoanOngoingTable({ handle }) {

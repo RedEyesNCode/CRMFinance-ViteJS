@@ -1,8 +1,8 @@
 import React, { useState, useEffect,useRef,useMemo } from 'react';
 import { FaBeer } from 'react-icons/fa';
 import { GiFastBackwardButton } from 'react-icons/gi';
-import EmiCalculator from './EmiCalculator';
-import { deleteApprovalLoan, deleteDisburseLoan, getApprovalLoanDetails, getDisburseLoanDetail, updateLoanApprovalStatus, updateLoanDisbursalStatus } from '../../apis/apiInterface';
+import EmiCalculator from '../EmiCalculator';
+import { deleteApprovalLoan, deleteDisburseLoan, getApprovalLoanDetails, getDisburseLoanDetail, updateLoanApprovalStatus, updateLoanDisbursalStatus } from '../../../apis/apiInterface';
 
 
 

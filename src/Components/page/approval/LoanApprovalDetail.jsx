@@ -1,13 +1,13 @@
 import React, { useState, useEffect,useRef,useMemo } from 'react';
 import { FaBeer } from 'react-icons/fa';
 import { GiFastBackwardButton } from 'react-icons/gi';
-import EmiCalculator from './EmiCalculator';
-import { deleteApprovalLoan, deleteDisburseLoan, getApprovalLoanDetails, getDisburseLoanDetail, updateLoanApprovalStatus, updateLoanDisbursalStatus } from '../../apis/apiInterface';
+import EmiCalculator from '../EmiCalculator';
+import { deleteApprovalLoan, getApprovalLoanDetails, updateLoanApprovalStatus } from '../../../apis/apiInterface';
 
 
 
 
-function LoanDisburseDetail({ lead_data,handleCloseCallback }) {
+function LoanApprovalDetail({ lead_data,handleCloseCallback }) {
     const [activeTab, setActiveTab] = useState('approveLoans'); // Default active tab
     const [activeTabDocs, setActiveTabDocs] = useState('pancard'); // Default active tab
 
@@ -42,8 +42,8 @@ function LoanDisburseDetail({ lead_data,handleCloseCallback }) {
     const deleteCurrentLead = async (lead_current_data) => {
 
       try{
-        const rawJson = {disbursal_loan_id : lead_current_data._id}
-        const response = await deleteDisburseLoan(rawJson);
+        const rawJson = {loan_approval_id : lead_current_data._id}
+        const response = await deleteApprovalLoan(rawJson);
         if(response.code==200){
           window.alert(response.message);
           handleCloseCallback();
@@ -61,11 +61,14 @@ function LoanDisburseDetail({ lead_data,handleCloseCallback }) {
     const callLeadDetailsAPI = async () => {
       try{
         const rawJson = {
-            disbursal_loan_id : lead_data._id
+          loan_approval_id : lead_data._id
         }
-        const leadDetailsResponse = await getDisburseLoanDetail(rawJson);
+        const leadDetailsResponse = await getApprovalLoanDetails(rawJson);
         if(leadDetailsResponse.code==200){
           setLeadCurrentData(leadDetailsResponse.data)
+          window.alert(leadDetailsResponse.data.lead_status);
+          
+          setLeadsStatus(leadDetailsResponse.data.lead_status);
         }else{
           setLeadCurrentData(lead_data);
         }
@@ -97,14 +100,14 @@ function LoanDisburseDetail({ lead_data,handleCloseCallback }) {
 
       try{
         const rawJson = {
-            disbursal_loan_id : updateLeadForm.leadId,
+          loan_approval_id : updateLeadForm.leadId,
           status : leads_status,
           amount : updateLeadForm.amount,
           feesAmount : updateLeadForm.feesAmount,
           interestRate : updateLeadForm.interestRate
         }
         console.log(rawJson);
-        const responseJson = await updateLoanDisbursalStatus(rawJson);
+        const responseJson = await updateLoanApprovalStatus(rawJson);
         if(responseJson.code==200){
           // window.alert(responseJson.message);
           setLeadStatusDialog(false);
@@ -136,8 +139,9 @@ function LoanDisburseDetail({ lead_data,handleCloseCallback }) {
     
       const leadStatusClass = useMemo(() => {
         return `w-[100%] p-6 rounded-b-lg flex items-center justify-center ${
+          lead_current_data.lead_status === 'APPROVED' ? 'bg-green-500' :
+          lead_current_data.lead_status === 'PENDING' ? 'bg-yellow-400' :
           lead_current_data.lead_status === 'REJECTED' ? 'bg-red-400' :
-          lead_current_data.lead_status === 'ONGOING' ? 'bg-blue-800' :
           lead_current_data.lead_status === 'DISBURSED' ? 'bg-blue-800' :
 
           'bg-gray-200' // Default
@@ -156,29 +160,29 @@ function LoanDisburseDetail({ lead_data,handleCloseCallback }) {
     <main >
         
     <div className='relative overflow-auto max-h-[560px]'>
-        <div className='flex flex-row gap-[400px] items-center font-mono rounded-md bg-blue-400 border-2 border-red-500  text-white'>
+        <div className='flex flex-row gap-[400px] items-center font-semibold rounded-md bg-green-900 text-white'>
         <GiFastBackwardButton onClick={() => handleBackpress()} className='text-[50px]  m-[10px] text-white'  />
-        <h2 className='text-2xl'>Loan Disbursal Details</h2>
+        <h2 className='text-2xl'>Loan Approval Details</h2>
 
 
         </div>
         
 
          <div id="lead-status-card" className={leadStatusClass}>
-    <span className="text-xl font-semibold text-white font-mono">Disbursal Loan Status : {lead_current_data.lead_status}</span>
+    <span className="text-xl font-thin font-mono text-white"> Loan Approval Status : {lead_current_data.lead_status}</span>
     </div>
     <div  className='w-fit h-fit rounded-xl m-2 bg-red-600 text-white font-mono text-[21px] p-2'>
     <span className="text-xl font-semibold">EMPLOYEE LEAD TABLE ID : {lead_current_data.employee_lead_id_linker}</span>
     </div>
-        <button onClick={HandleopenDeleteLeadDialog} class="m-[20px] rounded-[2px] bg-rose-900 hover:bg-red-500 text-white font-bold py-2 px-4">DELETE DISBURSAL LOAN</button>
-        <button onClick={handleOpenLeadStatusDialog} class="m-[20px] rounded-[12px] bg-cyan-900 hover:bg-cyan-500 text-white font-bold py-2 px-4">UPDATE DISBURSAL LOAN STATUS</button>
+        <button onClick={HandleopenDeleteLeadDialog} class="m-[20px] rounded-[2px] bg-rose-900 hover:bg-red-500 text-white font-bold py-2 px-4">DELETE APPROVAL LOAN</button>
+        <button onClick={handleOpenLeadStatusDialog} class="m-[20px] rounded-[12px] bg-cyan-900 hover:bg-cyan-500 text-white font-bold py-2 px-4">UPDATE APPROVAL LOAN STATUS</button>
 
 
 
     <div className="flex">
         
-      <div className="w-1/3 h-fit m-[10px] border-r pr-4 bg-white rounded-lg shadow-lg p-6 text-gray-700 text-[12px]">
-        <h2 className='font-semibold text-[#ffffff] bg-blue-900 rounded-lg p-2 text-[15px]'> Basic User Information</h2>
+      <div className="w-1/4 h-fit m-[10px] border-r pr-4 bg-white rounded-lg shadow-lg p-6 text-gray-700 text-[12px]">
+        <h2 className='font-semibold text-[#ffffff] bg-blue-900 rounded-lg p-2 text-[15px] border-5 border-red-700'> Basic User Information</h2>
         <ul>
           <li className='m-[10px]'>First Name {lead_current_data.firstName}</li>
           <li className='m-[10px]'>Last Name {lead_current_data.lastName}</li>
@@ -205,6 +209,10 @@ function LoanDisburseDetail({ lead_data,handleCloseCallback }) {
           
          
         </ul>
+      </div>
+      <div className='w-4/4 pl-4'>
+                <h2 className='font-semibold text-[18px] text-[#ffffff] bg-rose-500 rounded-lg p-6 m-[20px]'>EMI Calculator</h2>
+                <EmiCalculator/>
       </div>
 
         <div className="w-2/3 pl-4">
@@ -293,7 +301,7 @@ function LoanDisburseDetail({ lead_data,handleCloseCallback }) {
             <div>
             <div className="fixed inset-0 flex items-center justify-center z-150">
           <div className="bg-white p-10 rounded-md shadow-md">
-            <h2 className="text-xl font-semibold mb-4 text-gray-800 font-mono">Update Loan Approval Status</h2>
+            <h2 className="text-xl text-white font-semibold mb-4 font-mono border-2 border-amber-500 rounded-xl p-2 bg-emerald-400">Update Loan Approval Status</h2>
             <div className="mb-4">
               <label className="block text-gray-500 font-bold mb-2"
                 
@@ -316,13 +324,14 @@ function LoanDisburseDetail({ lead_data,handleCloseCallback }) {
                 value={leads_status}
                 onChange={(e) => setLeadsStatus(e.target.value)}
               >
-                <option value="ONGOING">ONGOING</option>
+                <option value="APPROVED">APPROVED</option>
                 <option value="REJECTED">REJECTED</option>
+                <option value="DISBURSED">DISBURSED</option>
               </select>
               {showFinancialFields && (
               <>
-               <label className="block text-red-500 font-semibold mb-2">
-                Note (IN ONGOING STATUS) : You will be moving this LEAD to Loan-OnGOING-Table (Loan Master Section)
+               <label className="text-red-500 font-semibold mb-2">
+                {'Note (IN DISBURSEMENT STATUS) : \n  You will be moving this LEAD to Loan-Disburment-Table (Loan Master Section)'}
               </label>
               <label className="block text-gray-500 font-bold mb-2">
                 Loan Approval Amount
@@ -386,4 +395,4 @@ function LoanDisburseDetail({ lead_data,handleCloseCallback }) {
   );
 }
 
-export default LoanDisburseDetail;
+export default LoanApprovalDetail;

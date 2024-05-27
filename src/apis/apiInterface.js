@@ -84,6 +84,31 @@ export const getUserVisits = async (user_attendance_data) => {
   }
 };
 
+
+export const getAllRejectedLoans = async () => {
+  try {
+    const response = await apiService("get-all-rejected-loans", "GET", );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const deleteRejectedLoan = async (rejected_loan_id) => {
+  try {
+    const response = await apiService("delete-rejected-loan", "POST",rejected_loan_id );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getRejectedLoanDetail = async (rejected_loan_id) => {
+  try {
+    const response = await apiService("get-reject-detail", "POST",rejected_loan_id );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 export const deleteLead = async (lead_delete_data) => {
   try {
     const response = await apiService("delete-lead", "POST", lead_delete_data);
@@ -257,6 +282,20 @@ export const updateLeadStatus = async (update_lead_data) => {
     throw error;
   }
 };
+
+export const getRecycleBin = async () => {
+  try {
+    const response = await apiService(
+      "get-recycle-bin",
+      "GET",
+      
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // export const createUserLead = async (formData) => {
 //   try {
 //     const response = await fetch("https://megmab2b.com:3000/create-lead", {

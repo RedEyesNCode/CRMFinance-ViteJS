@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom"; // Import useHistory from react-router-dom
-import LeadDetailsComponent from "../page/LeadDetailsComponent";
-import { deleteApprovalLoan, deleteDisburseLoan, getApprovalLoans, getDisburseLoans } from "../../apis/apiInterface";
-import LoanApprovalDetail from "./LoanApprovalDetail";
+import LeadDetailsComponent from "../LeadDetailsComponent";
+import { deleteApprovalLoan, deleteDisburseLoan, getApprovalLoans, getDisburseLoans } from "../../../apis/apiInterface";
+import LoanApprovalDetail from "../approval/LoanApprovalDetail";
 import LoanDisburseDetail from "./LoanDisburseDetail";
 
 function LoanDisburseTable({ handle }) {
@@ -135,7 +135,7 @@ function LoanDisburseTable({ handle }) {
 
   if(leadsData==null){
     return (
-          <h2 className="text-white text-[21px] font-semibold font-mono bg-green-800 rounded-md p-2">No Disbursement Loans Found !!</h2>
+          <h2 className="m-4 text-white text-[21px] font-semibold font-mono bg-green-800 rounded-md p-2">No Disbursement Loans Found !!</h2>
       )
   }
 

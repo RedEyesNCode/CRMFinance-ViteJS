@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom"; // Import useHistory from react-router-dom
-import LeadDetailsComponent from "../page/LeadDetailsComponent";
-import { deleteApprovalLoan, getApprovalLoans } from "../../apis/apiInterface";
+import LeadDetailsComponent from "../LeadDetailsComponent";
+import { deleteApprovalLoan, getApprovalLoans } from "../../../apis/apiInterface";
 import LoanApprovalDetail from "./LoanApprovalDetail";
 
 function LoanApprovalTable({ handle }) {
@@ -166,7 +166,7 @@ function LoanApprovalTable({ handle }) {
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
               >
-                Lead ID
+                Loan Approval Id
               </th>
               <th
                 scope="col"
