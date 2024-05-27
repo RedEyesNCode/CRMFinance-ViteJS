@@ -88,7 +88,7 @@ const UserTable = () => {
   }, []);
   if(UserData==null){
     return (
-      <main className="h-full w-[90%] px-4 pt-4 bg-[#F4FAFF] rounded-[50px] -ml-[5%]">
+      <main className="h-full w-full">
               <h2 className="text-white text-[21px] font-semibold font-mono bg-blue-800 rounded-md p-2">No Users found !!</h2>
 
         </main>
@@ -124,8 +124,8 @@ const UserTable = () => {
   };
 
   return (
-    <main className="h-full w-[90%] px-4 pt-4 bg-[#F4FAFF] rounded-[50px] -ml-[5%] overflow-hidden">
-    <div className="overflow-hidden rounded-3xl border border-gray-300 relative">
+    <main className="h-full w-full overflow-hidden">
+    <div className="overflow-hidden  border border-gray-300 relative">
       
       {!isUserDetailsFrame && UserData && (<div className="relative overflow-auto max-h-[680px]">
       
@@ -141,7 +141,7 @@ const UserTable = () => {
               </button>
             </div>
 
-        <table className="min-w-full rounded-3xl table-auto p-1">
+        <table className="min-w-full  table-auto p-1">
           <thead className="border">
             <tr>
               <th

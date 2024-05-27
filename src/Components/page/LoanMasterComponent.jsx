@@ -56,7 +56,7 @@ const LoanMasterComponent = () => {
       setDisburseFrame(false);
   }
   return (
-      <main className="h-full w-[90%] px-4 pt-4 bg-[#F4FAFF] rounded-[50px] -ml-[5%]">
+      <main className="h-full w-full">
               {true && (<div>
                 <h2 className="text-white text-[21px] font-semibold font-mono bg-blue-800 rounded-md p-2">Loan Master !!</h2>
               <div className='flex flex-row'>
