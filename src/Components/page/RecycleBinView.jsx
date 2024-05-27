@@ -94,7 +94,7 @@ function RecycleBinView() {
 
   if(recycleItems==null){
     return (
-      <main className="h-full w-[90%] px-4 pt-4 bg-[#F4FAFF] rounded-[50px] -ml-[5%]">
+      <main className="h-full">
               <h2 className="text-white text-[21px] font-semibold font-mono bg-blue-800 rounded-md p-2">No Recycler Items found !!</h2>
 
         </main>
@@ -103,7 +103,7 @@ function RecycleBinView() {
 
   return (
     
-    <main className="h-full w-[90%] px-4 pt-4 bg-[#F4FAFF] rounded-[50px] -ml-[5%] overflow-hidden">
+    <main className="h-full ">
     
     <ToastContainer
     position="top-right"

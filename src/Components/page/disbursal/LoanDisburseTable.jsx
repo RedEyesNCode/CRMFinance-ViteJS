@@ -135,7 +135,7 @@ function LoanDisburseTable({ handle }) {
 
   if(leadsData==null){
     return (
-          <h2 className="text-white text-[21px] font-semibold font-mono bg-green-800 rounded-md p-2">No Disbursement Loans Found !!</h2>
+          <h2 className="m-4 text-white text-[21px] font-semibold font-mono bg-green-800 rounded-md p-2">No Disbursement Loans Found !!</h2>
       )
   }
 
