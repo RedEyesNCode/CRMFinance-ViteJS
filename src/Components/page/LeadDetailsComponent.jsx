@@ -6,8 +6,12 @@ import {
   getLeadDetails,
   updateLeadStatus,
 } from "../../apis/apiInterface";
+import UpdateLead from "../UpdateLead";
 
 function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
+  const [currentData, setCurrentData] = useState({});
+  const [isUpdateLead, setIsUpdateLead] = useState(false);
+
   const [activeTab, setActiveTab] = useState("approveLoans"); // Default active tab
   const [activeTabDocs, setActiveTabDocs] = useState("pancard"); // Default active tab
 
@@ -160,6 +164,17 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
         class="m-[20px] rounded-[2px] bg-rose-900 hover:bg-red-500 text-white font-bold py-2 px-4"
       >
         DELETE LEAD
+      </button>
+      <button
+        onClick={() => {
+          setCurrentData(lead_current_data);
+          setIsUpdateLead(true);
+          console.log(lead_current_data); // Logs the incoming data
+          console.log(currentData); // Logs the incoming data (note this might still show previous state)
+        }}
+        className="m-[20px] rounded-[2px] bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4"
+      >
+        UPDATE LEAD
       </button>
 
       <div className="flex">
@@ -398,99 +413,100 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
       </div>
 
       {openLeadStatusDialog && (
-        <div className='absolute w-full h-full top-0 left-0 flex items-center justify-center'>
-            <div>
+        <div className="absolute w-full h-full top-0 left-0 flex items-center justify-center">
+          <div>
             <div className="fixed inset-0 flex items-center justify-center z-150">
-          <div className="bg-white p-10 rounded-md shadow-md">
-            <h2 className="text-xl font-semibold mb-4 text-gray-800">Update Lead Status</h2>
-            <div className="mb-4">
-              <label className="block text-gray-500 font-bold mb-2"
-                
-              >
-                Lead ID
-              </label>
-              <input 
-              name="leadId" 
-              value={updateLeadForm.leadId} 
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                id="leadId" 
-                type="text" 
-              />
-              <label className="block text-gray-500 font-bold mb-2">
-                Lead Status
-              </label>
-              <select
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-blue-500"
-                id="leadStatus"
-                value={leads_status}
-                onChange={(e) => setLeadsStatus(e.target.value)}
-              >
-                <option value="APPROVED">APPROVED</option>
-                <option value="REJECTED">REJECTED</option>
-                <option value="PENDING">PENDING</option>
-                <option value="DISBURSED">DISBURSED</option>
-              </select>
-              {showFinancialFields && (
-              <>
-               <label className="block text-red-500 font-thin mb-2">
-                Note (IN APPROVED STATUS) : You will be moving this LEAD to Loan-Approval-Table (Loan Master Section)
-              </label>
-              <label className="block text-gray-500 font-bold mb-2">
-                Lead Amount
-              </label>
-              <input
-              name="amount" 
-              value={updateLeadForm.amount}
-              onChange={handleChange}  
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                id="amount" 
-                type="number" 
-              />
-              <label className="block text-gray-500 font-bold mb-2">
-                Fees Amount
-              </label>
-              <input 
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                id="feesAmount" 
-                onChange={handleChange}  
+              <div className="bg-white p-10 rounded-md shadow-md">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800">
+                  Update Lead Status
+                </h2>
+                <div className="mb-4">
+                  <label className="block text-gray-500 font-bold mb-2">
+                    Lead ID
+                  </label>
+                  <input
+                    name="leadId"
+                    value={updateLeadForm.leadId}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="leadId"
+                    type="text"
+                  />
+                  <label className="block text-gray-500 font-bold mb-2">
+                    Lead Status
+                  </label>
+                  <select
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-blue-500"
+                    id="leadStatus"
+                    value={leads_status}
+                    onChange={(e) => setLeadsStatus(e.target.value)}
+                  >
+                    <option value="APPROVED">APPROVED</option>
+                    <option value="REJECTED">REJECTED</option>
+                    <option value="PENDING">PENDING</option>
+                    <option value="DISBURSED">DISBURSED</option>
+                  </select>
+                  {showFinancialFields && (
+                    <>
+                      <label className="block text-red-500 font-thin mb-2">
+                        Note (IN APPROVED STATUS) : You will be moving this LEAD
+                        to Loan-Approval-Table (Loan Master Section)
+                      </label>
+                      <label className="block text-gray-500 font-bold mb-2">
+                        Lead Amount
+                      </label>
+                      <input
+                        name="amount"
+                        value={updateLeadForm.amount}
+                        onChange={handleChange}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="amount"
+                        type="number"
+                      />
+                      <label className="block text-gray-500 font-bold mb-2">
+                        Fees Amount
+                      </label>
+                      <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="feesAmount"
+                        onChange={handleChange}
+                        name="feesAmount"
+                        value={updateLeadForm.feesAmount}
+                        type="number"
+                      />
+                      <label className="block text-gray-500 font-bold mb-2">
+                        Interest Amount
+                      </label>
+                      <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="interestRate"
+                        onChange={handleChange}
+                        name="interestRate"
+                        value={updateLeadForm.interestRate}
+                        type="text"
+                      />
+                    </>
+                  )}
+                </div>
 
-                name="feesAmount" 
-                value={updateLeadForm.feesAmount}  
-                type="number" 
-              />
-              <label className="block text-gray-500 font-bold mb-2">
-                Interest Amount
-              </label>
-              <input 
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                id="interestRate" 
-                onChange={handleChange}  
-
-                name="interestRate" 
-                value={updateLeadForm.interestRate}  
-                type="text" 
-              />
-              
-              </>
-            )}
-              
-            </div>
-
-            <div className="flex justify-end mt-8">
-              <button onClick={handleClose} className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
-                Cancel
-              </button>
-              <button onClick={handleUpdateLeadStatus} className="px-4 py-2 bg-blue-500 text-white rounded-md">
-                Save
-              </button>
+                <div className="flex justify-end mt-8">
+                  <button
+                    onClick={handleClose}
+                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleUpdateLeadStatus}
+                    className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-
-            </div>
-        </div>
-
-    )}
+      )}
       {openDeleteLeadDialog && (
         <div className="fixed z-10 inset-0 overflow-y-auto flex items-center justify-center">
           <div className="bg-white rounded-lg shadow-lg p-8 max-w-sm">
@@ -517,6 +533,8 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
           </div>
         </div>
       )}
+      {isUpdateLead && <><p className="absolute top-8 z-50 left-[70%] cursor-pointer" onClick={()=>setIsUpdateLead(false)}>❌</p> <UpdateLead currentData={currentData} /></>}
+
     </div>
   );
 }

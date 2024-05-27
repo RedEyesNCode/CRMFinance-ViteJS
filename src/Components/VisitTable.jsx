@@ -63,7 +63,7 @@ const VisitTable = () => {
   }, [addVisit]);
 
   return (
-    <main className="relative h-full w-full overflow-y-scroll">
+    <main className="relative h-full w-full overflow-auto">
       <div className="rounded-2xl border border-gray-300 border-r-0 h-full w-full">
         {VisitData ? (
           <div className="w-full text-[20px] font-mono font-bold bg-sky-500 text-white px-5 py-3  flex justify-between items-center">
