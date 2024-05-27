@@ -78,17 +78,17 @@ const AttendenceTable = () => {
   }, []);
   if(AttendenceData==null){
     return (
-      <main className="h-full w-[90%] px-4 pt-4 bg-[#F4FAFF] rounded-[50px] -ml-[5%]">
-              <h2 className="text-white text-[21px] font-semibold font-mono bg-green-800 rounded-md p-2">No Attendance found !!</h2>
+      <main className="h-full w-full ">
+              <h2 className="text-white text-[21px] font-semibold font-mono bg-green-800 rounded-md m-2 p-2">No Attendance found !!</h2>
 
         </main>
   )
   }
 
   return  (
-    <main className="h-full w-[90%] px-4 pt-4 bg-[#F4FAFF] rounded-[50px] -ml-[5%]">
+    <main className="h-full w-full">
 
-    <div className="overflow-hidden rounded-3xl border border-gray-300 relative">
+    <div className="overflow-hidden  border border-gray-300 relative">
     
       <div className="relative overflow-auto h-[680px]">
             <h2 className="m-[10px] text-[20px] font-mono font-bold">View All Attendance</h2>

@@ -12,7 +12,7 @@ const Login = () => {
 
   const handleLogin = () => {
     if (username === "megma" && password === "megma@123") {
-      navigate("/dashboard");
+      navigate("/newnav");
     } else {
       alert("Invalid username or password");
     }

@@ -63,10 +63,10 @@ const VisitTable = () => {
   }, [addVisit]);
 
   return (
-    <main className="relative h-full w-[90%] px-4 pt-3 bg-[#F4FAFF] rounded-[50px] -ml-[5%] overflow-y-scroll">
+    <main className="relative h-full w-full overflow-y-scroll">
       <div className="rounded-2xl border border-gray-300 border-r-0 h-full w-full">
         {VisitData ? (
-          <div className="w-full text-[20px] font-mono font-bold bg-sky-500 text-white px-5 py-3 rounded-md flex justify-between items-center">
+          <div className="w-full text-[20px] font-mono font-bold bg-sky-500 text-white px-5 py-3  flex justify-between items-center">
             View All Visits
             <button
               onClick={() => setaddVisit(true)}

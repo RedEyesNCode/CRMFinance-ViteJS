@@ -4,8 +4,8 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import image1 from "../assets/ic_cpanel.png";
 const AsideDivForDashBoard = () => {
   return (
-    <aside className="h-full px-2 pt-10 w-[16%] bg-blue-100 rounded-xl   flex flex-col gap-10 text-[#879097]">
-      <div className="AdminDetails flex items-center gap-2 h-[15%] w-full  font-bold  ">
+    <aside className="h-full w-[20%] p-5 bg-blue-100 rounded-xl flex flex-col gap-10 text-[#879097] m-8">
+      <div className="AdminDetails flex items-center gap-2   font-bold  ">
         <img className="h-20 w-20 rounded-full" src={Admin} alt="" />
         <div className="mt-5">
           <h1>Mr. Arun</h1>
@@ -13,13 +13,13 @@ const AsideDivForDashBoard = () => {
         </div>
       </div>
       <div>
-        <h2 className="text-[14px] m-2 font-semibold font-mono text-gray-700">
+        <h2 className="text-[14px] font-semibold font-mono text-gray-700">
           Notepad
         </h2>
         <div  className="h-[150px] p-4 bg-white border border-gray-300 rounded-md shadow-md font-mono text-gray-800">
           <textarea className="w-full h-full resize-none outline-none" />
         </div>
-        <div onClick={()=> window.open('https://13.126.22.120:2087/','_blank')} className="mt-10 flex items-center p-4 bg-white border-[2px] border-green-500 rounded-lg shadow-md">
+        <div onClick={()=> window.open('https://13.126.22.120:2087/','_blank')} className="mt-5 flex items-center p-4 bg-white border-[2px] border-green-500 rounded-lg shadow-md">
           <div className="flex-grow">
             <p className="text-gray-800 text-[15px] font-semibold">
               Login to cPanel Account
