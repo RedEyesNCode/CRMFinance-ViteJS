@@ -64,7 +64,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
 
   useEffect(() => {
     callLeadDetailsAPI();
-  }, [openLeadStatusDialog]);
+  }, [openLeadStatusDialog,isUpdateLead]);
 
   const [updateLeadForm, setUpdateLeadForm] = useState({
     leadId: lead_data._id,
@@ -547,7 +547,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
           >
             ❌
           </p>{" "}
-          <UpdateLead currentData={currentData} />
+          <UpdateLead currentData={currentData} close={()=>setIsUpdateLead(false)} />
         </>
       )}
     </main>

@@ -1,14 +1,14 @@
-
 import React, { useEffect, useState } from "react";
 import { RotatingLines } from "react-loader-spinner";
-import { getAllUsers } from "../apis/apiInterface";
+import { getAllUsers, updateUserLead } from "../apis/apiInterface";
 
-const UpdateLead = ({close, currentData }) => {
+const UpdateLead = ({ close, currentData }) => {
   const [formData, setFormData] = useState(currentData ? currentData : {});
   const [AllUsers, setAllUsers] = useState(null);
   const [imageFiles, setImageFiles] = useState([]);
   const [imageUploading, setImageUploading] = useState(false);
   const [formSubmitting, setFormSubmitting] = useState(false);
+  const [UserName, setUserName] = useState(null);
 
   const handleChange = (e) => {
     setFormData({
@@ -53,29 +53,29 @@ const UpdateLead = ({close, currentData }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (imageFiles.length !== 5) {
-      alert("Please upload all required images.");
-      return;
-    }
-
-    setFormSubmitting(true);
+    setFormSubmitting(true); // Start loader
     setImageUploading(true);
-
     const uploadedUrls = await uploadImages();
     setImageUploading(false);
 
     const updatedFormData = {
       ...formData,
       ...uploadedUrls,
+      leadId: formData._id,
     };
 
-    // Add your logic to submit updatedFormData to the server
-    console.log("Form submitted:", updatedFormData);
+    try {
+      const response = await updateUserLead(updatedFormData);
+      console.log("User Lead response -> ", response);
+      // Reset form data or handle success state here
+    } catch (error) {
+      console.error("Error creating user lead", error);
+    }
 
-    setFormSubmitting(false);
+    setFormSubmitting(false); // Stop loader
+    close();
   };
-  
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -93,13 +93,21 @@ const UpdateLead = ({close, currentData }) => {
     fetchUserData();
   }, []);
 
+  useEffect(() => {
+    if (AllUsers && formData.user) {
+      const user = AllUsers.data.find((user) => user._id === formData.user);
+      setUserName(user ? user.fullName : "");
+      console.log(UserName);
+    }
+  }, [AllUsers, formData.user]);
+
   return (
     <div className="absolute w-full h-full top-0 backdrop-blur-2xl overflow-y-scroll rounded-2xl z-10">
       <form
+        onSubmit={handleSubmit}
         className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md"
-        
       >
-        <h2 className="text-2xl font-bold mb-6">User Lead Form</h2>
+        <h2 className="text-2xl font-bold mb-6">Update Lead Form</h2>
 
         <div className="grid grid-cols-1 gap-6">
           <div className="flex justify-between">
@@ -109,6 +117,7 @@ const UpdateLead = ({close, currentData }) => {
               value={formData.firstName}
               type="text"
               name="firstName"
+              required={true}
               placeholder="Enter first name"
             />
             <input
@@ -117,6 +126,7 @@ const UpdateLead = ({close, currentData }) => {
               value={formData.middleName}
               type="text"
               name="middleName"
+              required={true}
               placeholder="Enter middle name"
             />
             <input
@@ -125,6 +135,7 @@ const UpdateLead = ({close, currentData }) => {
               value={formData.lastName}
               type="text"
               name="lastName"
+              required={true}
               placeholder="Enter last name"
             />
           </div>
@@ -135,6 +146,7 @@ const UpdateLead = ({close, currentData }) => {
               value={formData.mobileNumber}
               type="text"
               name="mobileNumber"
+              required={true}
               placeholder="Enter mobile number"
             />
             <input
@@ -143,6 +155,7 @@ const UpdateLead = ({close, currentData }) => {
               value={formData.dob}
               type="date"
               name="dob"
+              required={true}
               placeholder="Enter date of birth"
             />
             <select
@@ -165,6 +178,7 @@ const UpdateLead = ({close, currentData }) => {
               value={formData.gs_loan_number}
               type="text"
               name="gs_loan_number"
+              required={true}
               placeholder="Enter GS loan number"
             />
             <input
@@ -173,6 +187,7 @@ const UpdateLead = ({close, currentData }) => {
               value={formData.gs_loan_password}
               type="text"
               name="gs_loan_password"
+              required={true}
               placeholder="Enter GS loan password"
             />
             <input
@@ -181,31 +196,24 @@ const UpdateLead = ({close, currentData }) => {
               value={formData.gs_loan_userid}
               type="text"
               name="gs_loan_userid"
+              required={true}
               placeholder="Enter GS loan user ID"
             />
           </div>
           <div className="flex justify-between">
-            <select
+            <input
               className="w-56 px-5 py-2 rounded-md border outline-none"
-              onChange={handleChange}
-              value={formData.userId}
-              name="userId"
-              required={true}
-            >
-                <option value="">Select user</option>
-              {AllUsers &&
-                AllUsers.data.map((user) => (
-                  <option key={user._id} value={user._id}>
-                    {user.fullName}
-                  </option>
-                ))}
-            </select>
+              type="text"
+              value={UserName}
+              readOnly
+            />
             <input
               className="px-5 py-2 rounded-md border outline-none"
               onChange={handleChange}
               value={formData.userType}
               type="text"
               name="userType"
+              required={true}
               placeholder="Enter user type"
             />
             <input
@@ -214,6 +222,7 @@ const UpdateLead = ({close, currentData }) => {
               value={formData.monthlySalary}
               type="text"
               name="monthlySalary"
+              required={true}
               placeholder="Enter monthly salary"
             />
           </div>
@@ -225,6 +234,7 @@ const UpdateLead = ({close, currentData }) => {
               value={formData.currentAddress}
               type="text"
               name="currentAddress"
+              required={true}
               placeholder="Enter current address"
             />
             <input
@@ -233,6 +243,7 @@ const UpdateLead = ({close, currentData }) => {
               value={formData.pincode}
               type="text"
               name="pincode"
+              required={true}
               placeholder="Enter pincode"
             />
             <input
@@ -241,6 +252,7 @@ const UpdateLead = ({close, currentData }) => {
               value={formData.state}
               type="text"
               name="state"
+              required={true}
               placeholder="Enter state"
             />
           </div>
@@ -251,6 +263,7 @@ const UpdateLead = ({close, currentData }) => {
               value={formData.relativeName}
               type="text"
               name="relativeName"
+              required={true}
               placeholder="Enter relative name"
             />
             <input
@@ -259,10 +272,11 @@ const UpdateLead = ({close, currentData }) => {
               value={formData.relativeNumber}
               type="text"
               name="relativeNumber"
+              required={true}
               placeholder="Enter relative number"
             />
           </div>
-            <div className="flex justify-between items-center gap-2">
+          <div className="flex justify-between items-center gap-2">
             <label htmlFor="aadhar_front" className="text-gray-600">
               Upload Aadhar Front
             </label>
@@ -342,6 +356,3 @@ const UpdateLead = ({close, currentData }) => {
 };
 
 export default UpdateLead;
-
-
-          
