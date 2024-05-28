@@ -392,6 +392,17 @@ export const createUserLead = async (formData) => {
     throw error;
   }
 };
+export const updateUserLead = async (formData) => {
+  try {
+    const response = await apiService(
+      "update-emp-lead",
+      "POST",formData
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 export const uploadImage = async (Userwithimage) => {
   try {
     console.log(Userwithimage.file);
