@@ -177,7 +177,7 @@ function LoanDisburseDetail({ lead_data,handleCloseCallback }) {
 
     <div className="flex">
         
-      <div className="w-1/3 h-fit m-[10px] border-r pr-4 bg-white rounded-lg shadow-lg p-6 text-gray-700 text-[12px]">
+      <div className="w-1/3 h-fit m-[10px] border-r pr-4 bg-blue-400 rounded-lg shadow-lg p-6 text-gray-700 text-[12px]">
         <h2 className='font-semibold text-[#ffffff] bg-blue-900 rounded-lg p-2 text-[15px]'> Basic User Information</h2>
         <table className="w-full mt-4 bg-white rounded-md shadow-md text-sm  overflow-hidden">
               <tbody>
@@ -262,7 +262,7 @@ function LoanDisburseDetail({ lead_data,handleCloseCallback }) {
               </tbody>
             </table>
       </div>
-      <div className="w-3/3 h-fit m-[10px] border-r pr-4 bg-white rounded-lg shadow-lg p-6 text-gray-700 text-[10px] ">
+      <div className="w-3/3 h-fit m-[10px] border-r pr-4 bg-slate-400 rounded-lg shadow-lg p-6 text-gray-700 text-[10px] ">
         <h2 className='font-semibold text-[#ffffff] bg-green-900 rounded-lg p-2 text-[12px]'>Loan Disbursal Amount Information</h2>
         <table className="w-full mt-4 bg-white rounded-md shadow-md overflow-hidden text-sm">
               <tbody>
