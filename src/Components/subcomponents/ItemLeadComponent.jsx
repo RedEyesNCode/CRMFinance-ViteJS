@@ -117,7 +117,7 @@ function ItemLeadComponent({ userData }) {
   }
 
   return (
-    <div className="rounded-3xl border border-gray-300 h-full w-full relative overflow-y-scroll">
+    <div className="  border-gray-300 h-full w-full relative ">
       {!isLeadDetailFrame && (
         <div className="relative overflow-auto max-h-[680px] ">
           {/* <h2 className="m-[10px] text-[20px]  font-mono font-bold  text-white p-2 rounded-md">View All Leads</h2> */}
