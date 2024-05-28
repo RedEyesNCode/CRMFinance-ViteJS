@@ -153,7 +153,7 @@ function ItemLeadComponent({ userData }) {
                   scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
                 >
-                  User Info
+                  Employee Info
                 </th>
                 <th
                   scope="col"
@@ -226,8 +226,14 @@ function ItemLeadComponent({ userData }) {
                     <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
                       {user._id}
                     </td>
-                    <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                      {user.user}
+                    <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border table-cell">
+                    {user && user.user ? (
+        <>
+            {user.user.fullName} <br/>  {user.user.employeeId}
+        </>
+    ) : (
+        "N/A" // Or any appropriate placeholder for missing data
+    )}
                     </td>
                     <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
                       {user.firstName}
