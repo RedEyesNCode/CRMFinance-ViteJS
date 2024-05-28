@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom"; // Import useHistory from react-router-dom
 import LeadDetailsComponent from "../LeadDetailsComponent";
-import { deleteApprovalLoan, deleteDisburseLoan, deleteOnGoingLoan, getApprovalLoans, getDisburseLoans, getOnGoingLoans } from "../../../apis/apiInterface";
-import LoanApprovalDetail from "../approval/LoanApprovalDetail";
-import LoanDisburseDetail from "../disbursal/LoanDisburseDetail";
-import LoanOngoingDetail from "./LoanOngoingDetail";
+import { deleteApprovalLoan, deleteClosedLoan, deleteDisburseLoan, deleteOnGoingLoan, deleteRejectedLoan, getAllClosedLoans, getAllRejectedLoans, getApprovalLoans, getDisburseLoans, getOnGoingLoans } from "../../../apis/apiInterface";
+import LoanClosedDetail from "./LoanClosedDetail";
 
-function LoanOngoingTable({ handle }) {
+
+function LoanClosedTable({ handle }) {
   const [leadsData, setLeadsData] = useState(null);
   const [currentLead, setcurrentLead] = useState(null)
   const [isLeadDetailFrame,setLeadDetailFrame] = useState(false);
@@ -56,7 +55,7 @@ function LoanOngoingTable({ handle }) {
   }
   const callLeadApi = async () => {
     try {
-      const response = await getOnGoingLoans();
+      const response = await getAllClosedLoans();
       if(response.code==200){
         setLeadsData(response);
 
@@ -86,8 +85,8 @@ function LoanOngoingTable({ handle }) {
 
   const deleteCurrentLead = async () => {
     try{
-      const rawJson = {ongoing_loan_id : currentLead._id}
-      const response = await deleteOnGoingLoan(rawJson);
+      const rawJson = {rejected_loan_id : currentLead._id}
+      const response = await deleteClosedLoan(rawJson);
       if(response.code==200){
         window.alert(response.message);
         handleCloseDeleteLead();
@@ -116,8 +115,8 @@ function LoanOngoingTable({ handle }) {
   useEffect(() => {
     const LeadsData = async () => {
       try {
-        const response = await getOnGoingLoans();
-        if(response.code==200){
+        const response = await getAllClosedLoans();
+        if(response.status=='success'){
           setLeadsData(response);
           console.log(response);
         }else{
@@ -136,23 +135,23 @@ function LoanOngoingTable({ handle }) {
 
   if(leadsData==null){
     return (
-          <h2 className="text-white text-[21px] font-semibold m-5 font-mono bg-orange-500 rounded-md p-2">No On-Going Loans Found !!</h2>
+          <h2 className="m- text-white text-[21px] font-semibold font-mono bg-black rounded-md p-2 m-2">No Closed Loans Found !!</h2>
       )
   }
 
   return (
-    <div className="overflow-hidden border border-gray-300 relative m-2">
+    <div className="overflow-hidden m-2 border border-gray-300 relative">
 
       {!isLeadDetailFrame && (
         <div className="relative overflow-auto max-h-[680px] ">
-                            <h2 className="m-[10px] text-[16px]  font-sans font-bold  text-white p-2 rounded-md border-amber-800 bg-amber-600">Ongoing Loans</h2>
+                            <h2 className="m-[10px] text-[16px]  font-sans font-bold  text-white p-2 rounded-md border-red-800 bg-black">All Closed Loans</h2>
 
-        <table className="min-w-full table-auto p-1">
+        <table className="min-w-full rounded-3xl table-auto p-1">
           <thead className="border">
             <tr>
             <th
                 scope="col"
-                className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border bg-[#F3F4F7]"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border bg-[#F3F4F7]"
               >
                 SNO.
               </th>
@@ -160,93 +159,99 @@ function LoanOngoingTable({ handle }) {
               
               <th
                 scope="col"
-                className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
-                Ongoing Loan ID
+                Reject Loan ID
               </th>
               <th
                 scope="col"
-                className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 User Info
               </th>
               <th
                 scope="col"
-                className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 First Name
               </th>
               <th
                 scope="col"
-                className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 Last Name
               </th>
               <th
                 scope="col"
-                className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 Mobile Number
               </th>
               <th
                 scope="col"
-                className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 Gender
               </th>
               <th
                 scope="col"
-                className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 Status
               </th>
               <th
                 scope="col"
-                className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 Amount
               </th>
               <th
                 scope="col"
-                className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 Created At
               </th>
-             
               <th
                 scope="col"
-                className="px-2 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider border text-center"
+                className="px-1 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border whitespace-nowrap"
+              >
+                Disbursement Date
+              </th>
+              <th
+                scope="col"
+                className="px-2 py-3  text-[11px] font-medium text-gray-500 uppercase tracking-wider border text-center"
               >
                 Action
               </th>
+             
             </tr>
           </thead>
           <tbody className="bg-white  divide-gray-200">
             {leadsData != null &&
               leadsData.data.map((user, index) => (
                 <tr key={index} className={`${index % 2 != 0 ? "bg-[#F4FAFF]" : ""}`}>
-                   <td  className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border bg-[#F3F4F7]">
+                   <td  className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border bg-[#F3F4F7]">
                     {index + 1}.
                   </td>
+                  
                  
                  
-                 
-                  <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
                     {user._id}
                   </td>
-                  <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
                     {user.user}
                   </td>
-                  <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
                     {user.firstName}
                   </td>
-                  <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
                     {user.lastName}
                   </td>
-                  <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
                     {user.mobileNumber}
                   </td>
-                  <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
                     {user.gender}
                   </td>
                   <td
@@ -267,16 +272,19 @@ function LoanOngoingTable({ handle }) {
                     >
                       {user.lead_status}
                     </td>
-                  <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
                     {user.leadAmount}
                   </td>
-                  <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
                     {user.createdAt}
                   </td>
-                  <td className="px-2 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
+                    {user.disbursementDate}
+                  </td>
+                  <td className="px-2 py-4 whitespace-nowrap text-right text-[11px] font-medium flex gap-2">
                     <button
                       onClick={() => handleOpenLeadDetail(user)}
-                      className="text-white bg-yellow-500 px-3 py-2 rounded-xl font-mono border-2"
+                      className="text-white bg-yellow-500 px-3 py-2 rounded-xl font-sans border-2 "
                     >
                       Loan Details
                     </button>
@@ -293,14 +301,13 @@ function LoanOngoingTable({ handle }) {
                       Delete
                     </button>
                   </td>
-                 
                 </tr>
               ))}
           </tbody>
         </table>
       </div>
       )}
-      {isLeadDetailFrame && (<LoanOngoingDetail lead_data={currentLead} handleCloseCallback={() => handleCloseLeadDetail()}/>)}
+      {isLeadDetailFrame && (<LoanClosedDetail lead_data={currentLead} handleCloseCallback={() => handleCloseLeadDetail()}/>)}
       {isLeadDeleteFrame && (
         <div className="fixed z-10 inset-0 overflow-y-auto flex items-center justify-center">
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-sm">
@@ -341,4 +348,4 @@ function LoanOngoingTable({ handle }) {
   );
 }
 
-export default LoanOngoingTable;
+export default LoanClosedTable;

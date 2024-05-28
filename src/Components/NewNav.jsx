@@ -19,6 +19,9 @@ import { GrHadoop } from "react-icons/gr";
 import { RiRecycleFill } from "react-icons/ri";
 import RecycleBinView from "./page/RecycleBinView";
 import FilterDashboardData from "./FilterDashboardData";
+import LoanOngoingTable from "./page/ongoing/LoanOngoingTable";
+import LoanClosedTable from "./page/closed/LoanClosedTable";
+
 
 const NewNav = () => {
   const [selected, setSelected] = useState("Home");
@@ -37,31 +40,13 @@ const NewNav = () => {
         { name: "CRM Employee", component: <LiaDotCircle /> },
       ],
     },
-    {
-      component: <BiMoney />,
-      name: "Loan Master",
-      submenu: [
-        { name: "Approval Loan", component: <LiaDotCircle /> },
-        { name: "Disbursal Loan", component: <LiaDotCircle /> },
-        { name: "Rejected Loans", component: <LiaDotCircle /> },
-        { name: "Closed Loans", component: <LiaDotCircle /> },
-      ],
-    },
-    {
-      component: <BiPackage />,
-      name: "Package Master",
-      submenu: [
-        { name: "Package List", component: <LiaDotCircle /> },
-        { name: "Custom Package", component: <LiaDotCircle /> },
-      ],
-    },
-    {
-      component: <BiPackage />,
-      name: "E-Mandate",
-      submenu: [
-        { name: "Transaction Schedule", component: <LiaDotCircle /> },
-        { name: "Debit Schedule", component: <LiaDotCircle /> },
-        { name: "Remaining Debit Schedule", component: <LiaDotCircle /> },
+    { component: <BiMoney />, name: "Loan Master",submenu : [
+      { name: "Approval Loan", component: <LiaDotCircle /> },
+      { name: "Disbursal Loan", component: <LiaDotCircle /> },
+      { name: "Rejected Loans", component: <LiaDotCircle /> },
+      { name: "Ongoing Loans", component: <LiaDotCircle /> },
+
+      { name: "Closed Loans", component: <LiaDotCircle /> },
 
         { name: "History", component: <LiaDotCircle /> },
       ],
@@ -165,20 +150,23 @@ const NewNav = () => {
         {selected === "Attendence" && <AttendenceTable />}
         {selected === "Loan Master" && <LoanMasterComponent />}
         {selected === "Recycle Bin" && <RecycleBinView />}
+        {selected === "Ongoing Loans" && <LoanOngoingTable/>}
 
         {selected === "Approval Loan" && (
           <div>
             <LoanApprovalTable />
           </div>
-        )}
-        {selected === "Disbursal Loan" && <LoanDisburseTable />}
-        {selected === "Rejected Loans" && <LoanRejectTable />}
-        {selected === "Closed Loans" && (
-          <div className="m-10 bg-black text-white font-mono text-[21px] p-7 rounded-xl">
-            {" "}
-            Under development{" "}
+         )}
+         {selected === "Closed Loans" && (
+          <div>
+            <LoanClosedTable/>
           </div>
-        )}
+         )}
+        {selected === "Disbursal Loan" && (
+        <LoanDisburseTable/> )}
+        {selected === "Rejected Loans" && (
+        <LoanRejectTable/> )}
+
       </div>
     </div>
   );

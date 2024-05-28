@@ -135,92 +135,93 @@ function LoanRejectTable({ handle }) {
 
   if(leadsData==null){
     return (
-          <h2 className="m-4 text-white text-[21px] font-semibold font-mono bg-red-500 rounded-md p-2">No Rejected Loans Found !!</h2>
+          <h2 className="m-4 text-white text-[21px] font-semibold font-mono bg-red-500 rounded-md p-2 m-2">No Rejected Loans Found !!</h2>
       )
   }
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-gray-300 relative">
+    <div className="overflow-hidden m-2 border border-gray-300 relative">
 
       {!isLeadDetailFrame && (
         <div className="relative overflow-auto max-h-[680px] ">
-                            <h2 className="m-[10px] text-[20px]  font-sans font-bold  text-white p-2 rounded-md border-red-800 bg-red-600">All Rejected Loans</h2>
+                            <h2 className="m-[10px] text-[16px]  font-sans font-bold  text-white p-2 rounded-md border-red-800 bg-red-600">All Rejected Loans</h2>
 
         <table className="min-w-full rounded-3xl table-auto p-1">
           <thead className="border">
             <tr>
             <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border bg-[#F3F4F7]"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border bg-[#F3F4F7]"
               >
                 SNO.
               </th>
-            <th
-                scope="col"
-                className="px-6 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider border text-center"
-              >
-                Action
-              </th>
+           
               
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
-                Lead ID
+                Reject Loan ID
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 User Info
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 First Name
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 Last Name
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 Mobile Number
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 Gender
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 Status
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 Amount
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                className="px-2 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
               >
                 Created At
               </th>
               <th
                 scope="col"
-                className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border whitespace-nowrap"
+                className="px-1 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border whitespace-nowrap"
               >
                 Disbursement Date
+              </th>
+              <th
+                scope="col"
+                className="px-2 py-3  text-[11px] font-medium text-gray-500 uppercase tracking-wider border text-center"
+              >
+                Action
               </th>
              
             </tr>
@@ -229,15 +230,63 @@ function LoanRejectTable({ handle }) {
             {leadsData != null &&
               leadsData.data.map((user, index) => (
                 <tr key={index} className={`${index % 2 != 0 ? "bg-[#F4FAFF]" : ""}`}>
-                   <td  className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border bg-[#F3F4F7]">
+                   <td  className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border bg-[#F3F4F7]">
                     {index + 1}.
                   </td>
-                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
+                  
+                 
+                 
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
+                    {user._id}
+                  </td>
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
+                    {user.user}
+                  </td>
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
+                    {user.firstName}
+                  </td>
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
+                    {user.lastName}
+                  </td>
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
+                    {user.mobileNumber}
+                  </td>
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
+                    {user.gender}
+                  </td>
+                  <td
+                      className={`px-2 py-2 whitespace-nowrap text-[11px] font-medium border 
+                ${user.lead_status === "PENDING" ? "bg-yellow-500 text-center text-white" : ""}
+                ${user.lead_status === "DISBURSED" ? "bg-blue-500  text-center text-white" : ""}
+
+                ${
+                  user.lead_status === "APPROVED"
+                    ? "bg-green-500 text-white text-center"
+                    : ""
+                }
+                ${
+                  user.lead_status === "REJECTED"
+                    ? "bg-red-500 text-white "
+                    : ""
+                }`}
+                    >
+                      {user.lead_status}
+                    </td>
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
+                    {user.leadAmount}
+                  </td>
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
+                    {user.createdAt}
+                  </td>
+                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
+                    {user.disbursementDate}
+                  </td>
+                  <td className="px-2 py-4 whitespace-nowrap text-right text-[11px] font-medium flex gap-2">
                     <button
                       onClick={() => handleOpenLeadDetail(user)}
-                      className="text-white bg-red-900 px-3 py-2 rounded-sm font-sans border-2 border-black"
+                      className="text-white bg-yellow-500 px-3 py-2 rounded-xl font-sans border-2 "
                     >
-                      REJECTED LOAN DETAILS
+                      Loan Details
                     </button>
                     <button
                       onClick={() => handleOpenLeadUser(user)}
@@ -249,42 +298,9 @@ function LoanRejectTable({ handle }) {
                       onClick={() => handleOpenDeleteLead(user)}
                       className="text-white bg-[#fa4845] px-3 py-2 rounded-md"
                     >
-                      Delete Rejected Loan
+                      Delete
                     </button>
                   </td>
-                 
-                 
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                    {user._id}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                    {user.user}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                    {user.firstName}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                    {user.lastName}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                    {user.mobileNumber}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                    {user.gender}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                    {user.lead_status}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                    {user.leadAmount}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                    {user.createdAt}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                    {user.disbursementDate}
-                  </td>
-                 
                 </tr>
               ))}
           </tbody>

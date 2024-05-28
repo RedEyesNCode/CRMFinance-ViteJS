@@ -5,7 +5,7 @@ import { RotatingLines } from "react-loader-spinner";
 const CreateNewLead = ({ close }) => {
   const [AllUsers, setAllUsers] = useState(null);
   const [formData, setFormData] = useState({
-    userId: "6650239b0a8f5d8421610a49",
+    userId: "",
     firstName: "",
     lastName: "",
     middleName: "",
@@ -63,7 +63,6 @@ const CreateNewLead = ({ close }) => {
 
     for (const { fieldName, file } of imageFiles) {
       const formData = new FormData();
-      formData.append("user_id", "6650239b0a8f5d8421610a49");
       formData.append("file", file);
 
       try {
@@ -105,6 +104,7 @@ const CreateNewLead = ({ close }) => {
     };
 
     try {
+      console.log(updatedFormData);
       const response = await createUserLead(updatedFormData);
       console.log("User Lead response -> ", response);
       // Reset form data or handle success state here
@@ -232,6 +232,7 @@ const CreateNewLead = ({ close }) => {
               name="userId"
               required={true}
             >
+              <option value="">Select User</option>
               {AllUsers &&
                 AllUsers.data.map((user) => (
                   <option key={user._id} value={user._id}>
