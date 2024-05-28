@@ -256,7 +256,7 @@ function LoanApprovalTable({ handle }) {
                   <td
                       className={`px-2 py-2 whitespace-nowrap text-sm font-medium border 
                 ${user.lead_status === "PENDING" ? "bg-yellow-500 text-center text-white" : ""}
-                ${user.lead_status === "DISBURSED" ? "bg-blue-500 rounded-xl text-center text-white" : ""}
+                ${user.lead_status === "DISBURSED" ? "bg-blue-500 rounded-none text-center text-white" : ""}
 
                 ${
                   user.lead_status === "APPROVED"

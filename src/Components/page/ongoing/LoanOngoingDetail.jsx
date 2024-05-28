@@ -3,6 +3,7 @@ import { FaBeer } from 'react-icons/fa';
 import { GiFastBackwardButton } from 'react-icons/gi';
 import EmiCalculator from '../EmiCalculator';
 import { closeOngoingLoan, deleteApprovalLoan, deleteDisburseLoan, deleteOnGoingLoan, getApprovalLoanDetails, getDisburseLoanDetail, getOngoingLoanDetail, updateLoanApprovalStatus, updateLoanDisbursalStatus } from '../../../apis/apiInterface';
+import { ToastContainer } from 'react-toastify';
 
 
 
@@ -154,24 +155,24 @@ function LoanOngoingDetail({ lead_data,handleCloseCallback }) {
 
   return (
     <main >
-        
-    <div className='relative overflow-auto max-h-[560px]'>
-        <div className='flex flex-row gap-[400px] items-center font-mono rounded-md bg-orange-400 border-2 border-red-500  text-white'>
+        <ToastContainer/>
+    <div className='relative overflow-auto h-full'>
+        <div className='flex items-center font-mono rounded-none bg-orange-400 border-2 border-red-500  text-white'>
         <GiFastBackwardButton onClick={() => handleBackpress()} className='text-[50px]  m-[10px] text-white'  />
-        <h2 className='text-2xl'>On going Loan Details</h2>
+        <h2 className='text-2xl m-auto'>On going Loan Details</h2>
 
 
         </div>
         
 
          <div id="lead-status-card" className={leadStatusClass}>
-    <span className="text-xl font-semibold text-white font-mono">On Going Loan Status : {lead_current_data.lead_status}</span>
+    <h2 className="text-xl font-semibold m-auto text-white font-mono w-fit">Status : {lead_current_data.lead_status}</h2>
     </div>
     <div  className='w-fit h-fit rounded-xl m-2 bg-red-600 text-white font-mono text-[21px] p-2'>
     <span className="text-xl font-semibold">EMPLOYEE LEAD TABLE ID : {lead_current_data.employee_lead_id_linker}</span>
     </div>
-        <button onClick={HandleopenDeleteLeadDialog} class="m-[20px] rounded-[2px] bg-rose-900 hover:bg-red-500 text-white font-bold py-2 px-4">DELETE ONGOING LOAN</button>
-        <button onClick={handleOpenLeadStatusDialog} class="m-[20px] rounded-[12px] bg-cyan-900 hover:bg-yellow-500 text-white font-bold py-10 border-2 border-red-500 px-4">CLOSE THIS LOAN</button>
+        <button onClick={HandleopenDeleteLeadDialog} class="m-[20px] rounded-md bg-rose-900 hover:bg-red-500 font-mono text-white font-bold py-2 px-4">DELETE ONGOING LOAN</button>
+        <button onClick={handleOpenLeadStatusDialog} class="m-[12px] rounded-md bg-cyan-600 hover:bg-yellow-500 text-white font-bold py-2 border-2 border-red-500 px-4">CLOSE THIS LOAN</button>
 
 
 
@@ -179,32 +180,127 @@ function LoanOngoingDetail({ lead_data,handleCloseCallback }) {
         
       <div className="w-1/3 h-fit m-[10px] border-r pr-4 bg-white rounded-lg shadow-lg p-6 text-gray-700 text-[12px]">
         <h2 className='font-semibold text-[#ffffff] bg-blue-900 rounded-lg p-2 text-[15px]'> Basic User Information</h2>
-        <ul>
-          <li className='m-[10px]'>First Name {lead_current_data.firstName}</li>
-          <li className='m-[10px]'>Last Name {lead_current_data.lastName}</li>
-          <li className='font-bold text-[20px] m-[10px]'>Mobile: {lead_current_data.mobileNumber}</li>
-          <li className='m-[10px]'>DOB: {lead_current_data.dob}</li>
-          <li className='m-[10px]'>Gender: {lead_current_data.gender === '2' ? 'Female' : 'Male'}</li> 
-          <li className='m-[10px]'>Pincode: {lead_current_data.pincode} ₹</li>
-          <li className='m-[10px]'>Current Address: {lead_current_data.currentAddress}</li>
-          <li className='m-[10px]'>Relative Name: {lead_current_data.relativeName}</li>
-          <li className='m-[10px]'>Relative Number {lead_current_data.relativeNumber}</li>
-          <li className='m-[10px]'>State {lead_current_data.state}</li>
-          <li className='m-[10px]'>Salary {lead_current_data.monthlySalary}</li>
-         
-        </ul>
+        <table className="w-full mt-4 bg-white rounded-md shadow-md text-sm  overflow-hidden">
+              <tbody>
+                <tr className=" font-bold">
+                  <td className="p-2  w-40   border">Fields </td>
+                  <td className="p-2  w-40  border ">Values</td>
+                </tr>
+                <tr className="">
+                  <td className="p-2  w-40  font-semibold border">
+                    First Name
+                  </td>
+                  <td className="p-2  w-40  border font-semibold">
+                    {lead_current_data.firstName}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">Last Name</td>
+                  <td className="p-2 border w-40 font-semibold">
+                    {lead_current_data.lastName}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">Mobile</td>
+                  <td className="p-2 border w-40   font-semibold">
+                    {lead_current_data.mobileNumber}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">DOB</td>
+                  <td className="p-2 border w-40 font-semibold">
+                    {lead_current_data.dob}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">Gender</td>
+                  <td className="p-2 border w-40 font-semibold">
+                    {lead_current_data.gender === "2" ? "Female" : "Male"}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">Pincode</td>
+                  <td className="p-2 border w-40 font-semibold">
+                    {lead_current_data.pincode}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">
+                    Current Address
+                  </td>
+                  <td className="p-2 border w-40 font-semibold">
+                    {lead_current_data.currentAddress}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">
+                    Relative Name
+                  </td>
+                  <td className="p-2 border w-40 font-semibold">
+                    {lead_current_data.relativeName}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">
+                    Relative Number
+                  </td>
+                  <td className="p-2 border w-40 font-semibold">
+                    {lead_current_data.relativeNumber}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">State</td>
+                  <td className="p-2 border w-40 font-semibold">
+                    {lead_current_data.state}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">Salary</td>
+                  <td className="p-2 border w-40 font-semibold ">
+                    {lead_current_data.monthlySalary}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
       </div>
       <div className="w-3/3 h-fit m-[10px] border-r pr-4 bg-white rounded-lg shadow-lg p-6 text-gray-700 text-[10px] ">
         <h2 className='font-semibold text-[#ffffff] bg-green-900 rounded-lg p-2 text-[12px]'>Lead Amount Information</h2>
-        <ul>
-          <li className='m-[10px]'>Customer Loan Amount ₹{lead_current_data.customerLoanAmount} </li>
-          <li className='m-[10px]'>Employee Approved Amount ₹{lead_current_data.empApproveAmount}</li>
-          <li className='font-bold text-[15px] m-[10px]'>Lead Interest Amount: ₹{lead_current_data.lead_interest_rate}</li>
-          <li className='m-[10px]'>Processing Fees : ₹{lead_current_data.processingFees}</li>
-          <li className='m-[10px]'> Fees Amount ₹{lead_current_data.feesAmount} </li>
-          
-         
-        </ul>
+        <table className="w-full mt-4 bg-white rounded-md shadow-md overflow-hidden text-sm">
+              <tbody>
+                <tr className="border-b">
+                  <td className="p-2 font-semibold">Customer Loan Amount</td>
+                  <td className="p-2 font-semibold">
+                    ₹{lead_current_data.customerLoanAmount}
+                  </td>
+                </tr>
+                <tr className="border-b">
+                  <td className="p-2 font-semibold">
+                    Employee Approved Amount
+                  </td>
+                  <td className="p-2 font-semibold">
+                    ₹{lead_current_data.empApproveAmount}
+                  </td>
+                </tr>
+                <tr className="border-b">
+                  <td className="p-2 font-semibold">Lead Interest Amount</td>
+                  <td className="p-2 font-semibold">
+                    ₹{lead_current_data.lead_interest_rate}
+                  </td>
+                </tr>
+                <tr className="border-b">
+                  <td className="p-2 font-semibold">Processing Fees</td>
+                  <td className="p-2 font-semibold">
+                    ₹{lead_current_data.processingFees}
+                  </td>
+                </tr>
+                <tr className="border-b">
+                  <td className="p-2 font-semibold">Fees Amount</td>
+                  <td className="p-2 font-semibold">
+                    ₹{lead_current_data.feesAmount}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
       </div>
 
         <div className="w-2/3 pl-4">

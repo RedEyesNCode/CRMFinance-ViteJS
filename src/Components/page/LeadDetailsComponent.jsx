@@ -7,6 +7,7 @@ import {
   updateLeadStatus,
 } from "../../apis/apiInterface";
 import UpdateLead from "../UpdateLead";
+import { ToastContainer, toast } from "react-toastify";
 
 function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
   const [isUpdateLead, setIsUpdateLead] = useState(false);
@@ -21,6 +22,8 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
   const [openLeadStatusDialog, setLeadStatusDialog] = useState(false);
 
   const [openDeleteLeadDialog, setDeleteLeadDialog] = useState(false);
+
+  const [selectedFile, setSelectedFile] = useState(null); //Rishi
 
   const HandleopenDeleteLeadDialog = () => {
     setDeleteLeadDialog(true);
@@ -64,7 +67,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
 
   useEffect(() => {
     callLeadDetailsAPI();
-  }, [openLeadStatusDialog,isUpdateLead]);
+  }, [openLeadStatusDialog, isUpdateLead]);
 
   const [updateLeadForm, setUpdateLeadForm] = useState({
     leadId: lead_data._id,
@@ -99,12 +102,14 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
       };
       console.log(rawJson);
       const responseJson = await updateLeadStatus(rawJson);
-      if (responseJson.code == 200) {
-        // window.alert(responseJson.message);
+      console.log(responseJson);
+      if (responseJson.code === 200) {
+        toast.success(responseJson.message)
         setLeadStatusDialog(false);
       } else {
         setLeadCurrentData(lead_data);
-        window.alert("Lead Status NOT Updated !");
+        
+        toast.error(responseJson.message);
       }
     } catch (error) {
       console.log(error);
@@ -127,7 +132,6 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
   }, [lead_current_data]);
 
   const showFinancialFields = leads_status === "APPROVED";
-
   if (lead_current_data == null) {
     return (
       <h2 className="text-white text-[21px] font-semibold font-mono bg-green-800 rounded-md p-2">
@@ -136,181 +140,308 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
     );
   }
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type !== "application/pdf") {
+      alert("Please upload file in PDF format only");
+      event.target.value = ""; // Clear the input value
+      setSelectedFile(null);
+      return;
+    }
+    setSelectedFile(file);
+  };
+
+  const handleUploadClick = async () => {
+    if (!selectedFile) {
+      alert("No file selected");
+      return;
+    }
+    const obj = {
+      leadId: lead_current_data._id,
+    };
+    console.log("Top obj ", obj);
+
+    const formData = new FormData();
+    formData.append("cibil_pdf", selectedFile);
+    formData.append("leadId", lead_current_data._id);
+    for (let [key, value] of formData.entries()) {
+      if (key === "cibil_pdf") {
+        console.log(`${key}:`, value.name); // Log file name for the file object
+      } else {
+        console.log(`${key}:`, value);
+      }
+    }
+    const obj2 = {
+      ...formData,
+      ...obj,
+    };
+    console.log("Bottom obj ", obj2);
+    try {
+      const response = await fetch(
+        "https://megmab2b.com:3000/upload-lead-pdf",
+        {
+          method: "POST",
+          body: obj2,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log(data);
+      // Reset the selected file after successful upload
+      setSelectedFile(null);
+      // alert("File uploaded successfully");
+    } catch (error) {
+      console.error("PDF upload failed", error);
+      alert("File upload failed");
+    }
+  };
   return (
     <main>
-      <div className="relative">
-        <div className="flex flex-row gap-[400px] items-center font-semibold rounded-md bg-blue-600 text-white">
+      <ToastContainer/>
+      <div className="relative ">
+        <div className="flex items-center font-semibold  bg-blue-600 text-white rounded-none">
           <GiFastBackwardButton
             onClick={() => handleBackpress()}
-            className="text-[50px]  m-[10px] text-white"
+            className="text-[50px]  m-[10px] text-white "
           />
-          <h2 className="text-2xl">Lead Details Information</h2>
+          <h2 className="text-2xl m-auto">Lead Details Information </h2>
         </div>
 
-        <div id="lead-status-card" className={leadStatusClass}>
+        <div id="lead-status-card" className={`${leadStatusClass} text-white`}>
           <span className="text-xl font-semibold">
             Lead Status : {lead_current_data.lead_status}
           </span>
         </div>
         <button
           onClick={handleOpen}
-          class="m-[20px] rounded-[20px] bg-blue-500 hover:bg-purple-900 text-white font-bold py-2 px-4"
+          class="m-[20px] rounded-md bg-blue-500 hover:bg-purple-900 text-white font-bold py-2 px-4"
         >
           Update Lead Status
         </button>
 
         <button
           onClick={HandleopenDeleteLeadDialog}
-          class="m-[20px] rounded-[2px] bg-rose-900 hover:bg-red-500 text-white font-bold py-2 px-4"
+          class="m-[20px] rounded-md bg-rose-900 hover:bg-red-500 text-white font-bold py-2 px-4"
         >
           DELETE LEAD
         </button>
         <button
-        onClick={() => {
-          setCurrentData(lead_current_data);
-          setIsUpdateLead(true);
-          console.log(lead_current_data); // Logs the incoming data
-          console.log(currentData); // Logs the incoming data (note this might still show previous state)
-        }}
-        className="m-[20px] rounded-[2px] bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4"
-      >
-        UPDATE LEAD
-      </button>
-
+          onClick={() => {
+            setCurrentData(lead_current_data);
+            setIsUpdateLead(true);
+            console.log(lead_current_data); // Logs the incoming data
+            console.log(currentData); // Logs the incoming data (note this might still show previous state)
+          }}
+          className="m-[20px] rounded-md bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4"
+        >
+          UPDATE LEAD
+        </button>
 
         <div className="flex">
-          <div className="w-1/3 m-[10px] border-r pr-4 bg-white rounded-lg shadow-lg p-6 text-gray-700 text-[12px]">
+          <div className="w-1/3 m-[5px] border-r pr-4 rounded-lg shadow-lg p-6 text-gray-700 text-[12px] bg-blue-500">
             <h2 className="font-semibold text-[#ffffff] bg-blue-900 rounded-lg p-2 text-[15px]">
-              {" "}
               Basic User Information
             </h2>
-            <ul>
-              <li className="m-[10px]">
-                First Name {lead_current_data.firstName}
-              </li>
-              <li className="m-[10px]">
-                Last Name {lead_current_data.lastName}
-              </li>
-              <li className="font-bold text-[20px] m-[10px]">
-                Mobile: {lead_current_data.mobileNumber}
-              </li>
-              <li className="m-[10px]">DOB: {lead_current_data.dob}</li>
-              <li className="m-[10px]">
-                Gender: {lead_current_data.gender === "2" ? "Female" : "Male"}
-              </li>
-              <li className="m-[10px]">
-                Pincode: {lead_current_data.pincode} ₹
-              </li>
-              <li className="m-[10px]">
-                Current Address: {lead_current_data.currentAddress}
-              </li>
-              <li className="m-[10px]">
-                Relative Name: {lead_current_data.relativeName}
-              </li>
-              <li className="m-[10px]">
-                Relative Number {lead_current_data.relativeNumber}
-              </li>
-              <li className="m-[10px]">State {lead_current_data.state}</li>
-              <li className="m-[10px]">
-                Salary {lead_current_data.monthlySalary}
-              </li>
-            </ul>
+            <table className="w-full mt-4 bg-white rounded-md shadow-md text-sm  overflow-hidden">
+              <tbody>
+                <tr className=" font-bold">
+                  <td className="p-2  w-40   border">Fields </td>
+                  <td className="p-2  w-40  border ">Values</td>
+                </tr>
+                <tr className="">
+                  <td className="p-2  w-40  font-semibold border">
+                    First Name
+                  </td>
+                  <td className="p-2  w-40  border font-semibold">
+                    {lead_current_data.firstName}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">Last Name</td>
+                  <td className="p-2 border w-40 font-semibold">
+                    {lead_current_data.lastName}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">Mobile</td>
+                  <td className="p-2 border w-40   font-semibold">
+                    {lead_current_data.mobileNumber}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">DOB</td>
+                  <td className="p-2 border w-40 font-semibold">
+                    {lead_current_data.dob}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">Gender</td>
+                  <td className="p-2 border w-40 font-semibold">
+                    {lead_current_data.gender === "2" ? "Female" : "Male"}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">Pincode</td>
+                  <td className="p-2 border w-40 font-semibold">
+                    {lead_current_data.pincode}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">
+                    Current Address
+                  </td>
+                  <td className="p-2 border w-40 font-semibold">
+                    {lead_current_data.currentAddress}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">
+                    Relative Name
+                  </td>
+                  <td className="p-2 border w-40 font-semibold">
+                    {lead_current_data.relativeName}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">
+                    Relative Number
+                  </td>
+                  <td className="p-2 border w-40 font-semibold">
+                    {lead_current_data.relativeNumber}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">State</td>
+                  <td className="p-2 border w-40 font-semibold">
+                    {lead_current_data.state}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="p-2 border w-40  font-semibold">Salary</td>
+                  <td className="p-2 border w-40 font-semibold ">
+                    {lead_current_data.monthlySalary}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div className="w-3/3 m-[10px] border-r pr-4 bg-white rounded-lg shadow-lg p-6 text-gray-700 text-[10px] ">
-            <h2 className="font-semibold text-[#ffffff] bg-green-900 rounded-lg p-2 text-[12px]">
+          <div className="w-[20%] m-[5px] border-r pr-4 bg-gray-200 rounded-lg shadow-lg p-6 text-gray-700 text-[12px] ">
+            <h2 className="font-semibold text-[#ffffff] bg-green-700 rounded-lg p-2 text-[15px]">
               Lead Amount Information
             </h2>
-            <ul>
-              <li className="m-[10px]">
-                Customer Loan Amount ₹{lead_current_data.customerLoanAmount}{" "}
-              </li>
-              <li className="m-[10px]">
-                Employee Approved Amount ₹{lead_current_data.empApproveAmount}
-              </li>
-              <li className="font-bold text-[15px] m-[10px]">
-                Lead Interest Amount: ₹{lead_current_data.lead_interest_rate}
-              </li>
-              <li className="m-[10px]">
-                Processing Fees : ₹{lead_current_data.processingFees}
-              </li>
-              <li className="m-[10px]">
-                {" "}
-                Fees Amount ₹{lead_current_data.feesAmount}{" "}
-              </li>
-            </ul>
+            <table className="w-full mt-4 bg-white rounded-md shadow-md overflow-hidden text-sm">
+              <tbody>
+                <tr className="border-b">
+                  <td className="p-2 font-semibold">Customer Loan Amount</td>
+                  <td className="p-2 font-semibold">
+                    ₹{lead_current_data.customerLoanAmount}
+                  </td>
+                </tr>
+                <tr className="border-b">
+                  <td className="p-2 font-semibold">
+                    Employee Approved Amount
+                  </td>
+                  <td className="p-2 font-semibold">
+                    ₹{lead_current_data.empApproveAmount}
+                  </td>
+                </tr>
+                <tr className="border-b">
+                  <td className="p-2 font-semibold">Lead Interest Amount</td>
+                  <td className="p-2 font-semibold">
+                    ₹{lead_current_data.lead_interest_rate}
+                  </td>
+                </tr>
+                <tr className="border-b">
+                  <td className="p-2 font-semibold">Processing Fees</td>
+                  <td className="p-2 font-semibold">
+                    ₹{lead_current_data.processingFees}
+                  </td>
+                </tr>
+                <tr className="border-b">
+                  <td className="p-2 font-semibold">Fees Amount</td>
+                  <td className="p-2 font-semibold">
+                    ₹{lead_current_data.feesAmount}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           <div className="w-2/3 pl-4">
-            <h2 className="font-semibold text-[18px] text-[#ffffff] bg-blue-500 rounded-lg p-6 m-[20px]">
-              Loan Details
-            </h2>
+            <div className="Loan Detail Component ">
+              <h2 className="font-semibold text-[18px] text-[#ffffff] bg-blue-500 rounded-lg p-6 m-[20px]">
+                Loan Details
+              </h2>
+              <div className="flex space-x-4 mb-4 ml-[20px]">
+                <button
+                  className={`px-4 py-2 rounded-md ${
+                    activeTab === "approveLoans"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-400"
+                  }`}
+                  onClick={() => setActiveTab("approveLoans")}
+                >
+                  Approve Loans
+                </button>
+                <button
+                  className={`px-4 py-2 rounded-md ${
+                    activeTab === "ongoing"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-400"
+                  }`}
+                  onClick={() => setActiveTab("ongoing")}
+                >
+                  Ongoing
+                </button>
+                <button
+                  className={`px-4 py-2 rounded-md ${
+                    activeTab === "closed"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-400"
+                  }`}
+                  onClick={() => setActiveTab("closed")}
+                >
+                  Closed
+                </button>
+                {/* Add more buttons for 'ENACH' and 'UPDATE KYC' */}
+              </div>
+              <div className="ml-[20px]">
+                {activeTab === "approveLoans" && (
+                  <div className="p-4 bg-white rounded-md shadow-md">
+                    <h2 className="text-xl font-semibold mb-2">
+                      User Approved Loans
+                    </h2>
+                  </div>
+                )}
+                {activeTab === "ongoing" && (
+                  <div className="p-4 bg-white rounded-md shadow-md">
+                    <h2 className="text-xl font-semibold mb-2">
+                      User On-going loans
+                    </h2>
+                  </div>
+                )}
+                {activeTab === "closed" && (
+                  <div className="p-4 bg-white rounded-md shadow-md">
+                    <h2 className="text-xl font-semibold mb-2">
+                      User Closed loans
+                    </h2>
+                  </div>
+                )}
+                {/* Add content for 'ENACH' and 'UPDATE KYC' tabs */}
+              </div>
+            </div>
 
-            <div className="flex space-x-4 mb-4">
-              {" "}
-              {/* Tab bar */}
-              <button
-                className={`px-4 py-2 rounded-md ${
-                  activeTab === "approveLoans"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-400"
-                }`}
-                onClick={() => setActiveTab("approveLoans")}
-              >
-                Approve Loans
-              </button>
-              <button
-                className={`px-4 py-2 rounded-md ${
-                  activeTab === "ongoing"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-400"
-                }`}
-                onClick={() => setActiveTab("ongoing")}
-              >
-                Ongoing
-              </button>
-              <button
-                className={`px-4 py-2 rounded-md ${
-                  activeTab === "closed"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-400"
-                }`}
-                onClick={() => setActiveTab("closed")}
-              >
-                Closed
-              </button>
-              {/* Add more buttons for 'ENACH' and 'UPDATE KYC' */}
-            </div>
-            <div>
-              {activeTab === "approveLoans" && (
-                <div className="p-4 bg-white rounded-md shadow-md">
-                  <h2 className="text-xl font-semibold mb-2">
-                    User Approved Loans
-                  </h2>
-                </div>
-              )}
-              {activeTab === "ongoing" && (
-                <div className="p-4 bg-white rounded-md shadow-md">
-                  <h2 className="text-xl font-semibold mb-2">
-                    User On-going loans
-                  </h2>
-                </div>
-              )}
-              {activeTab === "closed" && (
-                <div className="p-4 bg-white rounded-md shadow-md">
-                  <h2 className="text-xl font-semibold mb-2">
-                    User Closed loans
-                  </h2>
-                </div>
-              )}
-              {/* Add content for 'ENACH' and 'UPDATE KYC' tabs */}
-            </div>
+
+            
             <h2 className="font-semibold text-[18px] text-[#ffffff] bg-purple-500 rounded-lg p-6 m-[20px]">
               Leads-KYC Documents
             </h2>
 
-            <div className="flex space-x-4 mb-4">
-              {" "}
-              {/* Tab bar */}
+            <div className="flex space-x-4 mb-4 ml-[20px]">
               <button
                 className={`px-4 py-2 rounded-md ${
                   activeTabDocs === "pancard"
@@ -351,11 +482,23 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
               >
                 Adhar Back
               </button>
+              {leads_status === "APPROVED" && (
+                <button
+                  className={`px-4 py-2 rounded-md ${
+                    activeTabDocs === "upload_pdf"
+                      ? "bg-purple-500 text-white"
+                      : "bg-gray-400"
+                  }`}
+                  onClick={() => setActiveTabDocs("upload_pdf")}
+                >
+                  Upload Cibil Pdf
+                </button>
+              )}
               {/* Add more buttons for 'ENACH' and 'UPDATE KYC' */}
             </div>
 
             {/* Tab Content */}
-            <div className="m-[5px]">
+            <div className="m-[5px] ml-[10px]">
               {activeTabDocs === "pancard" && (
                 <div className="p-4 bg-white  shadow-md m-[10px] border-[2px] rounded-3xl border-green-500">
                   <h2 className="text-xl font-semibold mb-2 text-gray-400 text-[20px]">
@@ -410,6 +553,26 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                     className="h-[100px] w-[100px] rounded-2xl object-cover"
                     src={lead_data.aadhar_back}
                   />
+                </div>
+              )}
+              {activeTabDocs === "upload_pdf" && (
+                <div className="p-4 bg-white shadow-md border-[2px] rounded-3xl border-green-500">
+                  <h2 className="text-xl font-semibold mb-2 text-gray-400">
+                    Upload Cibil Pdf here:
+                  </h2>
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    className="mt-5"
+                    onChange={handleFileChange}
+                  />
+                  <button
+                    onClick={handleUploadClick}
+                    className="mt-5 px-4 py-2 bg-green-500 text-white rounded"
+                    disabled={!selectedFile}
+                  >
+                    Upload
+                  </button>
                 </div>
               )}
               {/* Add content for 'ENACH' and 'UPDATE KYC' tabs */}
@@ -547,7 +710,10 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
           >
             ❌
           </p>{" "}
-          <UpdateLead currentData={currentData} close={()=>setIsUpdateLead(false)} />
+          <UpdateLead
+            currentData={currentData}
+            close={() => setIsUpdateLead(false)}
+          />
         </>
       )}
     </main>

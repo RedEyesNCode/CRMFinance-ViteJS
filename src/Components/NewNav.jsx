@@ -18,10 +18,10 @@ import { MdReport } from "react-icons/md";
 import { GrHadoop } from "react-icons/gr";
 import { RiRecycleFill } from "react-icons/ri";
 import RecycleBinView from "./page/RecycleBinView";
+import FilterDashboardData from "./FilterDashboardData";
 import LoanOngoingTable from "./page/ongoing/LoanOngoingTable";
 import LoanClosedTable from "./page/closed/LoanClosedTable";
 
-import FilterDashboardData from "./FilterDashboardData";
 
 const NewNav = () => {
   const [selected, setSelected] = useState("Home");
@@ -47,25 +47,6 @@ const NewNav = () => {
       { name: "Ongoing Loans", component: <LiaDotCircle /> },
 
       { name: "Closed Loans", component: <LiaDotCircle /> },
-    ]
-  },
-
-    
-    {
-      component: <BiPackage />,
-      name: "Package Master",
-      submenu: [
-        { name: "Package List", component: <LiaDotCircle /> },
-        { name: "Custom Package", component: <LiaDotCircle /> },
-      ],
-    },
-    {
-      component: <BiPackage />,
-      name: "E-Mandate",
-      submenu: [
-        { name: "Transaction Schedule", component: <LiaDotCircle /> },
-        { name: "Debit Schedule", component: <LiaDotCircle /> },
-        { name: "Remaining Debit Schedule", component: <LiaDotCircle /> },
 
         { name: "History", component: <LiaDotCircle /> },
       ],
@@ -185,8 +166,6 @@ const NewNav = () => {
         <LoanDisburseTable/> )}
         {selected === "Rejected Loans" && (
         <LoanRejectTable/> )}
-
-        
 
       </div>
     </div>
