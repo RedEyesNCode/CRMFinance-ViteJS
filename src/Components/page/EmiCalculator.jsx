@@ -23,7 +23,7 @@ function EmiCalculator({}) {
 
   useEffect(() => {
     calculateFlatEMI(); // Calculate EMI on component mount and when loanDetails change
-  }, [loanDetails]); // Dependency array ensures calculation on relevant changes
+  }, []); // Dependency array ensures calculation on relevant changes
 
   const calculateFlatEMI = () => {
     const { amount, interestRate, tenure } = loanDetails;
@@ -108,7 +108,7 @@ function EmiCalculator({}) {
 
       </div>
 
-      <table className="emi-table rounded-2xl border-2 border-amber-400 overflow-hidden m-10">
+      <table className="emi-table rounded-2xl border-2 border-amber-400 overflow-hidden ">
         
         <tbody>
           {/* Loan Details Section */}
