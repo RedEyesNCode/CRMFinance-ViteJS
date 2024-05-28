@@ -253,6 +253,7 @@ function LoanOngoingTable({ handle }) {
                       className={`px-2 py-2 whitespace-nowrap text-[11px] font-medium border 
                 ${user.lead_status === "PENDING" ? "bg-yellow-500 text-center text-white" : ""}
                 ${user.lead_status === "DISBURSED" ? "bg-blue-500  text-center text-white" : ""}
+                ${user.lead_status === "CLOSED" ? "bg-slate-500  text-center text-white" : ""}
 
                 ${
                   user.lead_status === "APPROVED"

@@ -3,7 +3,7 @@ import { FaBeer } from 'react-icons/fa';
 import { GiFastBackwardButton } from 'react-icons/gi';
 import EmiCalculator from '../EmiCalculator';
 import { closeOngoingLoan, deleteApprovalLoan, deleteDisburseLoan, deleteOnGoingLoan, getApprovalLoanDetails, getDisburseLoanDetail, getOngoingLoanDetail, updateLoanApprovalStatus, updateLoanDisbursalStatus } from '../../../apis/apiInterface';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 
 
 
@@ -114,7 +114,8 @@ function LoanOngoingDetail({ lead_data,handleCloseCallback }) {
 
         }else{
           setLeadCurrentData(lead_data);
-          window.alert('Lead Status NOT Updated !')
+          toast.error(responseJson.message);
+
         }
       }catch(error){
         console.log(error);
@@ -178,7 +179,7 @@ function LoanOngoingDetail({ lead_data,handleCloseCallback }) {
 
     <div className="flex">
         
-      <div className="w-1/3 h-fit m-[10px] border-r pr-4 bg-white rounded-lg shadow-lg p-6 text-gray-700 text-[12px]">
+      <div className="w-1/3 h-fit m-[10px] border-r pr-4 bg-blue-400 rounded-lg shadow-lg p-6 text-gray-700 text-[12px]">
         <h2 className='font-semibold text-[#ffffff] bg-blue-900 rounded-lg p-2 text-[15px]'> Basic User Information</h2>
         <table className="w-full mt-4 bg-white rounded-md shadow-md text-sm  overflow-hidden">
               <tbody>
@@ -264,7 +265,7 @@ function LoanOngoingDetail({ lead_data,handleCloseCallback }) {
             </table>
       </div>
       <div className="w-3/3 h-fit m-[10px] border-r pr-4 bg-white rounded-lg shadow-lg p-6 text-gray-700 text-[10px] ">
-        <h2 className='font-semibold text-[#ffffff] bg-green-900 rounded-lg p-2 text-[12px]'>Lead Amount Information</h2>
+        <h2 className='font-semibold text-[#ffffff] bg-green-900 rounded-lg p-2 text-[12px]'>Loan Ongoing Amount Information</h2>
         <table className="w-full mt-4 bg-white rounded-md shadow-md overflow-hidden text-sm">
               <tbody>
                 <tr className="border-b">
@@ -306,7 +307,7 @@ function LoanOngoingDetail({ lead_data,handleCloseCallback }) {
         <div className="w-2/3 pl-4">
        
 
-        <h2 className='font-semibold text-[18px] text-[#ffffff] bg-purple-500 rounded-lg p-6 m-[20px]'>Leads-KYC Documents</h2>
+        <h2 className='font-semibold text-[18px] text-[#ffffff] bg-slate-800 rounded-lg p-6 m-[20px]'>Ongoing Loan Documents</h2>
 
         <div className="flex space-x-4 mb-4"> {/* Tab bar */}
           <button 

@@ -3,6 +3,7 @@ import { FaBeer } from 'react-icons/fa';
 import { GiFastBackwardButton } from 'react-icons/gi';
 import EmiCalculator from '../EmiCalculator';
 import { deleteApprovalLoan, deleteDisburseLoan, deleteRejectedLoan, getApprovalLoanDetails, getClosedLoanDetail, getDisburseLoanDetail,  getRejectedLoanDetail, updateLoanApprovalStatus, updateLoanDisbursalStatus } from '../../../apis/apiInterface';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 
@@ -113,7 +114,8 @@ function LoanClosedDetail({ lead_data,handleCloseCallback }) {
 
         }else{
           setLeadCurrentData(lead_data);
-          window.alert('Lead Status NOT Updated !')
+          toast.error(responseJson.message);
+          
         }
       }catch(error){
         console.log(error);
@@ -154,6 +156,7 @@ function LoanClosedDetail({ lead_data,handleCloseCallback }) {
 
   return (
     <main >
+      <ToastContainer/>
         
     <div className='relative overflow-auto h-full'>
         <div className='flex flex-row items-center font-mono rounded-none bg-black border-2 border-slate-500  text-white'>

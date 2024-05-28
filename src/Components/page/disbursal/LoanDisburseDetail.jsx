@@ -171,7 +171,7 @@ function LoanDisburseDetail({ lead_data,handleCloseCallback }) {
     <span className="text-xl font-semibold">EMPLOYEE LEAD TABLE ID : {lead_current_data.employee_lead_id_linker}</span>
     </div>
         <button onClick={HandleopenDeleteLeadDialog} class="m-[20px] rounded-[2px] bg-rose-900 hover:bg-red-500 text-white font-bold py-2 px-4">DELETE DISBURSAL LOAN</button>
-        <button onClick={handleOpenLeadStatusDialog} class="m-[20px] rounded-[12px] bg-cyan-900 hover:bg-cyan-500 text-white font-bold py-2 px-4">UPDATE DISBURSAL LOAN STATUS</button>
+        {/* <button onClick={handleOpenLeadStatusDialog} class="m-[20px] rounded-[12px] bg-cyan-900 hover:bg-cyan-500 text-white font-bold py-2 px-4">UPDATE DISBURSAL LOAN STATUS</button> */}
 
 
 
