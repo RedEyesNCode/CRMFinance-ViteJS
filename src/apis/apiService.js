@@ -6,9 +6,7 @@ const BASE_URL = "https://megmab2b.com:3000/";
 const apiService = async (endpoint, method = "GET", data = null) => {
   const url = BASE_URL + endpoint;
   const headers = {
-    "Content-Type": "application/json",
-    // 'Content-Type': 'multipart/form-data'
-    // Add any other headers if needed
+    "Content-Type": "application/json"
   };
 
   const options = {

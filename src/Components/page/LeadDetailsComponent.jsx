@@ -5,6 +5,8 @@ import {
   deleteLead,
   getLeadDetails,
   updateLeadStatus,
+  uploadImage
+
 } from "../../apis/apiInterface";
 import UpdateLead from "../UpdateLead";
 import { ToastContainer, toast } from "react-toastify";
@@ -141,12 +143,12 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    if (file && file.type !== "application/pdf") {
-      alert("Please upload file in PDF format only");
-      event.target.value = ""; // Clear the input value
-      setSelectedFile(null);
-      return;
-    }
+    // if (file && file.type !== "application/pdf") {
+    //   alert("Please upload file in PDF format only");
+    //   event.target.value = ""; // Clear the input value
+    //   setSelectedFile(null);
+    //   return;
+    // }
     setSelectedFile(file);
   };
 
@@ -155,49 +157,41 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
       alert("No file selected");
       return;
     }
-    const obj = {
-      leadId: lead_current_data._id,
-    };
-    console.log("Top obj ", obj);
-
+    
     const formData = new FormData();
-    formData.append("cibil_pdf", selectedFile);
-    formData.append("leadId", lead_current_data._id);
-    for (let [key, value] of formData.entries()) {
-      if (key === "cibil_pdf") {
-        console.log(`${key}:`, value.name); // Log file name for the file object
-      } else {
-        console.log(`${key}:`, value);
-      }
-    }
-    const obj2 = {
-      ...formData,
-      ...obj,
-    };
-    console.log("Bottom obj ", obj2);
+    formData.append("file", selectedFile);
+    // formData.append("leadId", lead_current_data._id);
+    formData.forEach((e)=> console.log(e))
+  
     try {
-      const response = await fetch(
-        "https://megmab2b.com:3000/upload-lead-pdf",
-        {
-          method: "POST",
-          body: obj2,
-        }
-      );
-
+      const response = await fetch("https://megmab2b.com:3000/upload-file", {
+        method: "POST",
+        body: formData,
+      });
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
       const data = await response.json();
-      console.log(data);
-      // Reset the selected file after successful upload
+      const sendingURL = await fetch("https://megmab2b.com:3000/upload-lead-pdf",{
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({leadId: lead_current_data._id, leadCibilUrl: data.message}),
+      })
+      if (!sendingURL.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const sendingURLResult = await sendingURL.json();
+      toast.success(sendingURLResult.message)
       setSelectedFile(null);
-      // alert("File uploaded successfully");
     } catch (error) {
       console.error("PDF upload failed", error);
       alert("File upload failed");
     }
   };
+  
+
   return (
     <main>
       <ToastContainer />
@@ -559,7 +553,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                   </h2>
                   <input
                     type="file"
-                    accept="application/pdf"
+                    // accept="application/pdf"
                     className="mt-5"
                     onChange={handleFileChange}
                   />

@@ -403,10 +403,10 @@ export const updateUserLead = async (formData) => {
     throw error;
   }
 };
-export const uploadImage = async (Userwithimage) => {
+export const uploadImage = async (formData) => {
   try {
-    console.log(Userwithimage.file);
-    const response = await apiService("upload-file", "POST", Userwithimage);
+    console.log(formData);
+    const response = await apiService("upload-file", "POST", formData);
     return response;
   } catch (error) {
     throw error;
