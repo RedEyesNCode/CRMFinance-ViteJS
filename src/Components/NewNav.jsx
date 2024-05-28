@@ -22,7 +22,6 @@ import FilterDashboardData from "./FilterDashboardData";
 import LoanOngoingTable from "./page/ongoing/LoanOngoingTable";
 import LoanClosedTable from "./page/closed/LoanClosedTable";
 
-
 const NewNav = () => {
   const [selected, setSelected] = useState("Home");
   const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -40,13 +39,16 @@ const NewNav = () => {
         { name: "CRM Employee", component: <LiaDotCircle /> },
       ],
     },
-    { component: <BiMoney />, name: "Loan Master",submenu : [
-      { name: "Approval Loan", component: <LiaDotCircle /> },
-      { name: "Disbursal Loan", component: <LiaDotCircle /> },
-      { name: "Rejected Loans", component: <LiaDotCircle /> },
-      { name: "Ongoing Loans", component: <LiaDotCircle /> },
+    {
+      component: <BiMoney />,
+      name: "Loan Master",
+      submenu: [
+        { name: "Approval Loan", component: <LiaDotCircle /> },
+        { name: "Disbursal Loan", component: <LiaDotCircle /> },
+        { name: "Rejected Loans", component: <LiaDotCircle /> },
+        { name: "Ongoing Loans", component: <LiaDotCircle /> },
 
-      { name: "Closed Loans", component: <LiaDotCircle /> },
+        { name: "Closed Loans", component: <LiaDotCircle /> },
 
         { name: "History", component: <LiaDotCircle /> },
       ],
@@ -150,23 +152,16 @@ const NewNav = () => {
         {selected === "Attendence" && <AttendenceTable />}
         {selected === "Loan Master" && <LoanMasterComponent />}
         {selected === "Recycle Bin" && <RecycleBinView />}
-        {selected === "Ongoing Loans" && <LoanOngoingTable/>}
+        {selected === "Ongoing Loans" && <LoanOngoingTable />}
 
-        {selected === "Approval Loan" && (
+        {selected === "Approval Loan" && <LoanApprovalTable />}
+        {selected === "Closed Loans" && (
           <div>
-            <LoanApprovalTable />
+            <LoanClosedTable />
           </div>
-         )}
-         {selected === "Closed Loans" && (
-          <div>
-            <LoanClosedTable/>
-          </div>
-         )}
-        {selected === "Disbursal Loan" && (
-        <LoanDisburseTable/> )}
-        {selected === "Rejected Loans" && (
-        <LoanRejectTable/> )}
-
+        )}
+        {selected === "Disbursal Loan" && <LoanDisburseTable />}
+        {selected === "Rejected Loans" && <LoanRejectTable />}
       </div>
     </div>
   );

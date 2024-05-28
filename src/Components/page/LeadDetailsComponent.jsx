@@ -104,11 +104,10 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
       const responseJson = await updateLeadStatus(rawJson);
       console.log(responseJson);
       if (responseJson.code === 200) {
-        toast.success(responseJson.message)
+        toast.success(responseJson.message);
         setLeadStatusDialog(false);
       } else {
         setLeadCurrentData(lead_data);
-        
         toast.error(responseJson.message);
       }
     } catch (error) {
@@ -201,7 +200,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
   };
   return (
     <main>
-      <ToastContainer/>
+      <ToastContainer />
       <div className="relative ">
         <div className="flex items-center font-semibold  bg-blue-600 text-white rounded-none">
           <GiFastBackwardButton
@@ -435,8 +434,6 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
               </div>
             </div>
 
-
-            
             <h2 className="font-semibold text-[18px] text-[#ffffff] bg-purple-500 rounded-lg p-6 m-[20px]">
               Leads-KYC Documents
             </h2>
