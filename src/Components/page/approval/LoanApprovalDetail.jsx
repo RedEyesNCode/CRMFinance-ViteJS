@@ -70,9 +70,8 @@ function LoanApprovalDetail({ lead_data, handleCloseCallback }) {
   const [updateLeadForm, setUpdateLeadForm] = useState({
     leadId: lead_data._id,
     status: leads_status,
-    amount: "",
-    feesAmount: "",
-    interestRate: "",
+    disbursement_date: "",
+    emi_first_date: "",
   });
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -93,12 +92,12 @@ function LoanApprovalDetail({ lead_data, handleCloseCallback }) {
       console.log(rawJson);
       const responseJson = await updateLoanApprovalStatus(rawJson);
       if (responseJson.code == 200) {
-        toast.success(responseJson.message)
+        toast.success(responseJson.message);
         setLeadStatusDialog(false);
         callLeadDetailsAPI();
       } else {
         setLeadCurrentData(lead_data);
-        toast.error(responseJson.message)
+        toast.error(responseJson.message);
       }
     } catch (error) {
       console.log(error);
@@ -136,7 +135,7 @@ function LoanApprovalDetail({ lead_data, handleCloseCallback }) {
 
   return (
     <main>
-      <ToastContainer/>
+      <ToastContainer />
       <div className="relative ">
         <div className="flex items-center font-semibold  bg-green-900 text-white">
           <GiFastBackwardButton
@@ -155,20 +154,19 @@ function LoanApprovalDetail({ lead_data, handleCloseCallback }) {
           <span className=" rounded-md bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4">
             EMPLOYEE LEAD TABLE ID : {lead_current_data.employee_lead_id_linker}
           </span>
-        <button
-          onClick={handleOpenLeadStatusDialog}
-          class=" rounded-md bg-cyan-900 hover:bg-cyan-500 text-white font-bold py-2 px-4"
-        >
-          UPDATE APPROVAL LOAN STATUS
-        </button>
           <button
-          onClick={HandleopenDeleteLeadDialog}
-          class=" rounded-md bg-rose-900 hover:bg-red-500 text-white font-bold py-2 px-4"
-        >
-          DELETE APPROVAL LOAN
-        </button>
+            onClick={handleOpenLeadStatusDialog}
+            class=" rounded-md bg-cyan-900 hover:bg-cyan-500 text-white font-bold py-2 px-4"
+          >
+            UPDATE APPROVAL LOAN STATUS
+          </button>
+          <button
+            onClick={HandleopenDeleteLeadDialog}
+            class=" rounded-md bg-rose-900 hover:bg-red-500 text-white font-bold py-2 px-4"
+          >
+            DELETE APPROVAL LOAN
+          </button>
         </div>
-        
 
         <div className="flex w-full flex-col">
           <div className="w-full flex  p-2">
@@ -231,7 +229,8 @@ function LoanApprovalDetail({ lead_data, handleCloseCallback }) {
             </div>
           </div>
 
-          <div className="w-full flex p-2">
+          {/* Basic user info and one more panel */}
+          {/* <div className="w-full flex p-2">
             <div className="w-1/2 bg-white rounded-lg shadow-lg p-6  text-gray-700 text-md font-semibold ">
               <h2 className="font-semibold text-[#ffffff] bg-blue-900 rounded-lg p-6 text-[18px] mb-2 ">
                 {" "}
@@ -325,7 +324,7 @@ function LoanApprovalDetail({ lead_data, handleCloseCallback }) {
 
               <div className="flex space-x-4 mb-4 m-[20px]">
                 {" "}
-                {/* Tab bar */}
+          
                 <button
                   className={`px-4 py-2 rounded-md ${
                     activeTabDocs === "pancard"
@@ -366,10 +365,9 @@ function LoanApprovalDetail({ lead_data, handleCloseCallback }) {
                 >
                   Adhar Back
                 </button>
-                {/* Add more buttons for 'ENACH' and 'UPDATE KYC' */}
+        
               </div>
 
-              {/* Tab Content */}
               <div className="m-[5px]">
                 {activeTabDocs === "pancard" && (
                   <div className="p-4 bg-white  shadow-md m-[10px] border-[2px] rounded-3xl border-green-500">
@@ -427,10 +425,10 @@ function LoanApprovalDetail({ lead_data, handleCloseCallback }) {
                     />
                   </div>
                 )}
-                {/* Add content for 'ENACH' and 'UPDATE KYC' tabs */}
+           
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -500,6 +498,28 @@ function LoanApprovalDetail({ lead_data, handleCloseCallback }) {
                         }
                       </label>
                       <label className="block text-gray-500 font-bold mb-2">
+                        Disbursement Date
+                      </label>
+                      <input
+                        name="disbursement_date"
+                        value={updateLeadForm.disbursement_date}
+                        onChange={handleChange}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="disbursement_date"
+                        type="date"
+                      />
+                      <label className="block text-gray-500 font-bold mb-2">
+                        Emi First Date
+                      </label>
+                      <input
+                        name="emi_first_date"
+                        value={updateLeadForm.emi_first_date}
+                        onChange={handleChange}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="emi_first_date"
+                        type="date"
+                      />
+                      {/* <label className="block text-gray-500 font-bold mb-2">
                         Loan Approval Amount
                       </label>
                       <input
@@ -531,7 +551,7 @@ function LoanApprovalDetail({ lead_data, handleCloseCallback }) {
                         name="interestRate"
                         value={updateLeadForm.interestRate}
                         type="text"
-                      />
+                      /> */}
                     </>
                   )}
                 </div>

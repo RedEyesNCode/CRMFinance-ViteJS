@@ -16,6 +16,12 @@ function LoanApprovalTable({ handle }) {
 
   const [isLeadUserFrame, setLeadUserFrame] = useState(false);
 
+  const [openLeadDetailCompo, setopenLeadDetailCompo] = useState(false);
+
+  const [objwithlinkerid, setobjwithlinkerid] = useState({
+    _id: "",
+  })
+
   const handleOpenLeadUser = (lead_data) => {
     setLeadDeleteFrame(false);
     setcurrentLead(lead_data);
@@ -23,6 +29,15 @@ function LoanApprovalTable({ handle }) {
     setLeadDetailFrame(false);
     setLeadUserFrame(true);
   };
+  const handleOpenUserprofile = (lead_data) => {
+    setLeadDeleteFrame(false);
+    setobjwithlinkerid({ _id: lead_data.employee_lead_id_linker })
+    setLeadDetailFrame(false);
+    setLeadDetailFrame(false);
+    setLeadUserFrame(false);
+    setopenLeadDetailCompo(true)
+  };
+
   const handleCloseLeadUser = (lead_data) => {
     setLeadDeleteFrame(false);
     setcurrentLead(lead_data);
@@ -108,6 +123,9 @@ function LoanApprovalTable({ handle }) {
     LeadsData();
     console.log("Maindashboarddiv mounted");
   }, []);
+
+    
+
   if (leadsData == null || leadsData == undefined) {
     return (
       <main>
@@ -122,115 +140,116 @@ function LoanApprovalTable({ handle }) {
     <div className="border-t border-gray-300 relative ">
       {!isLeadDetailFrame && (
         <div className="relative overflow-auto max-h-[680px] ">
-          <h2 className="m-[10px] text-[14px]  font-sans font-bold  text-white p-2 rounded-md border-green-900 bg-[#86af49] ">
+          <h2 className=" text-lg  font-sans font-bold  text-white p-4  border-green-900 bg-[#86af49] ">
             Pending for Approval Loans
           </h2>
 
           <table className="min-w-full table-auto p-1">
             <thead className="border">
-              <tr>
+              <tr className="text-sm">
                 <th
                   scope="col"
-                  className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border bg-[#F3F4F7]"
+                  className="px-3 py-3 text-left  font-medium text-gray-500 uppercase tracking-wider border bg-[#F3F4F7]"
                 >
                   SNO.
                 </th>
 
                 <th
                   scope="col"
-                  className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
+                  className="px-3 py-3 text-left  font-medium text-gray-500 uppercase tracking-wider border"
                 >
                   Loan Approval Id
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
+                  className="px-3 py-3 text-left  font-medium text-gray-500 uppercase tracking-wider border"
                 >
-                  User Info
+                  Emp Info
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
+                  className="px-3 py-3 text-left  font-medium text-gray-500 uppercase tracking-wider border"
                 >
                   First Name
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
+                  className="px-3 py-3 text-left  font-medium text-gray-500 uppercase tracking-wider border"
                 >
                   Last Name
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
+                  className="px-3 py-3 text-left  font-medium text-gray-500 uppercase tracking-wider border"
                 >
                   Mobile Number
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
+                  className="px-3 py-3 text-left  font-medium text-gray-500 uppercase tracking-wider border"
                 >
                   Gender
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
+                  className="px-3 py-3 text-left  font-medium text-gray-500 uppercase tracking-wider border"
                 >
                   Status
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
+                  className="px-3 py-3 text-left  font-medium text-gray-500 uppercase tracking-wider border"
                 >
                   Amount
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border"
+                  className="px-3 py-3 text-left  font-medium text-gray-500 uppercase tracking-wider border"
                 >
                   Created At
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border whitespace-nowrap"
+                  className="px-3 py-3 text-left  font-medium text-gray-500 uppercase tracking-wider border whitespace-nowrap"
                 >
                   Disbursement Date
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3  text-[11px] font-medium text-gray-500 uppercase tracking-wider border text-center"
+                  className="px-3 py-3   font-medium text-gray-500 uppercase tracking-wider border text-center"
                 >
                   Action
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white  divide-gray-200">
-              {leadsData != null &&
-                leadsData.data.map((user, index) => (
+              {leadsData != null && 
+                leadsData.data
+                .filter(user => user.lead_status === "APPROVED").map((user, index) => (
                   <tr
                     key={index}
                     className={`${index % 2 != 0 ? "bg-[#F4FAFF]" : ""}`}
                   >
-                    <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border bg-[#F3F4F7]">
+                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border bg-[#F3F4F7]">
                       {index + 1}.
                     </td>
 
-                    <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
+                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
                       {user._id}
                     </td>
-                    <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
+                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
                       {user.user}
                     </td>
-                    <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
+                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
                       {user.firstName}
                     </td>
-                    <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
+                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
                       {user.lastName}
                     </td>
-                    <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
+                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
                       {user.mobileNumber}
                     </td>
-                    <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
+                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
                       {user.gender}
                     </td>
                     <td
@@ -252,18 +271,18 @@ function LoanApprovalTable({ handle }) {
                       {user.lead_status}
                     </td>
                     <td
-                      className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border
+                      className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border
                   "
                     >
                       {user.leadAmount}
                     </td>
-                    <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
+                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
                       {user.createdAt}
                     </td>
-                    <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
+                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
                       {user.disbursementDate}
                     </td>
-                    <td className="px-2 py-4 whitespace-nowrap text-right text-[11px] font-medium flex gap-2">
+                    <td className="px-2 py-4 whitespace-nowrap text-right  font-medium flex gap-2">
                       <button
                         onClick={() => handleOpenLeadDetail(user)}
                         className="text-white bg-yellow-500 px-3 py-2 rounded-lg font-mono border-"
@@ -274,7 +293,13 @@ function LoanApprovalTable({ handle }) {
                         onClick={() => handleOpenLeadUser(user)}
                         className="text-white bg-blue-900 px-3 py-2 rounded-md"
                       >
-                        View User
+                        View Employee
+                      </button>
+                      <button
+                        onClick={() => handleOpenUserprofile(user)}
+                        className="text-white bg-blue-700 px-3 py-2 rounded-md"
+                      >
+                        View user profile
                       </button>
                       <button
                         onClick={() => handleOpenDeleteLead(user)}
@@ -340,6 +365,7 @@ function LoanApprovalTable({ handle }) {
           </div>
         </div>
       )}
+      {openLeadDetailCompo && <div className="absolute h-full w-full top-0 bg-white"><LeadDetailsComponent   lead_data={objwithlinkerid} handleCloseCallback={()=> setopenLeadDetailCompo(false)} /></div>}
     </div>
   );
 }

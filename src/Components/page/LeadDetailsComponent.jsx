@@ -201,7 +201,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
             onClick={() => handleBackpress()}
             className="text-[50px]  m-[10px] text-white "
           />
-          <h2 className="text-2xl m-auto">Lead Details Information </h2>
+          <h2 className="text-2xl m-auto">Customer Profile Information </h2>
         </div>
 
         <div id="lead-status-card" className={`${leadStatusClass} text-white`}>

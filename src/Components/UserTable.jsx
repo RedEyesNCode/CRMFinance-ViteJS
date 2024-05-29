@@ -73,8 +73,7 @@ const UserTable = () => {
       }
     };
     UserData();
-  }, [addUser,isUserDeleteFrame]);
-  
+  }, [addUser, isUserDeleteFrame]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -115,37 +114,37 @@ const UserTable = () => {
           ADD USER
         </button>
         {addUser && (
-        <div className="absolute  h-full w-full flex items-center justify-center backdrop-blur-lg">
-          <div className="flex flex-col  bg-[#3B76EF] p-10 rounded-xl text-white text-xl justify-center gap-8 mt-[400px]">
-            <h1 className="font-bold text-center ">ADD USER</h1>
-            <form
-              className="flex flex-col gap-6 items-center text-zinc-700"
-              onSubmit={handleSubmit}
-            >
-              <input
-                className="px-5 py-2 rounded-md outline-none"
-                onChange={handleChange}
-                type="text"
-                name="fullName"
-                value={formData.fullName}
-                placeholder="Enter name of user"
-              />
-              <input
-                className="px-5 py-2 rounded-md outline-none"
-                onChange={handleChange}
-                type="text"
-                name="telephoneNumber"
-                value={formData.telephoneNumber}
-                placeholder="Enter number of user"
-              />
-              <input
-                type="submit"
-                className="bg-white text-[#3B76EF] font-bold w-1/2 rounded-md px-5 py-2"
-              />
-            </form>
+          <div className="absolute  h-full w-full flex items-center justify-center backdrop-blur-lg">
+            <div className="flex flex-col  bg-[#3B76EF] p-10 rounded-xl text-white text-xl justify-center gap-8 mt-[400px]">
+              <h1 className="font-bold text-center ">ADD USER</h1>
+              <form
+                className="flex flex-col gap-6 items-center text-zinc-700"
+                onSubmit={handleSubmit}
+              >
+                <input
+                  className="px-5 py-2 rounded-md outline-none"
+                  onChange={handleChange}
+                  type="text"
+                  name="fullName"
+                  value={formData.fullName}
+                  placeholder="Enter name of user"
+                />
+                <input
+                  className="px-5 py-2 rounded-md outline-none"
+                  onChange={handleChange}
+                  type="text"
+                  name="telephoneNumber"
+                  value={formData.telephoneNumber}
+                  placeholder="Enter number of user"
+                />
+                <input
+                  type="submit"
+                  className="bg-white text-[#3B76EF] font-bold w-1/2 rounded-md px-5 py-2"
+                />
+              </form>
+            </div>
           </div>
-        </div>
-      )}
+        )}
       </main>
     );
   }
@@ -216,7 +215,8 @@ const UserTable = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-gray-200">
-                {UserData  && UserData.data &&
+                {UserData &&
+                  UserData.data &&
                   UserData.data.map((user, index) => (
                     <tr
                       key={index}
