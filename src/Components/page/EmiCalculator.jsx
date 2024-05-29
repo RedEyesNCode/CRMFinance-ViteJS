@@ -1,37 +1,37 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { BiInfoCircle } from "react-icons/bi";
+import EmiPayTable from "../EmiPayTable";
 
-function EmiCalculator({}) {
+function EmiCalculator({ data }) {
+  const [IsPayTableVisible, setIsPayTableVisible] = useState(false);
+  const [startDate, setStartDate] = useState(""); // State for selected start date
+  const [emiSchedule, setEmiSchedule] = useState([]); // State for EMI schedule
   const [loanDetails, setLoanDetails] = useState({
-    amount: 50000,
-    tenure: 12,
+    amount: data.leadAmount || 50000,
+    tenure: data.tenure || 12,
     tenureUnit: "months",
-    processingFees: 1,
-    loanDocumentFees: 1,
-    insuranceRate: 1,
-    insuranceAmount: 1,
-    gstRate: 1,
-    gstAmount: 1,
-    interestRate: 1,
-    interestAmount: 1,
-    packageId: "",
-    status: "Pending",
-    emi: 1,
-    disbursementAmount: 1,
-    totalLoan: 1,
+    processingFees: data.processingFees || 1,
+    interestRate: data.lead_interest_rate || 1,
+    emi: 0,
+    disbursementAmount: 0,
+    totalLoan: 0,
+    monthlyInterest: 0,
+    totalInterest: 0,
   });
 
   useEffect(() => {
-    calculateFlatEMI(); // Calculate EMI on component mount and when loanDetails change
-  }, []); // Dependency array ensures calculation on relevant changes
+    if (startDate) {
+      calculateFlatEMI(); // Calculate EMI on component mount and when loanDetails change
+    }
+  }, [loanDetails.amount, loanDetails.interestRate, loanDetails.tenure, loanDetails.tenureUnit, startDate]);
 
   const calculateFlatEMI = () => {
-    const { amount, interestRate, tenure } = loanDetails;
+    const { amount, interestRate, tenure, tenureUnit } = loanDetails;
 
     let n = tenure;
-    if (loanDetails.tenureUnit === "days") {
+    if (tenureUnit === "days") {
       n = tenure / 30.44; // Approximate days to months
-    } else if (loanDetails.tenureUnit === "years") {
+    } else if (tenureUnit === "years") {
       n = tenure * 12;
     }
 
@@ -40,84 +40,100 @@ function EmiCalculator({}) {
     const N = parseFloat(n);
 
     // Flat EMI Calculation
-    const EMI = (P + P * R * N) / N;
-
+    const monthlyInterest = P * R;
+    const totalInterest = monthlyInterest * N;
+    const EMI = (P + totalInterest) / N;
     const totalAmount = EMI * N;
+
+    const schedule = generateEmiSchedule(startDate, EMI, N);
 
     setLoanDetails((prevDetails) => ({
       ...prevDetails,
       emi: EMI.toFixed(2),
       disbursementAmount: P.toFixed(2), // Assuming no processing fees
       totalLoan: totalAmount.toFixed(2),
+      monthlyInterest: monthlyInterest.toFixed(2),
+      totalInterest: totalInterest.toFixed(2),
     }));
+    setEmiSchedule(schedule);
   };
- 
+
+  const generateEmiSchedule = (startDate, emi, n) => {
+    const schedule = [];
+    let currentDate = new Date(startDate);
+
+    for (let i = 0; i < n; i++) {
+      schedule.push({
+        emiId: i + 1,
+        dueDate: new Date(currentDate),
+        installmentAmount: emi.toFixed(2),
+        paidAmount: 0,
+        status: "Pending",
+      });
+      currentDate.setMonth(currentDate.getMonth() + 1);
+    }
+
+    return schedule;
+  };
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
-
-    // Directly use the input field's ID instead of the name
-    const fieldId = event.target.id;
+    const { id, value } = event.target;
 
     let parsedValue;
-    if (fieldId.includes("Rate")) {
+    if (id.includes("Rate")) {
       parsedValue = parseFloat(value);
     } else {
       parsedValue = parseInt(value, 10);
     }
 
-    const sanitizedValue =
-      isNaN(parsedValue) || parsedValue < 0 ? 0 : parsedValue;
+    const sanitizedValue = isNaN(parsedValue) || parsedValue < 0 ? 0 : parsedValue;
 
     if (sanitizedValue > 100000) {
       // Set a maximum limit for the amount field
       setLoanDetails((prevDetails) => ({
         ...prevDetails,
-        [fieldId]: 100000, // Cap the amount at the maximum
+        [id]: 100000, // Cap the amount at the maximum
       }));
     } else {
       setLoanDetails((prevDetails) => ({
         ...prevDetails,
-        [fieldId]: sanitizedValue, // Update state using the fieldId
+        [id]: sanitizedValue, // Update state using the fieldId
       }));
     }
   };
 
-  const calculateEMI = () => {
-    const { amount, interestRate, tenure } = loanDetails;
-
-    // Basic EMI calculation (replace with your actual logic)
-    const r = interestRate / 12 / 100; // Monthly interest rate
-    const n = tenure;
-    const emi = (amount * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-
-    setLoanDetails((prevDetails) => ({
-      ...prevDetails,
-      emi,
-      
-      // Calculate other derived values like totalLoan, etc.
-    }));
-  };
-
   return (
-    <div className="flex flex-col overflow-y">
-      
+    <div className="flex flex-col ">
       <div className="flex flex-row">
-        <BiInfoCircle className="h-[30px] w-[30px] m-2" color="#9003FC"/>
-      <h2 className="font-mono text-[21px] m-2">Max Value for Each field : 100000</h2>
+        <BiInfoCircle className="h-[30px] w-[30px] m-2" color="#9003FC" />
+        <h2 className="font-mono text-[21px] m-2">Max Value for Each field : 100000</h2>
+        <button className=" px-6 py-2 bg-[#4793AF] hover:bg-[#3c7c93] text-white shadow-lg hover:shadow-none  rounded-lg ml-4 mb-2 font-bold">
+          Update Emi Detail
+        </button>
 
+        <input
+          className="outline-none px-6 py-2 bg-[#5BBCFF] rounded-lg ml-4 mb-2 font-bold text-white  hover:bg-[#4ea5e4]  shadow-lg hover:shadow-none"
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+        />
+        <button
+          onClick={() => setIsPayTableVisible(true)}
+          className=" px-6 py-2 bg-[#59D5E0] text-zinc-50 rounded-lg ml-4 mb-2 font-bold  hover:bg-[#47b2bc]  shadow-lg hover:shadow-none"
+        >
+          View Payment Schedule
+        </button>
       </div>
 
-      <table className="emi-table rounded-2xl border-2 border-amber-400 overflow-hidden ">
-        
+      <table className="emi-table overflow-hidden rounded-lg  ">
         <tbody>
           {/* Loan Details Section */}
-          <tr className="p-4 bg-blue-500 text-white font-mono">
+          <tr className="p-4 bg-blue-500 text-white font-mono border">
             <td className="p-4">AMOUNT:</td>
-            <td>₹{loanDetails.amount}</td>
+            <td>₹{data.leadAmount}</td>
             <td>
               <input
-                className="border-2 border-blue-600 rounded-lg m-2 w-fit text-black font-mono " // Added text-black
+                className="border-2 border-blue-600 rounded-lg m-2 w-fit text-black font-mono outline-none p-1"
                 value={loanDetails.amount}
                 id="amount"
                 type="number"
@@ -130,7 +146,7 @@ function EmiCalculator({}) {
             </td>
             <td>
               <select
-                className="border-2 border-blue-600 rounded-lg m-2 w-fit text-black"
+                className="border-2 border-blue-600 rounded-lg m-2 w-fit text-black p-[.4vw] outline-none"
                 value={loanDetails.tenureUnit}
                 onChange={(e) =>
                   setLoanDetails((prevDetails) => ({
@@ -145,9 +161,8 @@ function EmiCalculator({}) {
               </select>
               <input
                 type="number"
-                className="border-2 border-blue-600 rounded-lg m-2 w-fit text-black"
+                className="border-2 border-blue-600 rounded-lg m-2 w-fit text-black p-1 outline-none"
                 value={loanDetails.tenure}
-                
                 onChange={(e) =>
                   setLoanDetails((prevDetails) => ({
                     ...prevDetails,
@@ -158,105 +173,77 @@ function EmiCalculator({}) {
             </td>
           </tr>
 
-          {/* Processing Fees and Loan Document Fees */}
-          <tr className="p-4 bg-blue-500 text-white font-mono">
+          {/* Processing Fees */}
+          <tr className="p-4 bg-blue-500 text-white font-mono border">
             <td className="p-4">Processing fees:</td>
-            <td>{loanDetails.processingFees} ₹</td>
+            <td>{data.processingFees} ₹</td>
             <td>
               <input
-              id="processingFees"
-              type="number"
-              onChange={handleChange}
-                className="border-2 border-blue-600 rounded-lg m-2 w-fit text-black font-mono" // Added text-black
+                id="processingFees"
+                type="number"
+                onChange={handleChange}
+                className="border-2 border-blue-600 rounded-lg m-2 w-fit text-black font-mono p-1 outline-none"
                 value={loanDetails.processingFees}
               />
             </td>
-            <td className="p-4">Loan document fees:</td>
-            <td>{loanDetails.loanDocumentFees} ₹</td>
-            <td>
-              <input
-               id="loanDocumentFees"
-               type="number"
-               onChange={handleChange}
-                className="border-2 border-blue-600 rounded-lg m-2 w-fit text-black font-mono" // Added text-black
-                value={loanDetails.loanDocumentFees}
-              />
-            </td>
-            <td></td> {/* Empty cell for alignment */}
+            <td colSpan="3"></td> {/* Empty cells for alignment */}
           </tr>
 
-          {/* Insurance and GST */}
-          <tr className="p-4 bg-blue-500 text-white font-mono">
-            <td className="p-4">Insurance: {loanDetails.insuranceRate}% =</td>
-            <td>{loanDetails.insuranceAmount} ₹</td>
+          {/* Interest Rate */}
+          <tr className="p-4 bg-blue-500 text-white font-mono border">
+            <td className="p-4">Interest Rate: {data.lead_interest_rate}% =</td>
+            <td>{data.lead_interest_rate} ₹</td>
             <td>
               <input
-               id="insuranceAmount"
-               type="number"
-               onChange={handleChange}
-                className="border-2 border-blue-600 rounded-lg m-2 w-fit text-black font-mono" // Added text-black
-                value={loanDetails.insuranceAmount}
-              />
-            </td>
-            <td className="p-4">GST: {loanDetails.gstRate}%</td>
-            <td>{loanDetails.gstAmount} ₹</td>
-            <td>
-              <input
-                id="gstAmount"
+                id="interestRate"
                 type="number"
                 onChange={handleChange}
-                className="border-2 border-blue-600 rounded-lg m-2 w-fit text-black font-mono" // Added text-black
-                value={loanDetails.gstAmount}
+                className="border-2 border-blue-600 rounded-lg m-2 w-fit text-black font-mono p-1 outline-none"
+                value={loanDetails.interestRate}
               />
             </td>
-            <td></td> {/* Empty cell for alignment */}
-          </tr>
-          <tr className="p-4 bg-blue-500 text-white font-mono">
-            <td className="p-4">
-              Interest Rate: {loanDetails.interestAmount}% =
-            </td>
-            <td>{loanDetails.interestAmount} ₹</td>
-            <td>
-              <input
-               id="interestAmount"
-               type="number"
-               onChange={handleChange}
-                className="border-2 border-blue-600 rounded-lg m-2 w-fit text-black font-mono" // Added text-black
-                value={loanDetails.interestAmount}
-              />
-            </td>
-            <td></td>
-            <td></td>
-            <td></td> {/* Empty cell for alignment */}
-          </tr>
-          <tr className="p-4 bg-blue-500 text-white font-mono">
-
-            <td className="p-4">CALCULATED EMI : {loanDetails.emi}</td>
-            
-            <td></td> {/* Empty cell for alignment */}
-            <td className="p-4">
-              Disbursement Amount : {loanDetails.disbursementAmount}
-            </td>
-            <td></td> {/* Empty cell for alignment */}
-            <td className="p-4">
-              Total Loan Amount : {loanDetails.loanAmount}
-            </td>
-            <td></td> {/* Empty cell for alignment */}
-
-          </tr>
-          <tr className="p-4 bg-blue-500 text-white font-mono">
-            
-            <td>{loanDetails.loanAmount}</td>
-            <td></td> {/* Empty cell for alignment */}
-            
-            <td></td> {/* Empty cell for alignment */}
-            <td></td> {/* Empty cell for alignment */}
+            <td colSpan="3"></td> {/* Empty cells for alignment */}
           </tr>
 
-          {/* ... (rest of the table rows with the 'p-4 bg-blue-500 text-white font-mono' class and text-black on inputs) ... */}
+          {/* Calculated EMI */}
+          <tr className="p-4 bg-[#0E46A3] text-white font-mono border">
+            <td className="p-4">CALCULATED EMI: ₹{loanDetails.emi}</td>
+            <td colSpan="5"></td> {/* Empty cells for alignment */}
+          </tr>
+
+          {/* Disbursement Amount */}
+          <tr className="p-4 bg-[#7E8EF1] text-white font-mono border">
+            <td className="p-4">DISBURSEMENT AMOUNT: ₹{loanDetails.disbursementAmount}</td>
+            <td colSpan="5"></td> {/* Empty cells for alignment */}
+          </tr>
+
+          {/* Total Loan */}
+          
+
+          {/* Monthly Interest */}
+          <tr className="p-4 bg-[#0E46A3] text-white font-mono border">
+            <td className="p-4">MONTHLY INTEREST: ₹{loanDetails.monthlyInterest}</td>
+            <td colSpan="5"></td> {/* Empty cells for alignment */}
+          </tr>
+
+          {/* Total Interest */}
+          <tr className="p-4 bg-[#7E8EF1]  text-white font-mono border">
+            <td className="p-4">TOTAL INTEREST: ₹{loanDetails.totalInterest}</td>
+            <td colSpan="5"></td> {/* Empty cells for alignment */}
+          </tr>
+          <tr className="p-4 bg-[#615EFC] text-white font-mono border">
+            <td className="p-4">TOTAL PAYBLE AMOUNT: ₹{loanDetails.totalLoan}</td>
+            <td colSpan="5"></td> {/* Empty cells for alignment */}
+          </tr>
         </tbody>
       </table>
-     
+
+      {IsPayTableVisible && (
+        <div className="h-full w-full flex justify-center items-start absolute top-0 left-0 backdrop-blur-xl ">
+          <EmiPayTable  emiSchedule={emiSchedule} data={data} loanDetails={loanDetails}/>
+          <p className="cursor-pointer absolute right-8 top-[1%]" onClick={()=>setIsPayTableVisible(false)}>❌</p>
+        </div>
+      )}
     </div>
   );
 }

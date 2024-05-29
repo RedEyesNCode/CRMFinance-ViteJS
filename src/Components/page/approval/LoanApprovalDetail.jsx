@@ -174,7 +174,7 @@ function LoanApprovalDetail({ lead_data, handleCloseCallback }) {
               <h2 className="font-semibold text-[18px] text-[#ffffff] bg-rose-500 rounded-lg p-6 mb-2 ">
                 EMI Calculator
               </h2>
-              <EmiCalculator />
+              <EmiCalculator data={lead_current_data} />
             </div>
             <div className=" border rounded-lg shadow-xl py-6 px-4 text-gray-700 text-md font-semibold">
               <h2 className="font-semibold text-[#ffffff] bg-green-900 rounded-lg p-2 text-[15px] mb-2">
