@@ -108,7 +108,7 @@ function EmiCalculator({ data }) {
         <BiInfoCircle className="h-[30px] w-[30px] m-2" color="#9003FC" />
         <h2 className="font-mono text-[21px] m-2">Max Value for Each field : 100000</h2>
         <button className=" px-6 py-2 bg-[#4793AF] hover:bg-[#3c7c93] text-white shadow-lg hover:shadow-none  rounded-lg ml-4 mb-2 font-bold">
-          Update Emi Detail
+          UPDATE AMOUNT IN ALL TABLES
         </button>
 
         <input

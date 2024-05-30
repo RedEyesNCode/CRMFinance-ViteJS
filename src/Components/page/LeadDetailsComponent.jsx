@@ -600,10 +600,10 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                     value={leads_status}
                     onChange={(e) => setLeadsStatus(e.target.value)}
                   >
+                                        <option value="PENDING">PENDING</option>
+
                     <option value="APPROVED">APPROVED</option>
                     <option value="REJECTED">REJECTED</option>
-                    <option value="PENDING">PENDING</option>
-                    <option value="DISBURSED">DISBURSED</option>
                   </select>
                   {showFinancialFields && (
                     <>

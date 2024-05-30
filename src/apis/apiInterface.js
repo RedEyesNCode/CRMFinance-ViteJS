@@ -221,6 +221,31 @@ export const getOngoingLoanDetail = async (delete_disbursal_loan_id) => {
     throw error;
   }
 };
+export const getOngoingLoanEMIDetail = async (delete_disbursal_loan_id) => {
+  try {
+    const response = await apiService(
+      "get-ongoing-emi-detail",
+      "POST",
+      delete_disbursal_loan_id
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getOngoingEmiAmountDetail = async (delete_disbursal_loan_id) => {
+  try {
+    const response = await apiService(
+      "get-emi-amount-detail",
+      "POST",
+      delete_disbursal_loan_id
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const deleteApprovalLoan = async (delete_approval_id) => {
   try {
     const response = await apiService(

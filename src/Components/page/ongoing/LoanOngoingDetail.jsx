@@ -11,10 +11,12 @@ import {
   getApprovalLoanDetails,
   getDisburseLoanDetail,
   getOngoingLoanDetail,
+  getOngoingLoanEMIDetail,
   updateLoanApprovalStatus,
   updateLoanDisbursalStatus,
 } from "../../../apis/apiInterface";
 import { ToastContainer, toast } from "react-toastify";
+import OngoingEmiTable from "./OngoingEmiTable";
 
 function LoanOngoingDetail({ lead_data, handleCloseCallback }) {
   const [activeTab, setActiveTab] = useState("approveLoans"); // Default active tab
@@ -26,6 +28,23 @@ function LoanOngoingDetail({ lead_data, handleCloseCallback }) {
 
   const [openLeadStatusDialog, setLeadStatusDialog] = useState(false);
 
+  const [ongoingEmiDetail,setonGoingEmiDetail] = useState(null);
+
+  const [emiSchedule, setEmiSchedule] = useState([]); // State for EMI schedule
+  const [loanDetails, setLoanDetails] = useState({
+    amount: lead_data.leadAmount || 50000,
+    tenure: lead_data.tenure || 12,
+    tenureUnit: "months",
+    processingFees: lead_data.processingFees || 1,
+    interestRate: lead_data.lead_interest_rate || 1,
+    emi: 0,
+    disbursementAmount: 0,
+    totalLoan: 0,
+    monthlyInterest: 0,
+    totalInterest: 0,
+  });
+
+  
   const handleOpenLeadStatusDialog = () => {
     setLeadStatusDialog(true);
   };
@@ -70,6 +89,29 @@ function LoanOngoingDetail({ lead_data, handleCloseCallback }) {
       console.log(error);
     }
   };
+  
+  const callOngoingEmiDetail = async () => {
+    try {
+      const rawJson = {
+        ongoing_loan_id: lead_data._id,
+      };
+      const response = await getOngoingLoanEMIDetail(rawJson);
+      if (response.code == 200) {
+        console.log(response);
+        
+
+
+        setonGoingEmiDetail(response.data);
+      } else {
+        setonGoingEmiDetail(null);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    callOngoingEmiDetail();
+  }, []);
 
   const [updateLeadForm, setUpdateLeadForm] = useState({
     leadId: lead_data._id,
@@ -116,8 +158,8 @@ function LoanOngoingDetail({ lead_data, handleCloseCallback }) {
 
   const leadStatusClass = useMemo(() => {
     return `w-[100%] p-6 rounded-b-lg flex items-center justify-center ${
-      lead_current_data.lead_status === "REJECTED"
-        ? "bg-red-400"
+      lead_current_data.lead_status === "ACTIVE"
+        ? "bg-green-400"
         : lead_current_data.lead_status === "ONGOING"
         ? "bg-blue-800"
         : lead_current_data.lead_status === "DISBURSED"
@@ -170,7 +212,7 @@ function LoanOngoingDetail({ lead_data, handleCloseCallback }) {
         >
           CLOSE THIS LOAN
         </button>
-        <EmiPayTable/>
+        <OngoingEmiTable on_going_loan_id={lead_current_data._id}/>
         <div className="flex">
           <div className="w-1/3 h-fit m-[10px] border-r pr-4 bg-blue-400 rounded-lg shadow-lg p-6 text-gray-700 text-[12px]">
             <h2 className="font-semibold text-[#ffffff] bg-blue-900 rounded-lg p-2 text-[15px]">

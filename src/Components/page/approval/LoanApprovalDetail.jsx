@@ -71,7 +71,11 @@ function LoanApprovalDetail({ lead_data, handleCloseCallback }) {
     leadId: lead_data._id,
     status: leads_status,
     disbursement_date: "",
+    amount : "",
+    feesAmount : "",
+    interestRate : "",
     emi_first_date: "",
+    emi_tenure : ""
   });
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -86,8 +90,11 @@ function LoanApprovalDetail({ lead_data, handleCloseCallback }) {
         loan_approval_id: updateLeadForm.leadId,
         status: leads_status,
         amount: updateLeadForm.amount,
+        emi_first_date: updateLeadForm.emi_first_date,
+        disbursement_date: updateLeadForm.disbursement_date,
         feesAmount: updateLeadForm.feesAmount,
         interestRate: updateLeadForm.interestRate,
+        emi_tenure : updateLeadForm.emi_tenure
       };
       console.log(rawJson);
       const responseJson = await updateLoanApprovalStatus(rawJson);
@@ -491,8 +498,8 @@ function LoanApprovalDetail({ lead_data, handleCloseCallback }) {
                     <option value="DISBURSED">DISBURSED</option>
                   </select>
                   {showFinancialFields && (
-                    <>
-                      <label className="text-red-500 font-semibold mb-2">
+                    <div className="rounded-xl border-2 border-blue-400 p-2 m-2">
+                      <label className="text-red-500 font-thin mb-2">
                         {
                           "Note (IN DISBURSEMENT STATUS) : \n  You will be moving this LEAD to Loan-Disburment-Table (Loan Master Section)"
                         }
@@ -519,8 +526,19 @@ function LoanApprovalDetail({ lead_data, handleCloseCallback }) {
                         id="emi_first_date"
                         type="date"
                       />
-                      {/* <label className="block text-gray-500 font-bold mb-2">
-                        Loan Approval Amount
+                      <label className="block text-rose-500 font-bold mb-2">
+                        FINAL TENURE (Months)
+                      </label>
+                      <input
+                        name="emi_tenure"
+                        value={updateLeadForm.emi_tenure}
+                        onChange={handleChange}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="emi_tenure"
+                        type="number"
+                      />
+                      <label className="block text-red-500 font-bold mb-2">
+                        FINAL LOAN AMOUNT
                       </label>
                       <input
                         name="amount"
@@ -530,8 +548,8 @@ function LoanApprovalDetail({ lead_data, handleCloseCallback }) {
                         id="amount"
                         type="number"
                       />
-                      <label className="block text-gray-500 font-bold mb-2">
-                        Fees Amount
+                      <label className="block text-red-500 font-bold mb-2">
+                        FINAL FEES AMOUNT
                       </label>
                       <input
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -541,8 +559,8 @@ function LoanApprovalDetail({ lead_data, handleCloseCallback }) {
                         value={updateLeadForm.feesAmount}
                         type="number"
                       />
-                      <label className="block text-gray-500 font-bold mb-2">
-                        Interest Amount
+                      <label className="block text-red-500 font-bold mb-2">
+                        FINAL INTEREST AMOUNT
                       </label>
                       <input
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -551,8 +569,8 @@ function LoanApprovalDetail({ lead_data, handleCloseCallback }) {
                         name="interestRate"
                         value={updateLeadForm.interestRate}
                         type="text"
-                      /> */}
-                    </>
+                      />
+                    </div>
                   )}
                 </div>
 

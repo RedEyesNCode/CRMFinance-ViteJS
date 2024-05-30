@@ -18,6 +18,13 @@ function LoanApprovalTable({ handle }) {
 
   const [openLeadDetailCompo, setopenLeadDetailCompo] = useState(false);
 
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleSwitchChange = (event) => {
+    setIsChecked(event.target.checked);
+    // Perform actions based on the switch state
+  };
+
   const [objwithlinkerid, setobjwithlinkerid] = useState({
     _id: "",
   })
@@ -122,7 +129,7 @@ function LoanApprovalTable({ handle }) {
     };
     LeadsData();
     console.log("Maindashboarddiv mounted");
-  }, []);
+  }, [isChecked]);
 
     
 
@@ -140,9 +147,29 @@ function LoanApprovalTable({ handle }) {
     <div className="border-t border-gray-300 relative ">
       {!isLeadDetailFrame && (
         <div className="relative overflow-auto max-h-[680px] ">
-          <h2 className=" text-lg  font-sans font-bold  text-white p-4  border-green-900 bg-[#86af49] ">
+          
+          
+          <div className="border-green-900 bg-[#86af49] flex flex-row justify-items-start items-center">
+          <h2 className=" text-lg  font-sans font-bold  text-white p-4  ">
             Pending for Approval Loans
           </h2>
+          <button
+          
+          onClick={(e) => setIsChecked(true)}
+          className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
+            All Approval Loans
+            </button>
+            <button
+          
+          onClick={(e) => setIsChecked(false)}
+          className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
+            Only Active Approval Loans
+            </button>
+
+        
+            
+            </div>
+          
 
           <table className="min-w-full table-auto p-1">
             <thead className="border">
@@ -223,9 +250,95 @@ function LoanApprovalTable({ handle }) {
               </tr>
             </thead>
             <tbody className="bg-white  divide-gray-200">
-              {leadsData != null && 
+              {leadsData != null && isChecked==false &&
                 leadsData.data
                 .filter(user => user.lead_status === "APPROVED").map((user, index) => (
+                  <tr
+                    key={index}
+                    className={`${index % 2 != 0 ? "bg-[#F4FAFF]" : ""}`}
+                  >
+                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border bg-[#F3F4F7]">
+                      {index + 1}.
+                    </td>
+
+                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
+                      {user._id}
+                    </td>
+                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
+                      {user.user}
+                    </td>
+                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
+                      {user.firstName}
+                    </td>
+                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
+                      {user.lastName}
+                    </td>
+                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
+                      {user.mobileNumber}
+                    </td>
+                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
+                      {user.gender}
+                    </td>
+                    <td
+                      className={`px-2 py-2 whitespace-nowrap text-sm font-medium border 
+                ${user.lead_status === "PENDING" ? "bg-yellow-500 text-center text-white" : ""}
+                ${user.lead_status === "DISBURSED" ? "bg-blue-500 rounded-none text-center text-white" : ""}
+
+                ${
+                  user.lead_status === "APPROVED"
+                    ? "bg-green-500 text-white text-center"
+                    : ""
+                }
+                ${
+                  user.lead_status === "REJECTED"
+                    ? "bg-red-500 text-white "
+                    : ""
+                }`}
+                    >
+                      {user.lead_status}
+                    </td>
+                    <td
+                      className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border
+                  "
+                    >
+                      {user.leadAmount}
+                    </td>
+                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
+                      {user.createdAt}
+                    </td>
+                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
+                      {user.disbursementDate}
+                    </td>
+                    <td className="px-2 py-4 whitespace-nowrap text-right  font-medium flex gap-2">
+                      <button
+                        onClick={() => handleOpenLeadDetail(user)}
+                        className="text-white bg-yellow-500 px-3 py-2 rounded-lg font-mono border-"
+                      >
+                        Loan Details
+                      </button>
+                      <button
+                        onClick={() => handleOpenLeadUser(user)}
+                        className="text-white bg-blue-900 px-3 py-2 rounded-md"
+                      >
+                        View Employee
+                      </button>
+                      <button
+                        onClick={() => handleOpenUserprofile(user)}
+                        className="text-white bg-blue-700 px-3 py-2 rounded-md"
+                      >
+                        View user profile
+                      </button>
+                      <button
+                        onClick={() => handleOpenDeleteLead(user)}
+                        className="text-white bg-[#fa4845] px-3 py-2 rounded-md"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {leadsData != null && isChecked==true &&
+                leadsData.data.map((user, index) => (
                   <tr
                     key={index}
                     className={`${index % 2 != 0 ? "bg-[#F4FAFF]" : ""}`}
