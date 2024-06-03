@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { FaBeer } from "react-icons/fa";
 import { GiFastBackwardButton } from "react-icons/gi";
 import EmiCalculator from "../EmiCalculator";
-import EmiPayTable from "../../EmiPayTable"
+import EmiPayTable from "../../EmiPayTable";
 import {
   closeOngoingLoan,
   deleteApprovalLoan,
@@ -28,7 +28,7 @@ function LoanOngoingDetail({ lead_data, handleCloseCallback }) {
 
   const [openLeadStatusDialog, setLeadStatusDialog] = useState(false);
 
-  const [ongoingEmiDetail,setonGoingEmiDetail] = useState(null);
+  const [ongoingEmiDetail, setonGoingEmiDetail] = useState(null);
 
   const [emiSchedule, setEmiSchedule] = useState([]); // State for EMI schedule
   const [loanDetails, setLoanDetails] = useState({
@@ -44,7 +44,6 @@ function LoanOngoingDetail({ lead_data, handleCloseCallback }) {
     totalInterest: 0,
   });
 
-  
   const handleOpenLeadStatusDialog = () => {
     setLeadStatusDialog(true);
   };
@@ -89,7 +88,7 @@ function LoanOngoingDetail({ lead_data, handleCloseCallback }) {
       console.log(error);
     }
   };
-  
+
   const callOngoingEmiDetail = async () => {
     try {
       const rawJson = {
@@ -98,8 +97,6 @@ function LoanOngoingDetail({ lead_data, handleCloseCallback }) {
       const response = await getOngoingLoanEMIDetail(rawJson);
       if (response.code == 200) {
         console.log(response);
-        
-
 
         setonGoingEmiDetail(response.data);
       } else {
@@ -181,7 +178,7 @@ function LoanOngoingDetail({ lead_data, handleCloseCallback }) {
   return (
     <main>
       <ToastContainer />
-      <div className="relative overflow-auto h-full">
+      <div className="relative overflow-auto h-full w-full">
         <div className="flex items-center font-mono rounded-none bg-orange-400 border-2 border-red-500  text-white">
           <GiFastBackwardButton
             onClick={() => handleBackpress()}
@@ -212,7 +209,7 @@ function LoanOngoingDetail({ lead_data, handleCloseCallback }) {
         >
           CLOSE THIS LOAN
         </button>
-        <OngoingEmiTable on_going_loan_id={lead_current_data._id}/>
+        <OngoingEmiTable on_going_loan_id={lead_current_data._id} />
         <div className="flex">
           <div className="w-1/3 h-fit m-[10px] border-r pr-4 bg-blue-400 rounded-lg shadow-lg p-6 text-gray-700 text-[12px]">
             <h2 className="font-semibold text-[#ffffff] bg-blue-900 rounded-lg p-2 text-[15px]">

@@ -437,3 +437,22 @@ export const uploadImage = async (formData) => {
     throw error;
   }
 };
+
+
+// In apis/apiInterface.js
+export const updateEmiStatus = async (data) => {
+  try {
+    const response = await fetch("https://localhost:3000/update-emi-status", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    return response.json();
+  } catch (error) {
+    console.error("Error updating EMI status:", error);
+    throw error;
+  }
+};
+
