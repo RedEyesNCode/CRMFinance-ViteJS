@@ -118,6 +118,19 @@ function LoanApprovalTable({ handle }) {
     const istString = utcDate.toLocaleString("en-US", options);
     return istString;
   }
+  const [searchForm, setSearchForm] = useState({
+    fromDate: "",
+    toDate: "",
+    leadStatus: "",
+    leadFirstName: "",
+  });
+  const handleChange = (e) => {
+    console.log(e.target.name + e.target.value);
+    setSearchForm({
+      ...searchForm,
+      [e.target.name]: e.target.value,
+    });
+  };
   useEffect(() => {
     const LeadsData = async () => {
       try {
@@ -158,6 +171,7 @@ function LoanApprovalTable({ handle }) {
           <h2 className=" text-lg  font-sans font-bold  text-white p-4  ">
             Pending for Approval Loans
           </h2>
+          
           <button
           
           onClick={(e) => setIsChecked(true)}
@@ -170,9 +184,90 @@ function LoanApprovalTable({ handle }) {
           className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
             Only Active Approval Loans
             </button>
+            <button
+               className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
+               
+               Filter Approval Loans
+             </button>
+             <button
+               className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
+               
+               Reset Filter
+             </button>
+            <div className="flex flex-row">
+             
+           
+            
+           </div>
 
         
             
+            </div>
+
+            <div className="bg-[#86af49] w-full">
+            <div className="flex">
+                <div class="date-input">
+                  <label
+                    for="fromDate"
+                    className="text-white text-[18px] font-mono p-1 m-1"
+                  >
+                    From Date :{" "}
+                  </label>
+                  <input
+                    type="date"
+                    id="fromDate"
+                    onChange={handleChange}
+                    value={searchForm.fromDate}
+                    name="fromDate"
+                    className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="toDate"
+                    className="text-white text-[18px] font-mono p-1 m-1"
+                  >
+                    To Date :
+                  </label>
+                  <input
+                    type="date"
+                    id="toDate"
+                    onChange={handleChange}
+                    value={searchForm.toDate}
+                    className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+                    name="toDate"
+                  />
+                </div>
+                <div>
+                <label className="items-center mt-1 font-mono font-semibold text-white mt-1">
+                Search By First Name
+              </label>
+              <input
+                type="text"
+                id="leadFirstName"
+                value={searchForm.leadFirstName}
+                name="leadFirstName"
+                onChange={handleChange}
+                className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+              ></input>
+                </div>
+                <select
+                id="leadStatus"
+                value={searchForm.leadStatus}
+                onChange={handleChange}
+                name="leadStatus"
+                className="text-black text-[13px] h-[45px] font-mono m-1 rounded-xl"
+              >
+                <option value="">Select Status</option>
+                <option value="DISBURSED">DISBURSED</option>
+                <option value="REJECTED">REJECTED</option>
+              </select>
+            </div>
+            
+
+           
+
+
             </div>
           
 
@@ -192,6 +287,7 @@ function LoanApprovalTable({ handle }) {
                 >
                   Loan Approval Id
                 </th>
+                
                 <th
                   scope="col"
                   className="px-3 py-3 text-left  font-medium text-gray-500 uppercase tracking-wider border"
@@ -240,12 +336,7 @@ function LoanApprovalTable({ handle }) {
                 >
                   Created At
                 </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3 text-left  font-medium text-gray-500 uppercase tracking-wider border whitespace-nowrap"
-                >
-                  Disbursement Date
-                </th>
+                
                 <th
                   scope="col"
                   className="px-3 py-3   font-medium text-gray-500 uppercase tracking-wider border text-center"
@@ -322,9 +413,7 @@ function LoanApprovalTable({ handle }) {
                     <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
                       {parseUTCtoIST(user.createdAt)}
                     </td>
-                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
-                      {user.disbursementDate}
-                    </td>
+                   
                     <td className="px-2 py-4 whitespace-nowrap text-right  font-medium flex gap-2">
                       <button
                         onClick={() => handleOpenLeadDetail(user)}
@@ -421,9 +510,7 @@ function LoanApprovalTable({ handle }) {
                     {parseUTCtoIST(user.createdAt)}
 
                     </td>
-                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
-                      {user.disbursementDate}
-                    </td>
+                   
                     <td className="px-2 py-4 whitespace-nowrap text-right  font-medium flex gap-2">
                       <button
                         onClick={() => handleOpenLeadDetail(user)}

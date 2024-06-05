@@ -22,6 +22,50 @@ function LoanOngoingTable({ handle }) {
 
   const [isLeadUserFrame, setLeadUserFrame] = useState(false);
 
+  function parseUTCtoIST(utcString) {
+    const utcDate = new Date(utcString);
+    const options = { timeZone: "Asia/Kolkata", timeZoneName: "short" };
+    const istString = utcDate.toLocaleString("en-US", options);
+    return istString;
+  }
+  function unixToIST(unixTimestamp) {
+    // Check for validity, ensuring the timestamp is not too far in the future
+    const maxAllowedTimestamp = Date.now() + (100 * 365 * 24 * 60 * 60 * 1000); // 100 years from now
+    if (unixTimestamp > maxAllowedTimestamp) {
+      throw new Error('Unix timestamp is too far in the future and cannot be processed.');
+    }
+  
+    // If valid, proceed with conversion
+    const date = new Date(unixTimestamp);
+    const options = {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    };
+  
+    return date.toLocaleString('en-IN', options); 
+  }
+
+
+  const [searchForm, setSearchForm] = useState({
+    fromDate: "",
+    toDate: "",
+    leadStatus: "",
+    leadFirstName: "",
+  });
+  const handleChange = (e) => {
+    console.log(e.target.name + e.target.value);
+    setSearchForm({
+      ...searchForm,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+
   const handleOpenLeadUser = (lead_data) => {
     setLeadDeleteFrame(false);
     setcurrentLead(lead_data);
@@ -127,9 +171,79 @@ function LoanOngoingTable({ handle }) {
     <div className="overflow-hidden border border-gray-300 relative ">
       {!isLeadDetailFrame && (
         <div className="relative overflow-auto max-h-[680px] ">
-          <h2 className="px-5 py-4 text-base  font-sans font-bold  text-white p-2 rounded-md border-amber-800 bg-amber-600">
+          <h2 className="px-5 py-4 text-base  font-sans font-bold  text-white p-2  border-amber-800 bg-amber-600">
             Ongoing Loans
           </h2>
+          <div
+                            
+                            className="bg-amber-800"
+                            >
+                              <button
+               className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
+               
+               Filter Ongoing Loans
+             </button>
+             <button
+               className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
+               
+               Reset Filter
+             </button>
+             </div>
+             <div className="bg-amber-700 p-1 w-full">
+            <div className="flex">
+                <div class="date-input">
+                  <label
+                    for="fromDate"
+                    className="text-white text-[18px] font-mono p-1 m-1"
+                  >
+                    From Date :{" "}
+                  </label>
+                  <input
+                    type="date"
+                    id="fromDate"
+                    onChange={handleChange}
+                    value={searchForm.fromDate}
+                    name="fromDate"
+                    className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="toDate"
+                    className="text-white text-[18px] font-mono p-1 m-1"
+                  >
+                    To Date :
+                  </label>
+                  <input
+                    type="date"
+                    id="toDate"
+                    onChange={handleChange}
+                    value={searchForm.toDate}
+                    className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+                    name="toDate"
+                  />
+                </div>
+                <div>
+                <label className="items-center mt-1 font-mono font-semibold text-white mt-1">
+                Search By First Name
+              </label>
+              <input
+                type="text"
+                id="leadFirstName"
+                value={searchForm.leadFirstName}
+                name="leadFirstName"
+                onChange={handleChange}
+                className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+              ></input>
+                </div>
+                
+            </div>
+            
+
+           
+
+
+            </div>
 
           <table className="min-w-full table-auto p-1">
             <thead className="border">
@@ -194,6 +308,12 @@ function LoanOngoingTable({ handle }) {
                   className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
                 >
                   Created At
+                </th>
+                <th
+                  scope="col"
+                  className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                >
+                  Disbursement Date
                 </th>
 
                 <th
@@ -270,7 +390,10 @@ function LoanOngoingTable({ handle }) {
                         {user.leadAmount}
                       </td>
                       <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                        {user.createdAt}
+                        {parseUTCtoIST(user.createdAt)}
+                      </td>
+                      <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                        {unixToIST(Number(user.disbursementDate))}
                       </td>
                       <td className="px-2 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
                         <button

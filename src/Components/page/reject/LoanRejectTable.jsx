@@ -13,6 +13,19 @@ function LoanRejectTable({ handle }) {
   const [isLeadDeleteFrame,setLeadDeleteFrame] = useState(false);
 
   const [isLeadUserFrame,setLeadUserFrame] = useState(false);
+  const [searchForm, setSearchForm] = useState({
+    fromDate: "",
+    toDate: "",
+    leadStatus: "",
+    leadFirstName: "",
+  });
+  const handleChange = (e) => {
+    console.log(e.target.name + e.target.value);
+    setSearchForm({
+      ...searchForm,
+      [e.target.name]: e.target.value,
+    });
+  };
 
 
   const handleOpenLeadUser = (lead_data) => {
@@ -132,6 +145,12 @@ function LoanRejectTable({ handle }) {
     LeadsData();
     console.log("Maindashboarddiv mounted");
   }, []);
+  function parseUTCtoIST(utcString) {
+    const utcDate = new Date(utcString);
+    const options = { timeZone: "Asia/Kolkata", timeZoneName: "short" };
+    const istString = utcDate.toLocaleString("en-US", options);
+    return istString;
+  }
 
   if(leadsData==null){
     return (
@@ -145,7 +164,76 @@ function LoanRejectTable({ handle }) {
       {!isLeadDetailFrame && (
         <div className="relative overflow-auto max-h-[680px] ">
                             <h2 className="m-[10px] text-[16px]  font-sans font-bold  text-white p-2 rounded-md border-red-800 bg-red-600">All Rejected Loans</h2>
+                            <div
+                            
+                            className="bg-red-800"
+                            >
+                              <button
+               className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
+               
+               Filter Rejected Loans
+             </button>
+             <button
+               className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
+               
+               Reset Filter
+             </button>
+             </div>
+             <div className="bg-red-700 p-1 w-full">
+            <div className="flex">
+                <div class="date-input">
+                  <label
+                    for="fromDate"
+                    className="text-white text-[18px] font-mono p-1 m-1"
+                  >
+                    From Date :{" "}
+                  </label>
+                  <input
+                    type="date"
+                    id="fromDate"
+                    onChange={handleChange}
+                    value={searchForm.fromDate}
+                    name="fromDate"
+                    className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="toDate"
+                    className="text-white text-[18px] font-mono p-1 m-1"
+                  >
+                    To Date :
+                  </label>
+                  <input
+                    type="date"
+                    id="toDate"
+                    onChange={handleChange}
+                    value={searchForm.toDate}
+                    className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+                    name="toDate"
+                  />
+                </div>
+                <div>
+                <label className="items-center mt-1 font-mono font-semibold text-white mt-1">
+                Search By First Name
+              </label>
+              <input
+                type="text"
+                id="leadFirstName"
+                value={searchForm.leadFirstName}
+                name="leadFirstName"
+                onChange={handleChange}
+                className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+              ></input>
+                </div>
+                
+            </div>
+            
 
+           
+
+
+            </div>
         <table className="min-w-full rounded-3xl table-auto p-1">
           <thead className="border">
             <tr>
@@ -211,12 +299,7 @@ function LoanRejectTable({ handle }) {
               >
                 Created At
               </th>
-              <th
-                scope="col"
-                className="px-1 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider border whitespace-nowrap"
-              >
-                Disbursement Date
-              </th>
+              
               <th
                 scope="col"
                 className="px-2 py-3  text-[11px] font-medium text-gray-500 uppercase tracking-wider border text-center"
@@ -276,11 +359,9 @@ function LoanRejectTable({ handle }) {
                     {user.leadAmount}
                   </td>
                   <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
-                    {user.createdAt}
+                    {parseUTCtoIST(user.createdAt)}
                   </td>
-                  <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
-                    {user.disbursementDate}
-                  </td>
+                  
                   <td className="px-2 py-4 whitespace-nowrap text-right text-[11px] font-medium flex gap-2">
                     <button
                       onClick={() => handleOpenLeadDetail(user)}

@@ -89,6 +89,27 @@ function ItemLeadComponent({ userData }) {
     const istString = utcDate.toLocaleString("en-US", options);
     return istString;
   }
+  function unixToIST(unixTimestamp) {
+    // Check for validity, ensuring the timestamp is not too far in the future
+    const maxAllowedTimestamp = Date.now() + (100 * 365 * 24 * 60 * 60 * 1000); // 100 years from now
+    if (unixTimestamp > maxAllowedTimestamp) {
+      throw new Error('Unix timestamp is too far in the future and cannot be processed.');
+    }
+  
+    // If valid, proceed with conversion
+    const date = new Date(unixTimestamp);
+    const options = {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    };
+  
+    return date.toLocaleString('en-IN', options); 
+  }
 
   const deleteCurrentLead = async () => {
     try {
@@ -163,10 +184,10 @@ function ItemLeadComponent({ userData }) {
   }
 
   return (
-    <div className="  border-gray-300 h-full w-full relative ">
+    <div className="border-gray-300 h-full w-full  ">
       <ToastContainer />
       {!isLeadDetailFrame && (
-        <div className="relative overflow-x max-h-[680px] ">
+        <div className=" flex flex-col  ">
           {/* <h2 className="m-[10px] text-[20px]  font-mono font-bold  text-white p-2 rounded-md">View All Leads</h2> */}
           <div className="flex  px-5 py-2 items-center bg-amber-500 text-white">
             <div className="flex flex-row">
@@ -279,6 +300,12 @@ function ItemLeadComponent({ userData }) {
                   scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
                 >
+                  Generated Loan ID
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                >
                   Employee Info
                 </th>
                 <th
@@ -352,6 +379,9 @@ function ItemLeadComponent({ userData }) {
                     <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
                       {user._id.substring(20)}
                     </td>
+                    <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                      {user.generated_loan_id}
+                    </td>
                     <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border table-cell">
                       {user && user.user ? (
                         <>
@@ -407,7 +437,7 @@ function ItemLeadComponent({ userData }) {
                       {parseUTCtoIST(user.createdAt)}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                      {parseUTCtoIST(user.disbursementDate)}
+                      {unixToIST(Number(user.disbursementDate))}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
                       <button
