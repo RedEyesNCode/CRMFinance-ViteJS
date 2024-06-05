@@ -112,7 +112,12 @@ function LoanApprovalTable({ handle }) {
     setLeadUserFrame(false);
     callLeadApi();
   };
-
+  function parseUTCtoIST(utcString) {
+    const utcDate = new Date(utcString);
+    const options = { timeZone: "Asia/Kolkata", timeZoneName: "short" };
+    const istString = utcDate.toLocaleString("en-US", options);
+    return istString;
+  }
   useEffect(() => {
     const LeadsData = async () => {
       try {
@@ -144,9 +149,9 @@ function LoanApprovalTable({ handle }) {
   }
 
   return (
-    <div className="border-t border-gray-300 relative ">
+    <div className="border-t border-gray-300 relative overflow-auto">
       {!isLeadDetailFrame && (
-        <div className="relative overflow-auto max-h-[680px] ">
+        <div className="relative h-[fill] ">
           
           
           <div className="border-green-900 bg-[#86af49] flex flex-row justify-items-start items-center">
@@ -261,11 +266,22 @@ function LoanApprovalTable({ handle }) {
                       {index + 1}.
                     </td>
 
-                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
-                      {user._id}
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900 border relative group">
+                      <div className="whitespace-nowrap overflow-hidden text-ellipsis rounded-lg bg-indigo-800 text-white p-1 m-2">
+                      {user._id.substring(20)}
+                      </div>
+                      <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10">
+                        {user._id}
+                      </div>
                     </td>
-                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
-                      {user.user}
+                    <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border table-cell">
+                      {user && user.user ? (
+                        <>
+                          {user.user.fullName} <br /> {user.user.employeeId}
+                        </>
+                      ) : (
+                        "N/A" // Or any appropriate placeholder for missing data
+                      )}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
                       {user.firstName}
@@ -304,7 +320,7 @@ function LoanApprovalTable({ handle }) {
                       {user.leadAmount}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
-                      {user.createdAt}
+                      {parseUTCtoIST(user.createdAt)}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
                       {user.disbursementDate}
@@ -347,11 +363,23 @@ function LoanApprovalTable({ handle }) {
                       {index + 1}.
                     </td>
 
-                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
-                      {user._id}
+                    
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900 border relative group">
+                      <div className="whitespace-nowrap overflow-hidden text-ellipsis rounded-lg bg-indigo-800 text-white p-1">
+                      {user._id.substring(20)}
+                      </div>
+                      <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10">
+                        {user._id}
+                      </div>
                     </td>
-                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
-                      {user.user}
+                    <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border table-cell">
+                      {user && user.user ? (
+                        <>
+                          {user.user.fullName} <br /> {user.user.employeeId}
+                        </>
+                      ) : (
+                        "N/A" // Or any appropriate placeholder for missing data
+                      )}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
                       {user.firstName}
@@ -390,7 +418,8 @@ function LoanApprovalTable({ handle }) {
                       {user.leadAmount}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
-                      {user.createdAt}
+                    {parseUTCtoIST(user.createdAt)}
+
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
                       {user.disbursementDate}

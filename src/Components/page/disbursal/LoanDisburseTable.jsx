@@ -132,6 +132,12 @@ function LoanDisburseTable({ handle }) {
     LeadsData();
     console.log("Maindashboarddiv mounted");
   }, []);
+  function parseUTCtoIST(utcString) {
+    const utcDate = new Date(utcString);
+    const options = { timeZone: "Asia/Kolkata", timeZoneName: "short" };
+    const istString = utcDate.toLocaleString("en-US", options);
+    return istString;
+  }
 
   if(leadsData==null){
     return (
@@ -275,7 +281,7 @@ function LoanDisburseTable({ handle }) {
                     {user.leadAmount}
                   </td>
                   <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
-                    {user.createdAt}
+                    {parseUTCtoIST(user.createdAt)}
                   </td>
                   <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
                     {user.disbursementDate}

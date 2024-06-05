@@ -8,6 +8,20 @@ export const getAllLeads = async () => {
     throw error;
   }
 };
+
+export const searchLeads = async (search_data) => {
+
+  try {
+    const response = await apiService("search-lead", "POST",search_data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+
+
+}
+
+
 export const getAllUsers = async () => {
   try {
     const response = await apiService("get-all-users", "GET");
@@ -134,6 +148,8 @@ export const deleteUser = async (lead_delete_data) => {
     throw error;
   }
 };
+
+
 
 export const deleteAttendance = async (lead_delete_data) => {
   try {

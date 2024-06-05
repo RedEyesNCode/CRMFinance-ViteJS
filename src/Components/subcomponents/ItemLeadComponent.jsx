@@ -1,12 +1,28 @@
 import React, { useState, useEffect, useRef } from "react";
-import { deleteLead, getAllLeads } from "../../apis/apiInterface";
+import { deleteLead, getAllLeads, searchLeads } from "../../apis/apiInterface";
 import { useNavigate } from "react-router-dom"; // Import useHistory from react-router-dom
 import LeadDetailsComponent from "../page/LeadDetailsComponent";
 import CreateNewLead from "./CreateNewLead";
+import { ToastContainer, toast } from "react-toastify";
 
 function ItemLeadComponent({ userData }) {
   const [leadsData, setLeadsData] = useState(null);
   const [currentLead, setcurrentLead] = useState(null);
+
+  const [searchForm, setSearchForm] = useState({
+    fromDate: "",
+    toDate: "",
+    leadStatus: "",
+    leadFirstName: "",
+  });
+  const handleChange = (e) => {
+    console.log(e.target.name + e.target.value);
+    setSearchForm({
+      ...searchForm,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const [isLeadDetailFrame, setLeadDetailFrame] = useState(false);
 
   const [isLeadDeleteFrame, setLeadDeleteFrame] = useState(false);
@@ -67,6 +83,12 @@ function ItemLeadComponent({ userData }) {
     setLeadDeleteFrame(false);
     // navigate("/lead-details");
   };
+  function parseUTCtoIST(utcString) {
+    const utcDate = new Date(utcString);
+    const options = { timeZone: "Asia/Kolkata", timeZoneName: "short" };
+    const istString = utcDate.toLocaleString("en-US", options);
+    return istString;
+  }
 
   const deleteCurrentLead = async () => {
     try {
@@ -85,6 +107,30 @@ function ItemLeadComponent({ userData }) {
     setLeadDeleteFrame(false);
     setLeadUserFrame(false);
     callLeadApi();
+  };
+
+  const callSearchLeadAPI = async () => {
+    try {
+      if (searchForm.fromDate.length === 0) {
+        toast.error("Please enter from date");
+      } else if (searchForm.toDate.length === 0) {
+        toast.error("Please enter toDate");
+      } else if (searchForm.leadStatus.length === 0) {
+        toast.error("Please enter lead status");
+      } else if (searchForm.leadFirstName.length === 0) {
+        toast.error("Please enter lead first name");
+      } else {
+        const response = await searchLeads(searchForm);
+        if (response.status == "success") {
+          setLeadsData(response);
+        } else {
+          setLeadsData(null);
+        }
+        console.log(response);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -118,19 +164,99 @@ function ItemLeadComponent({ userData }) {
 
   return (
     <div className="  border-gray-300 h-full w-full relative ">
+      <ToastContainer />
       {!isLeadDetailFrame && (
-        <div className="relative overflow-auto max-h-[680px] ">
+        <div className="relative overflow-x max-h-[680px] ">
           {/* <h2 className="m-[10px] text-[20px]  font-mono font-bold  text-white p-2 rounded-md">View All Leads</h2> */}
-          <div className="flex justify-between px-5 py-2 items-center bg-amber-500 text-white">
-            <h2 className="m-[10px] text-[20px] font-mono font-bold">
-              View All Leads
-            </h2>
-            <button
-              onClick={() => setaddLead(true)}
-              className="border  px-3 h-10 rounded-xl font-semibold"
-            >
-              Add Lead
-            </button>
+          <div className="flex  px-5 py-2 items-center bg-amber-500 text-white">
+            <div className="flex flex-row">
+              <h2 className="m-[10px] text-[20px] font-mono font-bold">
+                View All Leads
+              </h2>
+              <div className="flex flex-row justify-normal item-center">
+                <div class="date-input">
+                  <label
+                    for="fromDate"
+                    className="text-white text-[18px] font-mono p-1 m-1"
+                  >
+                    From Date :{" "}
+                  </label>
+                  <input
+                    type="date"
+                    id="fromDate"
+                    onChange={handleChange}
+                    value={searchForm.fromDate}
+                    name="fromDate"
+                    className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="toDate"
+                    className="text-white text-[18px] font-mono p-1 m-1"
+                  >
+                    To Date :
+                  </label>
+                  <input
+                    type="date"
+                    id="toDate"
+                    onChange={handleChange}
+                    value={searchForm.toDate}
+                    className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+                    name="toDate"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-row">
+              <label className="items-center mt-1 font-mono font-semibold">
+                Search By First Name
+              </label>
+              <input
+                type="text"
+                id="leadFirstName"
+                value={searchForm.leadFirstName}
+                name="leadFirstName"
+                onChange={handleChange}
+                className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+              ></input>
+
+              <select
+                id="leadStatus"
+                value={searchForm.leadStatus}
+                onChange={handleChange}
+                name="leadStatus"
+                className="text-black text-[13px] font-mono m-1 rounded-xl"
+              >
+                <option value="">Select Lead Status</option>
+                <option value="APPROVED">APPROVED</option>
+                <option value="PENDING">PENDING</option>
+                <option value="REJECTED">REJECTED</option>
+                <option value="DISBURSED">DISBURSED</option>
+              </select>
+            </div>
+
+            <div className="flex flex-row justify-between">
+             
+              <button
+                onClick={() => callSearchLeadAPI()}
+                className="border-2 border-amber-400 bg-slate-700  px-3 h-15 rounded-xl m-4 font-semibold"
+              >
+                Filter Leads
+              </button>
+              <button
+                onClick={() => callLeadApi()}
+                className="border-2 border-amber-400 bg-red-700  px-3 h-15 rounded-xl m-4 font-semibold"
+              >
+                Reset Filter
+              </button>
+              <button
+                onClick={() => setaddLead(true)}
+                className="border  px-3 h-15 rounded-xl m-4 font-semibold"
+              >
+                Add Lead
+              </button>
+            </div>
           </div>
 
           <table className="min-w-full rounded-3xl table-auto p-1">
@@ -224,16 +350,16 @@ function ItemLeadComponent({ userData }) {
                     </td>
 
                     <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                      {user._id}
+                      {user._id.substring(20)}
                     </td>
                     <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border table-cell">
-                    {user && user.user ? (
-        <>
-            {user.user.fullName} <br/>  {user.user.employeeId}
-        </>
-    ) : (
-        "N/A" // Or any appropriate placeholder for missing data
-    )}
+                      {user && user.user ? (
+                        <>
+                          {user.user.fullName} <br /> {user.user.employeeId}
+                        </>
+                      ) : (
+                        "N/A" // Or any appropriate placeholder for missing data
+                      )}
                     </td>
                     <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
                       {user.firstName}
@@ -249,8 +375,16 @@ function ItemLeadComponent({ userData }) {
                     </td>
                     <td
                       className={`px-2 py-2 whitespace-nowrap text-sm font-medium border 
-                ${user.lead_status === "PENDING" ? "bg-yellow-500 text-center text-white" : ""}
-                ${user.lead_status === "DISBURSED" ? "bg-blue-500 rounded-none text-center text-white" : ""}
+                ${
+                  user.lead_status === "PENDING"
+                    ? "bg-yellow-500 text-center text-white"
+                    : ""
+                }
+                ${
+                  user.lead_status === "DISBURSED"
+                    ? "bg-blue-500 rounded-none text-center text-white"
+                    : ""
+                }
 
                 ${
                   user.lead_status === "APPROVED"
@@ -270,10 +404,10 @@ function ItemLeadComponent({ userData }) {
                       {user.leadAmount}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                      {user.createdAt}
+                      {parseUTCtoIST(user.createdAt)}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                      {user.disbursementDate}
+                      {parseUTCtoIST(user.disbursementDate)}
                     </td>
                     <td className="px-2 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
                       <button
