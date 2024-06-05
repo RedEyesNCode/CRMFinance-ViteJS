@@ -18,7 +18,7 @@ function FilterLeadComponent() {
   const formattedDate = dateTime.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
 
   return (
-    <main className="h-full   ">
+    <main className=" w-full ">
 
       <ItemLeadComponent/>
      
