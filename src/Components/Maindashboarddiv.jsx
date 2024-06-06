@@ -13,6 +13,7 @@ import {
 } from "../apis/apiInterface";
 import AsideDivForDashBoard from "./AsideDivForDashBoard";
 import FilterDashboardData from "./FilterDashboardData";
+import apiService from "../apis/apiService";
 
 const Maindashboarddiv = () => {
   const [LeadData, setLeadData] = useState([]);
@@ -44,7 +45,7 @@ const Maindashboarddiv = () => {
   useEffect(() => {
     const LeadsData = async () => {
       try {
-        const response = await getAllLeads();
+        // const response = await getAllLeads();
         const responseVisits = await getAllVisits();
         const responseAttendance = await getAllAttendance();
         const responseAllUsers = await getAllUsers();
@@ -52,7 +53,11 @@ const Maindashboarddiv = () => {
         setVisitData(responseVisits.data);
         setUsersData(responseAllUsers.data);
 
-        setLeadData(response.data);
+        apiService('get-all-leads', 'GET')
+        .then(response => setLeadData(response.data))
+        .catch(error => console.error('Error fetching leads:', error));
+
+        // setLeadData(response.data);
         console.log(response);
       } catch (error) {
         console.log(error);

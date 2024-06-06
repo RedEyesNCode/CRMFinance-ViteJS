@@ -4,10 +4,33 @@ import { useNavigate } from "react-router-dom"; // Import useHistory from react-
 import LeadDetailsComponent from "../page/LeadDetailsComponent";
 import CreateNewLead from "./CreateNewLead";
 import { ToastContainer, toast } from "react-toastify";
+import apiService from "../../apis/apiService";
+import ReactPaginate from "react-paginate";
+import { BsBack } from "react-icons/bs";
 
 function ItemLeadComponent({ userData }) {
   const [leadsData, setLeadsData] = useState(null);
   const [currentLead, setcurrentLead] = useState(null);
+  const [currentPage,setCurrentPage] = useState(1);
+  const [rowsPerPage,setRowsPerPage] = useState(100);
+
+  const handlePageChange = (selectedPage) => {
+    setCurrentPage(selectedPage.selected+1);
+};
+
+const handleRowsPerPageChange = (event) => {
+    const newRowsPerPage = parseInt(event.target.value, 10);
+    setRowsPerPage(newRowsPerPage);
+    setCurrentPage(1); // Reset to the first page when rows per page changes
+
+};
+
+useEffect(() => {
+  callLeadApi();
+
+}, [currentPage, rowsPerPage]);
+
+
 
   const [searchForm, setSearchForm] = useState({
     fromDate: "",
@@ -29,6 +52,10 @@ function ItemLeadComponent({ userData }) {
 
   const [isLeadUserFrame, setLeadUserFrame] = useState(false);
   const [addLead, setaddLead] = useState(false);
+
+
+
+
 
   const handleOpenLeadUser = (lead_data) => {
     setLeadDeleteFrame(false);
@@ -62,13 +89,26 @@ function ItemLeadComponent({ userData }) {
   };
   const callLeadApi = async () => {
     try {
-      const response = await getAllLeads();
-      if (response.status == "success") {
-        setLeadsData(response);
-      } else {
-        setLeadsData(null);
-      }
-      console.log(response);
+      const rawJson = {page : currentPage, limit : rowsPerPage}
+      // apiService('get-all-leads', 'POST',rawJson)
+      //   .then(response => {
+      //     if (response.status == "success") {
+      //     setLeadsData(response);
+      //   } else {
+      //     setLeadsData(null);
+      //   }
+      //   console.log(response);
+
+
+      //   })
+      //   .catch(error => console.error('Error fetching leads:', error));
+
+        const response = await getAllLeads(rawJson);
+        if (response.status == "success") {
+          setLeadsData(response);
+        } else {
+          setLeadsData(null);
+        }
     } catch (error) {
       console.log(error);
     }
@@ -157,13 +197,27 @@ function ItemLeadComponent({ userData }) {
   useEffect(() => {
     const LeadsData = async () => {
       try {
-        const response = await getAllLeads();
+        const rawJson = {page : currentPage, limit : rowsPerPage}
+
+        // apiService('get-all-leads', 'POST',rawJson)
+        // .then(response => {
+        //   if (response.status == "success") {
+            
+        //   setLeadsData(response);
+        // } else {
+        //   setLeadsData(null);
+        // }
+        // console.log(response);
+
+
+        // })
+        // .catch(error => console.error('Error fetching leads:', error));
+        const response = await getAllLeads(rawJson);
         if (response.status == "success") {
           setLeadsData(response);
         } else {
           setLeadsData(null);
         }
-        console.log(response);
       } catch (error) {
         console.log(error);
       }
@@ -184,12 +238,12 @@ function ItemLeadComponent({ userData }) {
   }
 
   return (
-    <div className="border-gray-300 h-full w-full  ">
+    <div className="border-gray-300 h-full w-full ">
       <ToastContainer />
       {!isLeadDetailFrame && (
         <div className=" flex flex-col  ">
           {/* <h2 className="m-[10px] text-[20px]  font-mono font-bold  text-white p-2 rounded-md">View All Leads</h2> */}
-          <div className="flex  px-5 py-2 items-center bg-amber-500 text-white">
+          <div className="flex  px-5 py-2 items-center bg-gradient-to-r from-[#3858f9] to-[#e43364] text-white">
             <div className="flex flex-row">
               <h2 className="m-[10px] text-[20px] font-mono font-bold">
                 View All Leads
@@ -279,6 +333,7 @@ function ItemLeadComponent({ userData }) {
               </button>
             </div>
           </div>
+          
 
           <table className="min-w-full rounded-3xl table-auto p-1">
             <thead className="border">
@@ -365,6 +420,7 @@ function ItemLeadComponent({ userData }) {
               </tr>
             </thead>
             <tbody className="bg-white  divide-gray-200">
+            
               {leadsData &&
                 leadsData.status != "fail" &&
                 leadsData.data.map((user, index) => (
@@ -463,6 +519,37 @@ function ItemLeadComponent({ userData }) {
                 ))}
             </tbody>
           </table>
+          {leadsData && (
+              <div className="flex justify-between items-center mb-4 bg-gradient-to-r from-[#e43364] to-[#3858f9] p-2">
+              <div>
+                  <span className="text-white font-mono text-[18px]">Rows per page: </span>
+                  <select value={rowsPerPage} className="rounded-lg border-2 border-slate-600" onChange={handleRowsPerPageChange}>
+                      <option value={100}>100</option>
+                      <option value={25}>25</option>
+                      <option value={5}>5</option>
+
+                      <option value={50}>50</option>
+                      <option value={200}>200</option>
+                      <option value={250}>250</option>
+                      <option value={500}>500</option>
+
+                  </select>
+              </div>
+  
+              <ReactPaginate
+                  breakLabel="..."
+                  nextLabel={<button className="text-white text-[19px] font-mono rounded-md bg-cyan-800 p-1">Next</button>}
+                  onPageChange={handlePageChange}
+                  pageRangeDisplayed={5}
+                  pageCount={leadsData.totalPages}
+                  previousLabel={<button className="text-white text-[19px] font-mono rounded-md bg-cyan-800 p-1">Previous</button>}
+                  containerClassName="pagination-buttons flex"
+                  activeClassName="bg-indigo-900 text-white"
+                  pageClassName="px-3 py-1 rounded bg-gray-200 mx-1 hover:bg-gray-300"
+              />
+          </div>
+            )}
+          
         </div>
       )}
       {isLeadDetailFrame && (
@@ -528,6 +615,7 @@ function ItemLeadComponent({ userData }) {
           </p>
         </>
       )}
+      
     </div>
   );
 }

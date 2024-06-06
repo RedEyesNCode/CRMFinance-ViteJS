@@ -1,8 +1,8 @@
 import apiService from "./apiService";
 
-export const getAllLeads = async () => {
+export const getAllLeads = async (data) => {
   try {
-    const response = await apiService("get-all-leads", "GET");
+    const response = await apiService("get-all-leads", "POST",data);
     return response;
   } catch (error) {
     throw error;
