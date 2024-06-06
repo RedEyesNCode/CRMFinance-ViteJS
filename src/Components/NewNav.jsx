@@ -21,6 +21,7 @@ import RecycleBinView from "./page/RecycleBinView";
 import FilterDashboardData from "./FilterDashboardData";
 import LoanOngoingTable from "./page/ongoing/LoanOngoingTable";
 import LoanClosedTable from "./page/closed/LoanClosedTable";
+import UserCollectionTable from "./page/user/UserCollectionTable";
 
 const NewNav = () => {
   const [selected, setSelected] = useState("Home");
@@ -36,6 +37,8 @@ const NewNav = () => {
       submenu: [
         { name: "Visit", component: <LiaDotCircle /> },
         { name: "Attendence", component: <LiaDotCircle /> },
+        { name: "Collections", component: <LiaDotCircle /> },
+
         { name: "CRM Employee", component: <LiaDotCircle /> },
       ],
     },
@@ -50,7 +53,6 @@ const NewNav = () => {
 
         { name: "Closed Loans", component: <LiaDotCircle /> },
 
-        { name: "History", component: <LiaDotCircle /> },
       ],
     },
     { component: <BiLogoPostgresql />, name: "Banners" },
@@ -162,6 +164,7 @@ const NewNav = () => {
         )}
         {selected === "Disbursal Loan" && <LoanDisburseTable />}
         {selected === "Rejected Loans" && <LoanRejectTable />}
+        {selected === "Collections" && (<UserCollectionTable/>)}
       </div>
     </div>
   );

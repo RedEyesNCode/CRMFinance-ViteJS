@@ -1,16 +1,47 @@
 import apiService from "./apiService";
 
-export const getAllLeads = async () => {
+export const getAllLeads = async (data) => {
   try {
-    const response = await apiService("get-all-leads", "GET");
+    const response = await apiService("get-all-leads", "POST",data);
     return response;
   } catch (error) {
     throw error;
   }
 };
+
+export const searchLeads = async (search_data) => {
+
+  try {
+    const response = await apiService("search-lead", "POST",search_data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+
+
+}
+
+
 export const getAllUsers = async () => {
   try {
     const response = await apiService("get-all-users", "GET");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getAllCollection = async () => {
+  try {
+    const response = await apiService("get-users-with-collection", "GET");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getCollectionData = async (data) => {
+  try {
+    console.log(data);
+    const response = await apiService("get-user-collection", "POST",data);
     return response;
   } catch (error) {
     throw error;
@@ -134,6 +165,17 @@ export const deleteUser = async (lead_delete_data) => {
     throw error;
   }
 };
+export const deleteUserCollection = async (data) => {
+  try {
+    console.log(data);
+    const response = await apiService("delete-user-collection", "POST", data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 
 export const deleteAttendance = async (lead_delete_data) => {
   try {
@@ -410,6 +452,17 @@ export const createUserLead = async (formData) => {
   try {
     const response = await apiService(
       "create-lead",
+      "POST",formData
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const createCollection = async (formData) => {
+  try {
+    const response = await apiService(
+      "create-user-collection",
       "POST",formData
     );
     return response;

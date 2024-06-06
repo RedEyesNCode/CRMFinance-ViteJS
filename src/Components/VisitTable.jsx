@@ -44,6 +44,12 @@ const VisitTable = () => {
       console.log(error);
     }
   };
+  function parseUTCtoIST(utcString) {
+    const utcDate = new Date(utcString);
+    const options = { timeZone: "Asia/Kolkata", timeZoneName: "short" };
+    const istString = utcDate.toLocaleString("en-US", options);
+    return istString;
+  }
 
   useEffect(() => {
     const VisitData = async () => {
@@ -63,8 +69,8 @@ const VisitTable = () => {
   }, [addVisit]);
 
   return (
-    <main className="relative h-full w-full overflow-auto">
-      <div className="rounded-2xl border border-gray-300 border-r-0 h-full w-full">
+    <main className="h-full w-full">
+      <div className="rounded-2xl border border-gray-300 border-r-0 h-full w-full  relative overflow-x h-fill">
         {VisitData ? (
           <div className="w-full text-[20px] font-mono font-bold bg-sky-500 text-white px-5 py-3  flex justify-between items-center">
             View All Visits in DB.
@@ -108,7 +114,7 @@ const VisitTable = () => {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
                   >
-                    User info
+                    Emp Info
                   </th>
                   <th
                     scope="col"
@@ -177,17 +183,28 @@ const VisitTable = () => {
                         {index + 1}.
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                        {Visit._id}
+                      {Visit._id.substring(20)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                        fill user
+                      {Visit && Visit.user ? (
+                        <>
+                          {Visit.user.fullName} <br /> {Visit.user.employeeId}
+                        </>
+                      ) : (
+                        "N/A" // Or any appropriate placeholder for missing data
+                      )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
                         {Visit.customerName}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                      <td className="px-6 py-4 text-sm font-medium text-gray-900 border relative group">
+                      <div className="whitespace-nowrap overflow-hidden text-ellipsis rounded-lg bg-indigo-800 text-white p-1">
+                        View Address
+                      </div>
+                      <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10">
                         {Visit.address}
-                      </td>
+                      </div>
+                    </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm  font-medium border ">
                         {Visit.latitude}
                       </td>
@@ -195,10 +212,15 @@ const VisitTable = () => {
                         {Visit.longitude}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                        {Visit.createdAt}
+                        {parseUTCtoIST(Visit.createdAt)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                        <img src={Visit.photo ? image : image} alt="" />
+                        <img 
+                        
+                        onClick={() =>
+                          window.open(Visit.photo, "_blank")
+                        }
+                        src={Visit.photo} alt="Visit Image" className="rounded-xl" />
                       </td>
 
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium border">

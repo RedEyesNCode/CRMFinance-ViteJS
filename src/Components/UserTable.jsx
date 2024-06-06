@@ -150,10 +150,10 @@ const UserTable = () => {
   }
 
   return (
-    <main className="h-full w-full overflow-hidden">
-      <div className="overflow-hidden  border border-gray-300 relative">
+    <main className="h-full w-full">
+      <div className="  border border-gray-300 relative">
         {!isUserDetailsFrame && UserData && (
-          <div className="relative overflow-auto max-h-[680px]">
+          <div className="relative overflow-auto h-fill">
             <div className="flex justify-between px-5 py-2 items-center bg-indigo-700 text-white">
               <h2 className="m-[10px] text-[20px] font-mono font-bold">
                 View All Users
@@ -226,7 +226,7 @@ const UserTable = () => {
                         {index + 1}.
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                        {user._id}
+                        {user._id.substring(20)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
                         {user.fullName}

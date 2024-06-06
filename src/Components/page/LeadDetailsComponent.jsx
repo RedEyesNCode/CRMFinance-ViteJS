@@ -473,8 +473,17 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
               >
                 Adhar Back
               </button>
-              {leads_status === "APPROVED" && (
-                <button
+              <button
+                className={`px-4 py-2 rounded-md ${
+                  activeTabDocs === "additional"
+                    ? "bg-purple-500 text-white"
+                    : "bg-gray-400"
+                }`}
+                onClick={() => setActiveTabDocs("additional")}
+              >
+                Additional Document
+              </button>
+              <button
                   className={`px-4 py-2 rounded-md ${
                     activeTabDocs === "upload_pdf"
                       ? "bg-purple-500 text-white"
@@ -484,7 +493,6 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                 >
                   Upload Cibil Pdf
                 </button>
-              )}
               {/* Add more buttons for 'ENACH' and 'UPDATE KYC' */}
             </div>
 
@@ -501,6 +509,20 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                     }
                     className="h-[100px] w-[100px] rounded-2xl object-cover"
                     src={lead_data.pancard_img}
+                  />
+                </div>
+              )}
+               {activeTabDocs === "additional" && (
+                <div className="p-4 bg-white  shadow-md m-[10px] border-[2px] rounded-3xl border-amber-500">
+                  <h2 className="text-xl font-semibold mb-2 text-gray-400 text-[20px]">
+                    Additional Document
+                  </h2>
+                  <img
+                    onClick={() =>
+                      window.open(lead_current_data.additional_document, "_blank")
+                    }
+                    className="h-[100px] w-[100px] rounded-2xl object-cover"
+                    src={lead_data.additional_document}
                   />
                 </div>
               )}
@@ -564,6 +586,14 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                   >
                     Upload
                   </button>
+                  <img
+                    onClick={() =>
+                      window.open(lead_current_data.cibil_pdf, "_blank")
+                    }
+                    className="h-[100px] w-[100px] rounded-2xl object-cover"
+                    src={lead_data.cibil_pdf}
+                    alt="CIBIL-PDF"
+                  />
                 </div>
               )}
               {/* Add content for 'ENACH' and 'UPDATE KYC' tabs */}
