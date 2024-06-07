@@ -1,17 +1,73 @@
 import React, { useState, useEffect, useRef } from "react";
-import { deleteUser, getAllUsers, createUser } from "../apis/apiInterface";
+import { deleteUser, getAllUsers, createUser, updateUser } from "../apis/apiInterface";
 import UserDetailsComponent from "./page/UserDetailsComponent";
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 const UserTable = () => {
   const [UserData, setUserData] = useState(null);
   const [CurrentUser, setCurrentUser] = useState(null);
   const [isUserDeleteFrame, setUserDeleteFrame] = useState(null);
   const [isUserDetailsFrame, setUserDetailFrame] = useState(null);
+  const [isUserUpdateFrame,setUserUpdateFrame] = useState(null);
+
+
+  const handleUpdateUserFrame = (user) => {
+    setUserUpdateFrame(true);
+    setUserDetailFrame(false);
+    setUserDeleteFrame(false);
+    setCurrentUser(user);
+    setUpdateUserFormData({
+      userId : user._id,
+      fullName : user.fullName,
+      telephoneNumber : user.telephoneNumber,
+      empId : user.employeeId,
+      mPass : user.mpass
+    })
+
+
+
+  }
+  const closeUpdateUserFrame = ()=> {
+    setUserUpdateFrame(false);
+    setUserDetailFrame(false);
+    setUserDeleteFrame(false);
+    callGetUsersAPI();
+ 
+  }
   const [addUser, setaddUser] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     telephoneNumber: "",
   });
+  const [updateUserFormData,setUpdateUserFormData] = useState({
+    userId : "",
+    fullName: "",
+    telephoneNumber: "",
+    empId: "",
+    mPass: "",
+  });
+
+  const handleChangeUpdateUser = (e) => {
+    const { name, value } = e.target;
+    setUpdateUserFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleUpdateUser = async () => {
+    try{
+      const response = await updateUser(updateUserFormData);
+      window.alert(response.message);
+
+      
+    }catch(error){
+      console.log(error);
+    }
+
+  }
+
   const deleteCurrentUser = async () => {
     try {
       const rawJson = { userId: CurrentUser._id };
@@ -104,6 +160,7 @@ const UserTable = () => {
   if (UserData == null) {
     return (
       <main className="w-full bg-blue-800 flex items-center justify-between px-10 py-3 relative">
+        <ToastContainer/>
         <h2 className="text-white text-[21px] font-semibold font-mono  rounded-md p-2">
           No Users found !!
         </h2>
@@ -249,6 +306,12 @@ const UserTable = () => {
                           Delete User
                         </button>
                         <button
+                          onClick={() => handleUpdateUserFrame(user)}
+                          className="text-white bg-green-600 px-3 py-2 rounded-md m-2"
+                        >
+                          Update User
+                        </button>
+                        <button
                           onClick={() => handleOpenUserDetails(user)}
                           className="text-white bg-yellow-600 px-3 py-2 rounded-md m-2"
                         >
@@ -268,6 +331,70 @@ const UserTable = () => {
           />
         )}
       </div>
+      {isUserUpdateFrame && !isUserDeleteFrame && (
+         <div className="fixed z-10 inset-0 overflow-y-auto flex items-center justify-center border-2 border-indigo-700">
+         <div className="bg-white rounded-lg shadow-lg p-8 max-w-sm border-2 border-indigo-700">
+           <h2 className="text-2xl font-bold mb-4">Update User</h2>
+            <h2 className="bg-amber-600 rounded-md p-2 m-1 text-white font-mono font-semibold">{updateUserFormData.userId}</h2>
+           <label>Full Name</label>
+
+             <input
+               type="text"
+               name="fullName"
+               value={updateUserFormData.fullName}
+               onChange={handleChangeUpdateUser}
+               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+               placeholder="Full Name"
+             />
+             <label>Employee ID</label>
+             <input
+               type="text"
+               name="empId"
+               value={updateUserFormData.empId}
+               onChange={handleChangeUpdateUser}
+               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+               placeholder="Employee Id"
+             />
+                          <label className="mt-2">MPass</label>
+
+             <input
+               type="text"
+               name="mPass"
+               value={updateUserFormData.mPass}
+               onChange={handleChangeUpdateUser}
+               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+               placeholder="mPass"
+             />
+                <label>Telephone Number</label>
+                <input
+               type="text"
+               name="telephoneNumber"
+               value={updateUserFormData.telephoneNumber}
+               onChange={handleChangeUpdateUser}
+               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+               placeholder="telephoneNumber"
+             />
+
+   
+             <button
+               type="submit"
+               onClick={handleUpdateUser}
+               className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"
+             >
+               Update
+             </button>
+           <button
+             onClick={closeUpdateUserFrame}
+             className="mt-4 px-4 py-2 bg-slate-600 rounded-md w-full text-white hover:text-white focus:outline-none"
+           >
+             Cancel
+           </button>
+         </div>
+       </div>
+
+
+
+      )}
       {isUserDeleteFrame && (
         <div className="fixed z-10 inset-0 overflow-y-auto flex items-center justify-center">
           <div className="bg-white rounded-lg shadow-lg p-8 max-w-sm">

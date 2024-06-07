@@ -591,7 +591,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                       window.open(lead_current_data.cibil_pdf, "_blank")
                     }
                     className="h-[100px] w-[100px] rounded-2xl object-cover"
-                    src={lead_data.cibil_pdf}
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/1667px-PDF_file_icon.svg.png"
                     alt="CIBIL-PDF"
                   />
                 </div>

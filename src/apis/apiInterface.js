@@ -9,6 +9,17 @@ export const getAllLeads = async (data) => {
   }
 };
 
+
+export const updateUser = async (data) => {
+
+  try {
+    const response = await apiService("update-user", "POST",data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const searchLeads = async (search_data) => {
 
   try {
