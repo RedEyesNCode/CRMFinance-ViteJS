@@ -2,7 +2,16 @@ import apiService from "./apiService";
 
 export const getAllLeads = async (data) => {
   try {
-    const response = await apiService("get-all-leads", "POST",data);
+    const response = await apiService("get-all-leads", "POST", data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateUser = async (data) => {
+  try {
+    const response = await apiService("update-user", "POST", data);
     return response;
   } catch (error) {
     throw error;
@@ -10,17 +19,13 @@ export const getAllLeads = async (data) => {
 };
 
 export const searchLeads = async (search_data) => {
-
   try {
-    const response = await apiService("search-lead", "POST",search_data);
+    const response = await apiService("search-lead", "POST", search_data);
     return response;
   } catch (error) {
     throw error;
   }
-
-
-}
-
+};
 
 export const getAllUsers = async () => {
   try {
@@ -41,7 +46,7 @@ export const getAllCollection = async () => {
 export const getCollectionData = async (data) => {
   try {
     console.log(data);
-    const response = await apiService("get-user-collection", "POST",data);
+    const response = await apiService("get-user-collection", "POST", data);
     return response;
   } catch (error) {
     throw error;
@@ -57,10 +62,7 @@ export const createUser = async (formData) => {
 };
 export const createVisit = async (formData) => {
   try {
-    const response = await apiService(
-      "create-visit",
-      "POST",formData
-    );
+    const response = await apiService("create-visit", "POST", formData);
     return response;
   } catch (error) {
     throw error;
@@ -115,10 +117,9 @@ export const getUserVisits = async (user_attendance_data) => {
   }
 };
 
-
 export const getAllRejectedLoans = async () => {
   try {
-    const response = await apiService("get-all-rejected-loans", "GET", );
+    const response = await apiService("get-all-rejected-loans", "GET");
     return response;
   } catch (error) {
     throw error;
@@ -126,7 +127,11 @@ export const getAllRejectedLoans = async () => {
 };
 export const deleteRejectedLoan = async (rejected_loan_id) => {
   try {
-    const response = await apiService("delete-rejected-loan", "POST",rejected_loan_id );
+    const response = await apiService(
+      "delete-rejected-loan",
+      "POST",
+      rejected_loan_id
+    );
     return response;
   } catch (error) {
     throw error;
@@ -134,7 +139,11 @@ export const deleteRejectedLoan = async (rejected_loan_id) => {
 };
 export const getRejectedLoanDetail = async (rejected_loan_id) => {
   try {
-    const response = await apiService("get-reject-detail", "POST",rejected_loan_id );
+    const response = await apiService(
+      "get-reject-detail",
+      "POST",
+      rejected_loan_id
+    );
     return response;
   } catch (error) {
     throw error;
@@ -174,8 +183,6 @@ export const deleteUserCollection = async (data) => {
     throw error;
   }
 };
-
-
 
 export const deleteAttendance = async (lead_delete_data) => {
   try {
@@ -365,11 +372,7 @@ export const updateLeadStatus = async (update_lead_data) => {
 
 export const getRecycleBin = async () => {
   try {
-    const response = await apiService(
-      "get-recycle-bin",
-      "GET",
-      
-    );
+    const response = await apiService("get-recycle-bin", "GET");
     return response;
   } catch (error) {
     throw error;
@@ -377,11 +380,7 @@ export const getRecycleBin = async () => {
 };
 export const getAllClosedLoans = async () => {
   try {
-    const response = await apiService(
-      "get-all-closed-loans",
-      "GET",
-      
-    );
+    const response = await apiService("get-all-closed-loans", "GET");
     return response;
   } catch (error) {
     throw error;
@@ -393,7 +392,6 @@ export const deleteClosedLoan = async (delete_loan_id) => {
       "delete-closed-loan",
       "POST",
       delete_loan_id
-      
     );
     return response;
   } catch (error) {
@@ -406,7 +404,6 @@ export const getClosedLoanDetail = async (delete_loan_id) => {
       "get-closed-detail",
       "POST",
       delete_loan_id
-      
     );
     return response;
   } catch (error) {
@@ -414,14 +411,12 @@ export const getClosedLoanDetail = async (delete_loan_id) => {
   }
 };
 
-
 export const closeOngoingLoan = async (delete_loan_id) => {
   try {
     const response = await apiService(
       "close-ongoing-loan",
       "POST",
       delete_loan_id
-      
     );
     return response;
   } catch (error) {
@@ -450,10 +445,7 @@ export const closeOngoingLoan = async (delete_loan_id) => {
 // };
 export const createUserLead = async (formData) => {
   try {
-    const response = await apiService(
-      "create-lead",
-      "POST",formData
-    );
+    const response = await apiService("create-lead", "POST", formData);
     return response;
   } catch (error) {
     throw error;
@@ -463,7 +455,8 @@ export const createCollection = async (formData) => {
   try {
     const response = await apiService(
       "create-user-collection",
-      "POST",formData
+      "POST",
+      formData
     );
     return response;
   } catch (error) {
@@ -472,10 +465,7 @@ export const createCollection = async (formData) => {
 };
 export const updateUserLead = async (formData) => {
   try {
-    const response = await apiService(
-      "update-emp-lead",
-      "POST",formData
-    );
+    const response = await apiService("update-emp-lead", "POST", formData);
     return response;
   } catch (error) {
     throw error;
@@ -490,7 +480,6 @@ export const uploadImage = async (formData) => {
     throw error;
   }
 };
-
 
 // In apis/apiInterface.js
 export const updateEmiStatus = async (data) => {
@@ -509,3 +498,103 @@ export const updateEmiStatus = async (data) => {
   }
 };
 
+///////////////////////Rishi->  Filters api
+
+export const filterApprovalLoansByDate = async (
+  fromDate,
+  toDate,
+  leadFirstName
+) => {
+  try {
+    const response = await apiService("filter-approveLoan-by-date", "POST", {
+      fromDate,
+      toDate,
+      firstName: leadFirstName,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const filterDisbursalLoansByDate = async (
+  fromDate,
+  toDate,
+  leadFirstName
+) => {
+  try {
+    const response = await apiService("filter-disburseLoan-by-date", "POST", {
+      fromDate,
+      toDate,
+      firstName: leadFirstName,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const filterRejectedLoansByDate = async (
+  fromDate,
+  toDate,
+  leadFirstName
+) => {
+  try {
+    const response = await apiService("filter-rejectedLoan-by-date", "POST", {
+      fromDate,
+      toDate,
+      firstName: leadFirstName,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const filterOngoingLoansByDate = async (
+  fromDate,
+  toDate,
+  leadFirstName
+) => {
+  try {
+    const response = await apiService("filter-ongoingLoan-by-date", "POST", {
+      fromDate,
+      toDate,
+      firstName: leadFirstName,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const filterClosedLoansByDate = async (
+  fromDate,
+  toDate,
+  leadFirstName
+) => {
+  try {
+    const response = await apiService("filter-closedLoan-by-date", "POST", {
+      fromDate,
+      toDate,
+      firstName: leadFirstName,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const filterLeadsbyDateStatusName = async (
+  fromDate,
+  toDate,
+  leadStatus,
+  leadFirstName
+) => {
+  try {
+    const response = await apiService("filter-leads-Date_Status_Name", "POST", {
+      fromDate,
+      toDate,
+      lead_status: leadStatus,
+      firstName: leadFirstName,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

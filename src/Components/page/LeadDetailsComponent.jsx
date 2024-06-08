@@ -245,7 +245,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                   <td className="p-2  w-40   border">Fields </td>
                   <td className="p-2  w-40  border ">Values</td>
                 </tr>
-                <tr className="">
+                <tr className="bg-indigo-300 text-black">
                   <td className="p-2  w-40  font-semibold border">
                     First Name
                   </td>
@@ -259,13 +259,13 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                     {lead_current_data.lastName}
                   </td>
                 </tr>
-                <tr className="">
+                <tr className="bg-indigo-300 text-black">
                   <td className="p-2 border w-40  font-semibold">Mobile</td>
                   <td className="p-2 border w-40   font-semibold">
                     {lead_current_data.mobileNumber}
                   </td>
                 </tr>
-                <tr className="">
+                <tr className="bg-indigo-300 text-black" >
                   <td className="p-2 border w-40  font-semibold">DOB</td>
                   <td className="p-2 border w-40 font-semibold">
                     {lead_current_data.dob}
@@ -277,13 +277,13 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                     {lead_current_data.gender === "2" ? "Female" : "Male"}
                   </td>
                 </tr>
-                <tr className="">
+                <tr className="bg-indigo-300 text-black">
                   <td className="p-2 border w-40  font-semibold">Pincode</td>
                   <td className="p-2 border w-40 font-semibold">
                     {lead_current_data.pincode}
                   </td>
                 </tr>
-                <tr className="">
+                <tr className="bg-indigo-300 text-black">
                   <td className="p-2 border w-40  font-semibold">
                     Current Address
                   </td>
@@ -317,6 +317,19 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                   <td className="p-2 border w-40  font-semibold">Salary</td>
                   <td className="p-2 border w-40 font-semibold ">
                     {lead_current_data.monthlySalary}
+                  </td>
+                </tr>
+                <tr className="bg-indigo-300 text-black">
+                  <td className="p-2 border w-40  font-semibold">Pan Card</td>
+                  <td className="p-2 border w-40 font-semibold">
+                    {lead_current_data.pancard}
+                  </td>
+                </tr>
+                
+                <tr className="bg-indigo-300 text-black">
+                  <td className="p-2 border w-40  font-semibold">Aadhar Card</td>
+                  <td className="p-2 border w-40 font-semibold">
+                    {lead_current_data.aadhar_card}
                   </td>
                 </tr>
               </tbody>
@@ -586,14 +599,14 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                   >
                     Upload
                   </button>
-                  <img
-                    onClick={() =>
-                      window.open(lead_current_data.cibil_pdf, "_blank")
-                    }
-                    className="h-[100px] w-[100px] rounded-2xl object-cover"
-                    src={lead_data.cibil_pdf}
-                    alt="CIBIL-PDF"
-                  />
+                  {lead_current_data.cibil_pdf.length !== 0 && (
+  <img
+    onClick={() => window.open(lead_current_data.cibil_pdf, "_blank")}
+    className="h-[100px] w-[100px] rounded-2xl object-cover cursor-pointer" // Added cursor-pointer
+    src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/1667px-PDF_file_icon.svg.png"
+    alt="CIBIL PDF"
+  />
+)}
                 </div>
               )}
               {/* Add content for 'ENACH' and 'UPDATE KYC' tabs */}
@@ -630,7 +643,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                     value={leads_status}
                     onChange={(e) => setLeadsStatus(e.target.value)}
                   >
-                                        <option value="PENDING">PENDING</option>
+                    <option value="PENDING">PENDING</option>
 
                     <option value="APPROVED">APPROVED</option>
                     <option value="REJECTED">REJECTED</option>

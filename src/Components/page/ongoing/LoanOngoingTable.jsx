@@ -5,6 +5,7 @@ import {
   deleteApprovalLoan,
   deleteDisburseLoan,
   deleteOnGoingLoan,
+  filterOngoingLoansByDate,
   getApprovalLoans,
   getDisburseLoans,
   getOnGoingLoans,
@@ -12,6 +13,7 @@ import {
 import LoanApprovalDetail from "../approval/LoanApprovalDetail";
 import LoanDisburseDetail from "../disbursal/LoanDisburseDetail";
 import LoanOngoingDetail from "./LoanOngoingDetail";
+import { ToastContainer, toast } from "react-toastify";
 
 function LoanOngoingTable({ handle }) {
   const [leadsData, setLeadsData] = useState(null);
@@ -30,42 +32,27 @@ function LoanOngoingTable({ handle }) {
   }
   function unixToIST(unixTimestamp) {
     // Check for validity, ensuring the timestamp is not too far in the future
-    const maxAllowedTimestamp = Date.now() + (100 * 365 * 24 * 60 * 60 * 1000); // 100 years from now
+    const maxAllowedTimestamp = Date.now() + 100 * 365 * 24 * 60 * 60 * 1000; // 100 years from now
     if (unixTimestamp > maxAllowedTimestamp) {
-      throw new Error('Unix timestamp is too far in the future and cannot be processed.');
+      throw new Error(
+        "Unix timestamp is too far in the future and cannot be processed."
+      );
     }
-  
+
     // If valid, proceed with conversion
     const date = new Date(unixTimestamp);
     const options = {
-      timeZone: 'Asia/Kolkata',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
+      timeZone: "Asia/Kolkata",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
     };
-  
-    return date.toLocaleString('en-IN', options); 
+
+    return date.toLocaleString("en-IN", options);
   }
-
-
-  const [searchForm, setSearchForm] = useState({
-    fromDate: "",
-    toDate: "",
-    leadStatus: "",
-    leadFirstName: "",
-  });
-  const handleChange = (e) => {
-    console.log(e.target.name + e.target.value);
-    setSearchForm({
-      ...searchForm,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-
   const handleOpenLeadUser = (lead_data) => {
     setLeadDeleteFrame(false);
     setcurrentLead(lead_data);
@@ -159,6 +146,55 @@ function LoanOngoingTable({ handle }) {
     console.log("Maindashboarddiv mounted");
   }, []);
 
+  const [searchForm, setSearchForm] = useState({
+    fromDate: "",
+    toDate: "",
+    leadFirstName: "",
+  });
+  const filterOngoingLoans = async () => {
+    const { fromDate, toDate, leadFirstName } = searchForm;
+
+    if (!fromDate || !toDate) {
+      toast.warn("From Date and To Date are required");
+      return;
+    }
+
+    try {
+      const response = await filterOngoingLoansByDate(
+        fromDate,
+        toDate,
+        leadFirstName
+      );
+      if(response.code != 200){
+        toast.warn(response.message);
+        return;
+      }
+      console.log(response);
+      setLeadsData(response);
+    } catch (error) {
+      console.error("Error filtering Ongoing loans:", error);
+      alert("An error occurred while filtering Ongoing loans.");
+    }
+  };
+  const resetFilters = () => {
+    setSearchForm({
+      fromDate: "",
+      toDate: "",
+      leadFirstName: "",
+    });
+    callLeadApi()
+  };
+
+  const handleChange = (e) => {
+    console.log(e.target.name + e.target.value);
+    setSearchForm({
+      ...searchForm,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+
+
   if (leadsData == null) {
     return (
       <h2 className="text-white text-[21px] font-semibold m-5 font-mono bg-orange-500 rounded-md p-2">
@@ -169,81 +205,70 @@ function LoanOngoingTable({ handle }) {
 
   return (
     <div className="overflow-hidden border border-gray-300 relative ">
+      <ToastContainer/>
       {!isLeadDetailFrame && (
         <div className="relative overflow-auto max-h-[680px] ">
-          <h2 className="px-5 py-4 text-base  font-sans font-bold  text-white p-2  border-amber-800 bg-amber-600">
+          <h2 className="text-lg  px-5 py-4   font-sans font-bold  text-white p-2  border-amber-800 bg-amber-600">
             Ongoing Loans
           </h2>
-          <div
-                            
-                            className="bg-amber-800"
-                            >
-                              <button
-               className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
-               
-               Filter Ongoing Loans
-             </button>
-             <button
-               className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
-               
-               Reset Filter
-             </button>
-             </div>
-             <div className="bg-amber-700 p-1 w-full">
+          
+          <div className="bg-amber-700 p-2 w-full">
             <div className="flex">
-                <div class="date-input">
-                  <label
-                    for="fromDate"
-                    className="text-white text-[18px] font-mono p-1 m-1"
-                  >
-                    From Date :{" "}
-                  </label>
-                  <input
-                    type="date"
-                    id="fromDate"
-                    onChange={handleChange}
-                    value={searchForm.fromDate}
-                    name="fromDate"
-                    className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
-                  />
-                </div>
-                <div>
-                  <label
-                    for="toDate"
-                    className="text-white text-[18px] font-mono p-1 m-1"
-                  >
-                    To Date :
-                  </label>
-                  <input
-                    type="date"
-                    id="toDate"
-                    onChange={handleChange}
-                    value={searchForm.toDate}
-                    className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
-                    name="toDate"
-                  />
-                </div>
-                <div>
+              <div class="date-input">
+                <label
+                  for="fromDate"
+                  className="text-white text-[18px] font-mono p-1 m-1"
+                >
+                  From Date :{" "}
+                </label>
+                <input
+                  type="date"
+                  id="fromDate"
+                  onChange={handleChange}
+                  value={searchForm.fromDate}
+                  name="fromDate"
+                  className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+                />
+              </div>
+              <div>
+                <label
+                  for="toDate"
+                  className="text-white text-[18px] font-mono p-1 m-1"
+                >
+                  To Date :
+                </label>
+                <input
+                  type="date"
+                  id="toDate"
+                  onChange={handleChange}
+                  value={searchForm.toDate}
+                  className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+                  name="toDate"
+                />
+              </div>
+              <div>
                 <label className="items-center mt-1 font-mono font-semibold text-white mt-1">
-                Search By First Name
-              </label>
-              <input
-                type="text"
-                id="leadFirstName"
-                value={searchForm.leadFirstName}
-                name="leadFirstName"
-                onChange={handleChange}
-                className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
-              ></input>
-                </div>
-                
+                  Search By First Name
+                </label>
+                <input
+                  type="text"
+                  id="leadFirstName"
+                  value={searchForm.leadFirstName}
+                  name="leadFirstName"
+                  onChange={handleChange}
+                  className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+                ></input>
+              </div>
             </div>
-            
-
-           
-
-
-            </div>
+          </div>
+          <div className="bg-amber-800">
+            <button onClick={filterOngoingLoans} className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
+              Filter Ongoing Loans
+            </button>
+            <button onClick={resetFilters}  className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
+              Reset Filter
+            </button>
+          </div>
 
           <table className="min-w-full table-auto p-1">
             <thead className="border">

@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom"; // Import useHistory from react-
 import LeadDetailsComponent from "../LeadDetailsComponent";
 import {
   deleteApprovalLoan,
+  filterApprovalLoansByDate,
   getApprovalLoans,
 } from "../../../apis/apiInterface";
 import LoanApprovalDetail from "./LoanApprovalDetail";
+import { ToastContainer, toast } from "react-toastify";
 
 function LoanApprovalTable({ handle }) {
   const [leadsData, setLeadsData] = useState(null);
@@ -27,7 +29,7 @@ function LoanApprovalTable({ handle }) {
 
   const [objwithlinkerid, setobjwithlinkerid] = useState({
     _id: "",
-  })
+  });
 
   const handleOpenLeadUser = (lead_data) => {
     setLeadDeleteFrame(false);
@@ -38,11 +40,11 @@ function LoanApprovalTable({ handle }) {
   };
   const handleOpenUserprofile = (lead_data) => {
     setLeadDeleteFrame(false);
-    setobjwithlinkerid({ _id: lead_data.employee_lead_id_linker })
+    setobjwithlinkerid({ _id: lead_data.employee_lead_id_linker });
     setLeadDetailFrame(false);
     setLeadDetailFrame(false);
     setLeadUserFrame(false);
-    setopenLeadDetailCompo(true)
+    setopenLeadDetailCompo(true);
   };
 
   const handleCloseLeadUser = (lead_data) => {
@@ -121,9 +123,42 @@ function LoanApprovalTable({ handle }) {
   const [searchForm, setSearchForm] = useState({
     fromDate: "",
     toDate: "",
-    leadStatus: "",
     leadFirstName: "",
   });
+  const filterApprovalLoans = async () => {
+    const { fromDate, toDate, leadFirstName } = searchForm;
+
+    if (!fromDate || !toDate) {
+      toast.warn("From Date and To Date are required");
+      return;
+    }
+
+    try {
+      const response = await filterApprovalLoansByDate(
+        fromDate,
+        toDate,
+        leadFirstName
+      );
+      if(response.code != 200){
+        toast.warn(response.message);
+        return;
+      }
+      console.log(response);
+      setLeadsData(response);
+    } catch (error) {
+      console.error("Error filtering approval loans:", error);
+      alert("An error occurred while filtering approval loans.");
+    }
+  };
+  const resetFilters = () => {
+    setSearchForm({
+      fromDate: "",
+      toDate: "",
+      leadFirstName: "",
+    });
+    callLeadApi()
+  };
+
   const handleChange = (e) => {
     console.log(e.target.name + e.target.value);
     setSearchForm({
@@ -149,8 +184,6 @@ function LoanApprovalTable({ handle }) {
     console.log("Maindashboarddiv mounted");
   }, [isChecked]);
 
-    
-
   if (leadsData == null || leadsData == undefined) {
     return (
       <main>
@@ -163,113 +196,88 @@ function LoanApprovalTable({ handle }) {
 
   return (
     <div className="border-t border-gray-300 relative overflow-auto">
+      <ToastContainer/>
       {!isLeadDetailFrame && (
         <div className="relative h-[fill] ">
-          
-          
           <div className="border-green-900 bg-[#86af49] flex flex-row justify-items-start items-center">
-          <h2 className=" text-lg  font-sans font-bold  text-white p-4  ">
-            Pending for Approval Loans
-          </h2>
-          
-          <button
-          
-          onClick={(e) => setIsChecked(true)}
-          className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
-            All Approval Loans
+            <h2 className=" text-lg  font-sans font-bold  text-white p-4  ">
+              Pending for Approval Loans
+            </h2>
+
+            <button
+              onClick={(e) => setIsChecked(true)}
+              className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]"
+            >
+              All Approval Loans
             </button>
             <button
-          
-          onClick={(e) => setIsChecked(false)}
-          className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
-            Only Active Approval Loans
+              onClick={(e) => setIsChecked(false)}
+              className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]"
+            >
+              Only Active Approval Loans
             </button>
             <button
-               className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
-               
-               Filter Approval Loans
-             </button>
-             <button
-               className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
-               
-               Reset Filter
-             </button>
-            <div className="flex flex-row">
-             
-           
-            
-           </div>
+              onClick={filterApprovalLoans}
+              className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]"
+            >
+              Filter Approval Loans
+            </button>
+            <button onClick={resetFilters} className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
+              Reset Filter
+            </button>
+            <div className="flex flex-row"></div>
+          </div>
 
-        
-            
-            </div>
-
-            <div className="bg-[#86af49] w-full">
+          <div className="bg-[#86af49] w-full">
             <div className="flex">
-                <div class="date-input">
-                  <label
-                    for="fromDate"
-                    className="text-white text-[18px] font-mono p-1 m-1"
-                  >
-                    From Date :{" "}
-                  </label>
-                  <input
-                    type="date"
-                    id="fromDate"
-                    onChange={handleChange}
-                    value={searchForm.fromDate}
-                    name="fromDate"
-                    className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
-                  />
-                </div>
-                <div>
-                  <label
-                    for="toDate"
-                    className="text-white text-[18px] font-mono p-1 m-1"
-                  >
-                    To Date :
-                  </label>
-                  <input
-                    type="date"
-                    id="toDate"
-                    onChange={handleChange}
-                    value={searchForm.toDate}
-                    className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
-                    name="toDate"
-                  />
-                </div>
-                <div>
+              <div class="date-input">
+                <label
+                  for="fromDate"
+                  className="text-white text-[18px] font-mono p-1 m-1"
+                >
+                  From Date :{" "}
+                </label>
+                <input
+                  type="date"
+                  id="fromDate"
+                  onChange={handleChange}
+                  value={searchForm.fromDate}
+                  name="fromDate"
+                  className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+                />
+              </div>
+              <div>
+                <label
+                  for="toDate"
+                  className="text-white text-[18px] font-mono p-1 m-1"
+                >
+                  To Date :
+                </label>
+                <input
+                  type="date"
+                  id="toDate"
+                  onChange={handleChange}
+                  value={searchForm.toDate}
+                  className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+                  name="toDate"
+                />
+              </div>
+              <div>
                 <label className="items-center mt-1 font-mono font-semibold text-white mt-1">
-                Search By First Name
-              </label>
-              <input
-                type="text"
-                id="leadFirstName"
-                value={searchForm.leadFirstName}
-                name="leadFirstName"
-                onChange={handleChange}
-                className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
-              ></input>
-                </div>
-                <select
-                id="leadStatus"
-                value={searchForm.leadStatus}
-                onChange={handleChange}
-                name="leadStatus"
-                className="text-black text-[13px] h-[45px] font-mono m-1 rounded-xl"
-              >
-                <option value="">Select Status</option>
-                <option value="DISBURSED">DISBURSED</option>
-                <option value="REJECTED">REJECTED</option>
-              </select>
+                  Search By First Name
+                </label>
+                <input
+                  type="text"
+                  id="leadFirstName"
+                  value={searchForm.leadFirstName}
+                  name="leadFirstName"
+                  onChange={handleChange}
+                  className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+                ></input>
+              </div>
+              
             </div>
-            
-
-           
-
-
-            </div>
-          
+          </div>
 
           <table className="min-w-full table-auto p-1">
             <thead className="border">
@@ -287,7 +295,7 @@ function LoanApprovalTable({ handle }) {
                 >
                   Loan Approval Id
                 </th>
-                
+
                 <th
                   scope="col"
                   className="px-3 py-3 text-left  font-medium text-gray-500 uppercase tracking-wider border"
@@ -336,7 +344,7 @@ function LoanApprovalTable({ handle }) {
                 >
                   Created At
                 </th>
-                
+
                 <th
                   scope="col"
                   className="px-3 py-3   font-medium text-gray-500 uppercase tracking-wider border text-center"
@@ -346,9 +354,115 @@ function LoanApprovalTable({ handle }) {
               </tr>
             </thead>
             <tbody className="bg-white  divide-gray-200">
-              {leadsData != null && isChecked==false &&
+              {leadsData != null &&
+                isChecked == false &&
                 leadsData.data
-                .filter(user => user.lead_status === "APPROVED").map((user, index) => (
+                  .filter((user) => user.lead_status === "APPROVED")
+                  .map((user, index) => (
+                    <tr
+                      key={index}
+                      className={`${index % 2 != 0 ? "bg-[#F4FAFF]" : ""}`}
+                    >
+                      <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border bg-[#F3F4F7]">
+                        {index + 1}.
+                      </td>
+
+                      <td className="px-6 py-4 text-sm font-medium text-gray-900 border relative group">
+                        <div className="whitespace-nowrap overflow-hidden text-ellipsis rounded-lg bg-indigo-800 text-white p-1 m-2">
+                          {user._id.substring(20)}
+                        </div>
+                        <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10">
+                          {user._id}
+                        </div>
+                      </td>
+                      <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border table-cell">
+                        {user && user.user ? (
+                          <>
+                            {user.user.fullName} <br /> {user.user.employeeId}
+                          </>
+                        ) : (
+                          "N/A" // Or any appropriate placeholder for missing data
+                        )}
+                      </td>
+                      <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
+                        {user.firstName}
+                      </td>
+                      <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
+                        {user.lastName}
+                      </td>
+                      <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
+                        {user.mobileNumber}
+                      </td>
+                      <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
+                        {user.gender}
+                      </td>
+                      <td
+                        className={`px-2 py-2 whitespace-nowrap text-sm font-medium border 
+                ${
+                  user.lead_status === "PENDING"
+                    ? "bg-yellow-500 text-center text-white"
+                    : ""
+                }
+                ${
+                  user.lead_status === "DISBURSED"
+                    ? "bg-blue-500 rounded-none text-center text-white"
+                    : ""
+                }
+
+                ${
+                  user.lead_status === "APPROVED"
+                    ? "bg-green-500 text-white text-center"
+                    : ""
+                }
+                ${
+                  user.lead_status === "REJECTED"
+                    ? "bg-red-500 text-white "
+                    : ""
+                }`}
+                      >
+                        {user.lead_status}
+                      </td>
+                      <td
+                        className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border
+                  "
+                      >
+                        {user.leadAmount}
+                      </td>
+                      <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
+                        {parseUTCtoIST(user.createdAt)}
+                      </td>
+
+                      <td className="px-2 py-4 whitespace-nowrap text-right  font-medium flex gap-2">
+                        <button
+                          onClick={() => handleOpenLeadDetail(user)}
+                          className="text-white bg-yellow-500 px-3 py-2 rounded-lg font-mono border-"
+                        >
+                          Loan Details
+                        </button>
+                        <button
+                          onClick={() => handleOpenLeadUser(user)}
+                          className="text-white bg-blue-900 px-3 py-2 rounded-md"
+                        >
+                          View Employee
+                        </button>
+                        <button
+                          onClick={() => handleOpenUserprofile(user)}
+                          className="text-white bg-blue-700 px-3 py-2 rounded-md"
+                        >
+                          View user profile
+                        </button>
+                        <button
+                          onClick={() => handleOpenDeleteLead(user)}
+                          className="text-white bg-[#fa4845] px-3 py-2 rounded-md"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+              {leadsData != null &&
+                isChecked == true &&
+                leadsData.data.map((user, index) => (
                   <tr
                     key={index}
                     className={`${index % 2 != 0 ? "bg-[#F4FAFF]" : ""}`}
@@ -358,8 +472,8 @@ function LoanApprovalTable({ handle }) {
                     </td>
 
                     <td className="px-6 py-4 text-sm font-medium text-gray-900 border relative group">
-                      <div className="whitespace-nowrap overflow-hidden text-ellipsis rounded-lg bg-indigo-800 text-white p-1 m-2">
-                      {user._id.substring(20)}
+                      <div className="whitespace-nowrap overflow-hidden text-ellipsis rounded-lg bg-indigo-800 text-white p-1">
+                        {user._id.substring(20)}
                       </div>
                       <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10">
                         {user._id}
@@ -388,8 +502,16 @@ function LoanApprovalTable({ handle }) {
                     </td>
                     <td
                       className={`px-2 py-2 whitespace-nowrap text-sm font-medium border 
-                ${user.lead_status === "PENDING" ? "bg-yellow-500 text-center text-white" : ""}
-                ${user.lead_status === "DISBURSED" ? "bg-blue-500 rounded-none text-center text-white" : ""}
+                ${
+                  user.lead_status === "PENDING"
+                    ? "bg-yellow-500 text-center text-white"
+                    : ""
+                }
+                ${
+                  user.lead_status === "DISBURSED"
+                    ? "bg-blue-500 rounded-none text-center text-white"
+                    : ""
+                }
 
                 ${
                   user.lead_status === "APPROVED"
@@ -413,104 +535,7 @@ function LoanApprovalTable({ handle }) {
                     <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
                       {parseUTCtoIST(user.createdAt)}
                     </td>
-                   
-                    <td className="px-2 py-4 whitespace-nowrap text-right  font-medium flex gap-2">
-                      <button
-                        onClick={() => handleOpenLeadDetail(user)}
-                        className="text-white bg-yellow-500 px-3 py-2 rounded-lg font-mono border-"
-                      >
-                        Loan Details
-                      </button>
-                      <button
-                        onClick={() => handleOpenLeadUser(user)}
-                        className="text-white bg-blue-900 px-3 py-2 rounded-md"
-                      >
-                        View Employee
-                      </button>
-                      <button
-                        onClick={() => handleOpenUserprofile(user)}
-                        className="text-white bg-blue-700 px-3 py-2 rounded-md"
-                      >
-                        View user profile
-                      </button>
-                      <button
-                        onClick={() => handleOpenDeleteLead(user)}
-                        className="text-white bg-[#fa4845] px-3 py-2 rounded-md"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-                {leadsData != null && isChecked==true &&
-                leadsData.data.map((user, index) => (
-                  <tr
-                    key={index}
-                    className={`${index % 2 != 0 ? "bg-[#F4FAFF]" : ""}`}
-                  >
-                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border bg-[#F3F4F7]">
-                      {index + 1}.
-                    </td>
 
-                    
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900 border relative group">
-                      <div className="whitespace-nowrap overflow-hidden text-ellipsis rounded-lg bg-indigo-800 text-white p-1">
-                      {user._id.substring(20)}
-                      </div>
-                      <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10">
-                        {user._id}
-                      </div>
-                    </td>
-                    <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border table-cell">
-                      {user && user.user ? (
-                        <>
-                          {user.user.fullName} <br /> {user.user.employeeId}
-                        </>
-                      ) : (
-                        "N/A" // Or any appropriate placeholder for missing data
-                      )}
-                    </td>
-                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
-                      {user.firstName}
-                    </td>
-                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
-                      {user.lastName}
-                    </td>
-                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
-                      {user.mobileNumber}
-                    </td>
-                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
-                      {user.gender}
-                    </td>
-                    <td
-                      className={`px-2 py-2 whitespace-nowrap text-sm font-medium border 
-                ${user.lead_status === "PENDING" ? "bg-yellow-500 text-center text-white" : ""}
-                ${user.lead_status === "DISBURSED" ? "bg-blue-500 rounded-none text-center text-white" : ""}
-
-                ${
-                  user.lead_status === "APPROVED"
-                    ? "bg-green-500 text-white text-center"
-                    : ""
-                }
-                ${
-                  user.lead_status === "REJECTED"
-                    ? "bg-red-500 text-white "
-                    : ""
-                }`}
-                    >
-                      {user.lead_status}
-                    </td>
-                    <td
-                      className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border
-                  "
-                    >
-                      {user.leadAmount}
-                    </td>
-                    <td className="px-2 py-4 whitespace-nowrap  font-medium text-gray-900 border">
-                    {parseUTCtoIST(user.createdAt)}
-
-                    </td>
-                   
                     <td className="px-2 py-4 whitespace-nowrap text-right  font-medium flex gap-2">
                       <button
                         onClick={() => handleOpenLeadDetail(user)}
@@ -594,7 +619,14 @@ function LoanApprovalTable({ handle }) {
           </div>
         </div>
       )}
-      {openLeadDetailCompo && <div className="absolute h-full w-full top-0 bg-white"><LeadDetailsComponent   lead_data={objwithlinkerid} handleCloseCallback={()=> setopenLeadDetailCompo(false)} /></div>}
+      {openLeadDetailCompo && (
+        <div className="absolute h-full w-full top-0 bg-white">
+          <LeadDetailsComponent
+            lead_data={objwithlinkerid}
+            handleCloseCallback={() => setopenLeadDetailCompo(false)}
+          />
+        </div>
+      )}
     </div>
   );
 }

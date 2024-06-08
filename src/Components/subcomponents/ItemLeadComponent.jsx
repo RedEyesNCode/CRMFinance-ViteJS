@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { deleteLead, getAllLeads, searchLeads } from "../../apis/apiInterface";
+import { deleteLead, filterLeadsbyDateStatusName, getAllLeads, searchLeads } from "../../apis/apiInterface";
 import { useNavigate } from "react-router-dom"; // Import useHistory from react-router-dom
 import LeadDetailsComponent from "../page/LeadDetailsComponent";
 import CreateNewLead from "./CreateNewLead";
@@ -11,26 +11,22 @@ import { BsBack } from "react-icons/bs";
 function ItemLeadComponent({ userData }) {
   const [leadsData, setLeadsData] = useState(null);
   const [currentLead, setcurrentLead] = useState(null);
-  const [currentPage,setCurrentPage] = useState(1);
-  const [rowsPerPage,setRowsPerPage] = useState(100);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(100);
 
   const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage.selected+1);
-};
+    setCurrentPage(selectedPage.selected + 1);
+  };
 
-const handleRowsPerPageChange = (event) => {
+  const handleRowsPerPageChange = (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
     setRowsPerPage(newRowsPerPage);
     setCurrentPage(1); // Reset to the first page when rows per page changes
+  };
 
-};
-
-useEffect(() => {
-  callLeadApi();
-
-}, [currentPage, rowsPerPage]);
-
-
+  useEffect(() => {
+    callLeadApi();
+  }, [currentPage, rowsPerPage]);
 
   const [searchForm, setSearchForm] = useState({
     fromDate: "",
@@ -45,6 +41,42 @@ useEffect(() => {
       [e.target.name]: e.target.value,
     });
   };
+  ///////////////////Rishi////////////////////
+  const filterLeads = async () => {
+    const { fromDate, toDate, leadStatus, leadFirstName } = searchForm;
+
+    if (!fromDate || !toDate) {
+      toast.warn("From Date and To Date are required");
+      return;
+    }
+
+    try {
+      const response = await filterLeadsbyDateStatusName(
+        fromDate,
+        toDate,
+        leadFirstName,
+        leadStatus
+      );
+      if (response.code != 200) {
+        toast.warn(response.message);
+        return;
+      }
+      console.log(response);
+      setLeadsData(response);
+    } catch (error) {
+      console.error("Error filtering Leads:", error);
+      alert("An error occurred while filtering Leads.");
+    }
+  };
+  const resetFilters = () => {
+    setSearchForm({
+      fromDate: "",
+      toDate: "",
+      leadStatus: "",
+      leadFirstName: "",
+    });
+    callLeadApi();
+  };
 
   const [isLeadDetailFrame, setLeadDetailFrame] = useState(false);
 
@@ -52,10 +84,6 @@ useEffect(() => {
 
   const [isLeadUserFrame, setLeadUserFrame] = useState(false);
   const [addLead, setaddLead] = useState(false);
-
-
-
-
 
   const handleOpenLeadUser = (lead_data) => {
     setLeadDeleteFrame(false);
@@ -89,7 +117,7 @@ useEffect(() => {
   };
   const callLeadApi = async () => {
     try {
-      const rawJson = {page : currentPage, limit : rowsPerPage}
+      const rawJson = { page: currentPage, limit: rowsPerPage };
       // apiService('get-all-leads', 'POST',rawJson)
       //   .then(response => {
       //     if (response.status == "success") {
@@ -99,16 +127,15 @@ useEffect(() => {
       //   }
       //   console.log(response);
 
-
       //   })
       //   .catch(error => console.error('Error fetching leads:', error));
 
-        const response = await getAllLeads(rawJson);
-        if (response.status == "success") {
-          setLeadsData(response);
-        } else {
-          setLeadsData(null);
-        }
+      const response = await getAllLeads(rawJson);
+      if (response.status == "success") {
+        setLeadsData(response);
+      } else {
+        setLeadsData(null);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -131,24 +158,26 @@ useEffect(() => {
   }
   function unixToIST(unixTimestamp) {
     // Check for validity, ensuring the timestamp is not too far in the future
-    const maxAllowedTimestamp = Date.now() + (100 * 365 * 24 * 60 * 60 * 1000); // 100 years from now
+    const maxAllowedTimestamp = Date.now() + 100 * 365 * 24 * 60 * 60 * 1000; // 100 years from now
     if (unixTimestamp > maxAllowedTimestamp) {
-      throw new Error('Unix timestamp is too far in the future and cannot be processed.');
+      throw new Error(
+        "Unix timestamp is too far in the future and cannot be processed."
+      );
     }
-  
+
     // If valid, proceed with conversion
     const date = new Date(unixTimestamp);
     const options = {
-      timeZone: 'Asia/Kolkata',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
+      timeZone: "Asia/Kolkata",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
     };
-  
-    return date.toLocaleString('en-IN', options); 
+
+    return date.toLocaleString("en-IN", options);
   }
 
   const deleteCurrentLead = async () => {
@@ -197,18 +226,17 @@ useEffect(() => {
   useEffect(() => {
     const LeadsData = async () => {
       try {
-        const rawJson = {page : currentPage, limit : rowsPerPage}
+        const rawJson = { page: currentPage, limit: rowsPerPage };
 
         // apiService('get-all-leads', 'POST',rawJson)
         // .then(response => {
         //   if (response.status == "success") {
-            
+
         //   setLeadsData(response);
         // } else {
         //   setLeadsData(null);
         // }
         // console.log(response);
-
 
         // })
         // .catch(error => console.error('Error fetching leads:', error));
@@ -312,15 +340,14 @@ useEffect(() => {
             </div>
 
             <div className="flex flex-row justify-between">
-             
               <button
-                onClick={() => callSearchLeadAPI()}
+                onClick={filterLeads}
                 className="border-2 border-amber-400 bg-slate-700  px-3 h-15 rounded-xl m-4 font-semibold"
               >
                 Filter Leads
               </button>
               <button
-                onClick={() => callLeadApi()}
+                onClick={resetFilters}
                 className="border-2 border-amber-400 bg-red-700  px-3 h-15 rounded-xl m-4 font-semibold"
               >
                 Reset Filter
@@ -333,7 +360,6 @@ useEffect(() => {
               </button>
             </div>
           </div>
-          
 
           <table className="min-w-full rounded-3xl table-auto p-1">
             <thead className="border">
@@ -420,7 +446,6 @@ useEffect(() => {
               </tr>
             </thead>
             <tbody className="bg-white  divide-gray-200">
-            
               {leadsData &&
                 leadsData.status != "fail" &&
                 leadsData.data.map((user, index) => (
@@ -520,36 +545,48 @@ useEffect(() => {
             </tbody>
           </table>
           {leadsData && (
-              <div className="flex justify-between items-center mb-4 bg-gradient-to-r from-[#e43364] to-[#3858f9] p-2">
+            <div className="flex justify-between items-center mb-4 bg-gradient-to-r from-[#e43364] to-[#3858f9] p-2">
               <div>
-                  <span className="text-white font-mono text-[18px]">Rows per page: </span>
-                  <select value={rowsPerPage} className="rounded-lg border-2 border-slate-600" onChange={handleRowsPerPageChange}>
-                      <option value={100}>100</option>
-                      <option value={25}>25</option>
-                      <option value={5}>5</option>
+                <span className="text-white font-mono text-[18px]">
+                  Rows per page:{" "}
+                </span>
+                <select
+                  value={rowsPerPage}
+                  className="rounded-lg border-2 border-slate-600"
+                  onChange={handleRowsPerPageChange}
+                >
+                  <option value={100}>100</option>
+                  <option value={25}>25</option>
+                  <option value={5}>5</option>
 
-                      <option value={50}>50</option>
-                      <option value={200}>200</option>
-                      <option value={250}>250</option>
-                      <option value={500}>500</option>
-
-                  </select>
+                  <option value={50}>50</option>
+                  <option value={200}>200</option>
+                  <option value={250}>250</option>
+                  <option value={500}>500</option>
+                </select>
               </div>
-  
+
               <ReactPaginate
-                  breakLabel="..."
-                  nextLabel={<button className="text-white text-[19px] font-mono rounded-md bg-cyan-800 p-1">Next</button>}
-                  onPageChange={handlePageChange}
-                  pageRangeDisplayed={5}
-                  pageCount={leadsData.totalPages}
-                  previousLabel={<button className="text-white text-[19px] font-mono rounded-md bg-cyan-800 p-1">Previous</button>}
-                  containerClassName="pagination-buttons flex"
-                  activeClassName="bg-indigo-900 text-white"
-                  pageClassName="px-3 py-1 rounded bg-gray-200 mx-1 hover:bg-gray-300"
+                breakLabel="..."
+                nextLabel={
+                  <button className="text-white text-[19px] font-mono rounded-md bg-cyan-800 p-1">
+                    Next
+                  </button>
+                }
+                onPageChange={handlePageChange}
+                pageRangeDisplayed={5}
+                pageCount={leadsData.totalPages}
+                previousLabel={
+                  <button className="text-white text-[19px] font-mono rounded-md bg-cyan-800 p-1">
+                    Previous
+                  </button>
+                }
+                containerClassName="pagination-buttons flex"
+                activeClassName="bg-indigo-900 text-white"
+                pageClassName="px-3 py-1 rounded bg-gray-200 mx-1 hover:bg-gray-300"
               />
-          </div>
-            )}
-          
+            </div>
+          )}
         </div>
       )}
       {isLeadDetailFrame && (
@@ -615,7 +652,6 @@ useEffect(() => {
           </p>
         </>
       )}
-      
     </div>
   );
 }
