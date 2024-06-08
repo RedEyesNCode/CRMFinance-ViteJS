@@ -164,7 +164,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
     formData.forEach((e)=> console.log(e))
   
     try {
-      const response = await fetch("https://megmab2b.com:3000/upload-file", {
+      const response = await fetch("https://LoadBalancerHTTPS-NodeHttp-1437481483.ap-southeast-2.elb.amazonaws.com:3000/upload-file", {
         method: "POST",
         body: formData,
       });
@@ -172,7 +172,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      const sendingURL = await fetch("https://megmab2b.com:3000/upload-lead-pdf",{
+      const sendingURL = await fetch("https://LoadBalancerHTTPS-NodeHttp-1437481483.ap-southeast-2.elb.amazonaws.com:3000/upload-lead-pdf",{
         method: "POST",
         headers: {
           "Content-Type": "application/json",
