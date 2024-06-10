@@ -1,5 +1,5 @@
 // apiService.js
-const BASE_URL = "https://LoadBalancerHTTPS-NodeHttp-1437481483.ap-southeast-2.elb.amazonaws.com:3000/";
+const BASE_URL = "https://megmab2b.com:3000/";
 // const BASE_URL = "https://192.168.1.3:3000/";
 
 // you can pass endpoint, method and data to this javascript function.
