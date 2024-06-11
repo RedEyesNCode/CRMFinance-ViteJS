@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { deleteLead, filterLeadsbyDateStatusName, getAllLeads, searchLeads } from "../../apis/apiInterface";
+import {
+  deleteLead,
+  filterLeadsbyDateStatusName,
+  getAllLeads,
+  searchLeads,
+} from "../../apis/apiInterface";
 import { useNavigate } from "react-router-dom"; // Import useHistory from react-router-dom
 import LeadDetailsComponent from "../page/LeadDetailsComponent";
 import CreateNewLead from "./CreateNewLead";
@@ -13,6 +18,7 @@ function ItemLeadComponent({ userData }) {
   const [currentLead, setcurrentLead] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(100);
+  const [FirstName, setFirstName] = useState("");
 
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected + 1);
@@ -251,7 +257,7 @@ function ItemLeadComponent({ userData }) {
       }
     };
     LeadsData();
-    console.log("Maindashboarddiv mounted");
+    
   }, [addLead]);
 
   const closeleadform = () => {
@@ -277,9 +283,9 @@ function ItemLeadComponent({ userData }) {
                 View All Leads
               </h2>
               <div className="flex flex-row justify-normal item-center">
-                <div class="date-input">
+                <div className="date-input">
                   <label
-                    for="fromDate"
+                    htmlFor="fromDate"
                     className="text-white text-[18px] font-mono p-1 m-1"
                   >
                     From Date :{" "}
@@ -290,12 +296,12 @@ function ItemLeadComponent({ userData }) {
                     onChange={handleChange}
                     value={searchForm.fromDate}
                     name="fromDate"
-                    className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+                    className="text-black text-[18px] font-mono p-1 m-1 rounded-md outline-none"
                   />
                 </div>
                 <div>
                   <label
-                    for="toDate"
+                    htmlFor="toDate"
                     className="text-white text-[18px] font-mono p-1 m-1"
                   >
                     To Date :
@@ -305,23 +311,22 @@ function ItemLeadComponent({ userData }) {
                     id="toDate"
                     onChange={handleChange}
                     value={searchForm.toDate}
-                    className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+                    className="text-black text-[18px] font-mono p-1 m-1 rounded-md outline-none "
                     name="toDate"
                   />
                 </div>
               </div>
             </div>
             <div className="flex flex-row">
-              <label className="items-center mt-1 font-mono font-semibold">
+              <label className="items-center mt-1 font-mono font-semibold ">
                 Search By First Name
               </label>
               <input
                 type="text"
-                id="leadFirstName"
-                value={searchForm.leadFirstName}
-                name="leadFirstName"
-                onChange={handleChange}
-                className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
+                value={FirstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="text-black text-[18px] font-mono p-2 m-1 rounded-md outline-none"
+                placeholder="Enter name here"
               ></input>
 
               <select
@@ -329,7 +334,7 @@ function ItemLeadComponent({ userData }) {
                 value={searchForm.leadStatus}
                 onChange={handleChange}
                 name="leadStatus"
-                className="text-black text-[13px] font-mono m-1 rounded-xl"
+                className="text-black text-[16px] font-mono  p-1 m-1 rounded-md"
               >
                 <option value="">Select Lead Status</option>
                 <option value="APPROVED">APPROVED</option>
@@ -361,7 +366,7 @@ function ItemLeadComponent({ userData }) {
             </div>
           </div>
 
-          <table className="min-w-full rounded-3xl table-auto p-1">
+          <table className="min-w-full rounded-3xl  p-1">
             <thead className="border">
               <tr>
                 <th
@@ -448,44 +453,50 @@ function ItemLeadComponent({ userData }) {
             <tbody className="bg-white  divide-gray-200">
               {leadsData &&
                 leadsData.status != "fail" &&
-                leadsData.data.map((user, index) => (
-                  <tr
-                    key={index}
-                    className={`${index % 2 != 0 ? "bg-[#F4FAFF]" : ""}`}
-                  >
-                    <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border bg-[#F3F4F7]">
-                      {index + 1}.
-                    </td>
+                leadsData.data
+                  .filter((lead) =>
+                    lead.firstName
+                      .toLowerCase()
+                      .includes(FirstName.toLowerCase())
+                  )
+                  .map((user, index) => (
+                    <tr
+                      key={index}
+                      className={`${index % 2 === 0 ? "bg-[#F4FAFF]" : ""}`}
+                    >
+                      <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border bg-[#F3F4F7]">
+                        {index + 1}.
+                      </td>
 
-                    <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                      {user._id.substring(20)}
-                    </td>
-                    <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                      {user.generated_loan_id}
-                    </td>
-                    <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border table-cell">
-                      {user && user.user ? (
-                        <>
-                          {user.user.fullName} <br /> {user.user.employeeId}
-                        </>
-                      ) : (
-                        "N/A" // Or any appropriate placeholder for missing data
-                      )}
-                    </td>
-                    <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                      {user.firstName}
-                    </td>
-                    <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                      {user.lastName}
-                    </td>
-                    <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                      {user.mobileNumber}
-                    </td>
-                    <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                      {user.gender}
-                    </td>
-                    <td
-                      className={`px-2 py-2 whitespace-nowrap text-sm font-medium border 
+                      <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                        {user._id.substring(20)}
+                      </td>
+                      <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                        {user.generated_loan_id}
+                      </td>
+                      <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border table-cell">
+                        {user && user.user ? (
+                          <>
+                            {user.user.fullName} <br /> {user.user.employeeId}
+                          </>
+                        ) : (
+                          "N/A" // Or any appropriate placeholder for missing data
+                        )}
+                      </td>
+                      <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                        {user.firstName}
+                      </td>
+                      <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                        {user.lastName}
+                      </td>
+                      <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                        {user.mobileNumber}
+                      </td>
+                      <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                        {user.gender}
+                      </td>
+                      <td
+                        className={`px-2 py-2 whitespace-nowrap text-sm font-medium border 
                 ${
                   user.lead_status === "PENDING"
                     ? "bg-yellow-500 text-center text-white"
@@ -507,41 +518,41 @@ function ItemLeadComponent({ userData }) {
                     ? "bg-red-500 text-white "
                     : ""
                 }`}
-                    >
-                      {user.lead_status}
-                    </td>
+                      >
+                        {user.lead_status}
+                      </td>
 
-                    <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                      {user.leadAmount}
-                    </td>
-                    <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                      {parseUTCtoIST(user.createdAt)}
-                    </td>
-                    <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                      {unixToIST(Number(user.disbursementDate))}
-                    </td>
-                    <td className="px-2 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
-                      <button
-                        onClick={() => handleOpenLeadDetail(user)}
-                        className="text-white bg-[#3B76EF] px-3 py-2 rounded-md"
-                      >
-                        View Lead
-                      </button>
-                      <button
-                        onClick={() => handleOpenLeadUser(user)}
-                        className="text-white bg-blue-900 px-3 py-2 rounded-md"
-                      >
-                        View User
-                      </button>
-                      <button
-                        onClick={() => handleOpenDeleteLead(user)}
-                        className="text-white bg-[#fa4845] px-3 py-2 rounded-md"
-                      >
-                        Delete Lead
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                      <td className="px-2 py-4  whitespace-nowrap text-sm font-medium text-gray-900 border">
+                        {user.leadAmount}
+                      </td>
+                      <td className="px-2 py-4 w-20 whitespace-pre-wrap text-sm font-medium text-gray-900 border">
+                        {parseUTCtoIST(user.createdAt)}
+                      </td>
+                      <td className="px-2 py-4 w-20 whitespace-pre-wrap text-sm font-medium text-gray-900 border">
+                        {unixToIST(Number(user.disbursementDate))}
+                      </td>
+                      <td className="px-2 py-4  text-right text-sm font-medium flex gap-2">
+                        <button
+                          onClick={() => handleOpenLeadDetail(user)}
+                          className="text-white bg-[#3B76EF] px-3 py-2 rounded-md"
+                        >
+                          View Lead
+                        </button>
+                        <button
+                          onClick={() => handleOpenLeadUser(user)}
+                          className="text-white bg-blue-900 px-3 py-2 rounded-md"
+                        >
+                          View User
+                        </button>
+                        <button
+                          onClick={() => handleOpenDeleteLead(user)}
+                          className="text-white bg-[#fa4845] px-3 py-2 rounded-md"
+                        >
+                          Delete Lead
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
             </tbody>
           </table>
           {leadsData && (

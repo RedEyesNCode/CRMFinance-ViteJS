@@ -13,7 +13,7 @@ import CollectionDetailsComponent from "./CollectionDetailsComponent";
 
 const UserCollectionTable = () => {
   const [UserData, setUserData] = useState(null);
-  const [AllCollection, setAllCollection] = useState(null)
+  const [AllCollection, setAllCollection] = useState(null);
   const [CollectionData, setCollectionData] = useState(null);
   const [CurrentUser, setCurrentUser] = useState(null);
   const [isUserDeleteFrame, setUserDeleteFrame] = useState(null);
@@ -109,26 +109,23 @@ const UserCollectionTable = () => {
     };
     UsersData();
   }, [addCollection, isUserDeleteFrame]);
- const collforSelect = (user) =>
- {
-  const fetchAllCollection = async () => {
-    try {
-      const json = { userId: user._id};
-      const response = await getCollectionData(json);
-      if (response.code === 200) {
-        setAllCollection(response.data);
-      } else {
-        setAllCollection(null);
+  const collforSelect = (user) => {
+    const fetchAllCollection = async () => {
+      try {
+        const json = { userId: user._id };
+        const response = await getCollectionData(json);
+        if (response.code === 200) {
+          setAllCollection(response.data);
+        } else {
+          setAllCollection(null);
+        }
+        console.log("All Collection for select  -> ", response);
+      } catch (error) {
+        console.log(error);
       }
-      console.log("Collection Fetched response -> ", response);
-    } catch (error) {
-      console.log(error);
-    }
+    };
+    fetchAllCollection();
   };
-  fetchAllCollection();
- } 
-    
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -183,7 +180,7 @@ const UserCollectionTable = () => {
   };
   const updateButton = async (user) => {
     collforSelect(user);
-    setUpdateFormData({ collection_id: coll._id, userId: user._id });
+    setUpdateFormData({ userId: user._id });
     setisUpdateCollection(true);
   };
 
@@ -291,7 +288,6 @@ const UserCollectionTable = () => {
                   >
                     Actions
                   </th>
-                  
                 </tr>
               </thead>
               <tbody className="bg-white divide-gray-200">
@@ -331,12 +327,6 @@ const UserCollectionTable = () => {
                         >
                           Delete
                         </button>
-                      </td>
-                      <td className="flex justify-between px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                        <select name="" id="" className="border bg-zinc-400 rounded-lg px-2 text-white outline-none">
-                          <option>Select Collection</option>
-
-                        </select>
                         <button
                           className="outline-none px-4 py-2 bg-yellow-500 text-white rounded-md"
                           onClick={() => updateButton(user)}
@@ -491,52 +481,65 @@ const UserCollectionTable = () => {
           </div>
         </div>
       )}
-      {isUpdateCollection && (
-        <div className="absolute top-0 h-full w-full flex items-center justify-center backdrop-blur-lg">
-          <div className="flex flex-col  bg-[#3B76EF] p-10 rounded-xl text-white text-xl justify-center gap-8 ">
-            <h1 className="font-bold text-center ">UPDATE DETAIL</h1>
-            <form
-              className="flex flex-col gap-6 items-center text-zinc-700"
-              onSubmit={handleUpdateSubmit}
-            >
-              <div className="flex gap-6">
-                <select
-                  name="status"
-                  id=""
-                  onChange={handleChangeinupdate}
-                  className="px-16 py-2 rounded-md outline-none"
-                >
-                  <option>Select Status</option>
-
-                  <option value="APPROVED">APPROVED</option>
-                  <option value="REJECTED">REJECTED</option>
-                </select>
-              </div>
-              <div className="flex gap-6">
-                <input
-                  className="px-5 py-2 rounded-md outline-none"
-                  onChange={handleChangeinupdate}
-                  type="text"
-                  name="approved_collection_amount"
-                  value={UpdateFormData.approved_collection_amount}
-                  placeholder="Enter Approved Amount"
-                />
-              </div>
-
-              <input
-                type="submit"
-                className="bg-white text-[#3B76EF] font-bold w-1/2 rounded-md px-5 py-2"
-              />
-            </form>
-          </div>
-          <button
-            className="absolute top-5 right-5"
-            onClick={() => setisUpdateCollection(false)}
+     {isUpdateCollection && (
+  <div className="absolute top-0 h-full w-full flex items-center justify-center backdrop-blur-lg">
+    <div className="flex flex-col bg-[#3B76EF] p-10 rounded-xl text-white text-xl justify-center gap-8">
+      <h1 className="font-bold text-center">UPDATE DETAIL</h1>
+      <form
+        className="flex flex-col gap-6 items-center text-zinc-700"
+        onSubmit={handleUpdateSubmit}
+      >
+        <div className="flex gap-6 flex-col">
+          <select
+            name="collection_id"
+            id=""
+            onChange={handleChangeinupdate}
+            className="px-2 py-2 rounded-md outline-none"
           >
-            ❌
-          </button>
+            <option>Select Collection</option>
+            {AllCollection &&
+              AllCollection.map((coll, index) => (
+                <option key={index} value={coll._id}>
+                  {coll.fullName} - ₹{coll.collection_amount}
+                </option>
+              ))}
+          </select>
+          <select
+            name="status"
+            id=""
+            onChange={handleChangeinupdate}
+            className="px-2 py-2 rounded-md outline-none"
+          >
+            <option>Select Status</option>
+            <option value="APPROVED">APPROVED</option>
+            <option value="REJECTED">REJECTED</option>
+          </select>
         </div>
-      )}
+        <div className="flex gap-6">
+          <input
+            className="px-5 py-2 rounded-md outline-none"
+            onChange={handleChangeinupdate}
+            type="text"
+            name="approved_collection_amount"
+            value={UpdateFormData.approved_collection_amount}
+            placeholder="Enter Approved Amount"
+          />
+        </div>
+        <input
+          type="submit"
+          className="bg-white text-[#3B76EF] font-bold w-1/2 rounded-md px-5 py-2"
+        />
+      </form>
+    </div>
+    <button
+      className="absolute top-5 right-5 text-white"
+      onClick={() => setisUpdateCollection(false)}
+    >
+      ❌
+    </button>
+  </div>
+)}
+
     </main>
   );
 };
