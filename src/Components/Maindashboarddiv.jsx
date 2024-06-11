@@ -45,20 +45,15 @@ const Maindashboarddiv = () => {
   useEffect(() => {
     const LeadsData = async () => {
       try {
-        // const response = await getAllLeads();
+        const responseLeads = await getAllLeads({page : 1 , limit : 100});
         const responseVisits = await getAllVisits();
         const responseAttendance = await getAllAttendance();
         const responseAllUsers = await getAllUsers();
         setAttendanceData(responseAttendance.data);
         setVisitData(responseVisits.data);
         setUsersData(responseAllUsers.data);
+        setLeadData(responseLeads.data);
 
-        apiService('', 'GET')
-        .then(response => setLeadData(response.data))
-        .catch(error => console.error('Error fetching leads:', error));
-
-        // setLeadData(response.data);
-        console.log(response);
       } catch (error) {
         console.log(error);
       }
