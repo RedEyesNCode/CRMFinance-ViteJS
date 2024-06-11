@@ -53,7 +53,7 @@ const Maindashboarddiv = () => {
         setVisitData(responseVisits.data);
         setUsersData(responseAllUsers.data);
 
-        apiService('get-all-leads', 'GET')
+        apiService('', 'GET')
         .then(response => setLeadData(response.data))
         .catch(error => console.error('Error fetching leads:', error));
 

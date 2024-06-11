@@ -5,8 +5,7 @@ import {
   deleteLead,
   getLeadDetails,
   updateLeadStatus,
-  uploadImage
-
+  uploadImage,
 } from "../../apis/apiInterface";
 import UpdateLead from "../UpdateLead";
 import { ToastContainer, toast } from "react-toastify";
@@ -157,12 +156,12 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
       alert("No file selected");
       return;
     }
-    
+
     const formData = new FormData();
     formData.append("file", selectedFile);
     // formData.append("leadId", lead_current_data._id);
-    formData.forEach((e)=> console.log(e))
-  
+    formData.forEach((e) => console.log(e));
+
     try {
       const response = await fetch("https://megmab2b.com:3000/upload-file", {
         method: "POST",
@@ -172,25 +171,30 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      const sendingURL = await fetch("https://megmab2b.com:3000/upload-lead-pdf",{
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({leadId: lead_current_data._id, leadCibilUrl: data.message}),
-      })
+      const sendingURL = await fetch(
+        "https://megmab2b.com:3000/upload-lead-pdf",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            leadId: lead_current_data._id,
+            leadCibilUrl: data.message,
+          }),
+        }
+      );
       if (!sendingURL.ok) {
         throw new Error("Network response was not ok");
       }
       const sendingURLResult = await sendingURL.json();
-      toast.success(sendingURLResult.message)
+      toast.success(sendingURLResult.message);
       setSelectedFile(null);
     } catch (error) {
       console.error("PDF upload failed", error);
       alert("File upload failed");
     }
   };
-  
 
   return (
     <main>
@@ -265,7 +269,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                     {lead_current_data.mobileNumber}
                   </td>
                 </tr>
-                <tr className="bg-indigo-300 text-black" >
+                <tr className="bg-indigo-300 text-black">
                   <td className="p-2 border w-40  font-semibold">DOB</td>
                   <td className="p-2 border w-40 font-semibold">
                     {lead_current_data.dob}
@@ -325,9 +329,11 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                     {lead_current_data.pancard}
                   </td>
                 </tr>
-                
+
                 <tr className="bg-indigo-300 text-black">
-                  <td className="p-2 border w-40  font-semibold">Aadhar Card</td>
+                  <td className="p-2 border w-40  font-semibold">
+                    Aadhar Card
+                  </td>
                   <td className="p-2 border w-40 font-semibold">
                     {lead_current_data.aadhar_card}
                   </td>
@@ -375,73 +381,43 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                 </tr>
               </tbody>
             </table>
+            <h2 className="font-semibold text-[#ffffff] bg-amber-700 mt-2 rounded-lg p-2 text-[15px]">
+              Employee Information
+            </h2>
+            <table className="w-full mt-4 bg-white rounded-md shadow-md text-sm  overflow-hidden">
+              <tbody>
+                <tr className=" font-bold">
+                  <td className="p-2  w-40   border">Fields </td>
+                  <td className="p-2  w-40  border ">Values</td>
+                </tr>
+                <tr className=" font-bold">
+                  <td className="p-2  w-40   border">Name </td>
+                  <td className="p-2  w-40  border ">
+                    {lead_data.user.fullName}
+                  </td>
+                </tr>
+                <tr className=" font-bold">
+                  <td className="p-2  w-40   border">Telephone Number </td>
+                  <td className="p-2  w-40  border ">
+                    {lead_data.user.telephoneNumber}
+                  </td>
+                </tr>
+                <tr className=" font-bold">
+                  <td className="p-2  w-40   border">Employee Id</td>
+                  <td className="p-2  w-40  border ">
+                    {lead_data.user.employeeId}
+                  </td>
+                </tr>
+                <tr className=" font-bold">
+                  <td className="p-2  w-40   border">Mpass</td>
+                  <td className="p-2  w-40  border ">{lead_data.user.mpass}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
-          <div className="w-2/3 pl-4">
-            <div className="Loan Detail Component ">
-              <h2 className="font-semibold text-[18px] text-[#ffffff] bg-blue-500 rounded-lg p-6 m-[20px]">
-                Loan Details
-              </h2>
-              <div className="flex space-x-4 mb-4 ml-[20px]">
-                <button
-                  className={`px-4 py-2 rounded-md ${
-                    activeTab === "approveLoans"
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-400"
-                  }`}
-                  onClick={() => setActiveTab("approveLoans")}
-                >
-                  Approve Loans
-                </button>
-                <button
-                  className={`px-4 py-2 rounded-md ${
-                    activeTab === "ongoing"
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-400"
-                  }`}
-                  onClick={() => setActiveTab("ongoing")}
-                >
-                  Ongoing
-                </button>
-                <button
-                  className={`px-4 py-2 rounded-md ${
-                    activeTab === "closed"
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-400"
-                  }`}
-                  onClick={() => setActiveTab("closed")}
-                >
-                  Closed
-                </button>
-                {/* Add more buttons for 'ENACH' and 'UPDATE KYC' */}
-              </div>
-              <div className="ml-[20px]">
-                {activeTab === "approveLoans" && (
-                  <div className="p-4 bg-white rounded-md shadow-md">
-                    <h2 className="text-xl font-semibold mb-2">
-                      User Approved Loans
-                    </h2>
-                  </div>
-                )}
-                {activeTab === "ongoing" && (
-                  <div className="p-4 bg-white rounded-md shadow-md">
-                    <h2 className="text-xl font-semibold mb-2">
-                      User On-going loans
-                    </h2>
-                  </div>
-                )}
-                {activeTab === "closed" && (
-                  <div className="p-4 bg-white rounded-md shadow-md">
-                    <h2 className="text-xl font-semibold mb-2">
-                      User Closed loans
-                    </h2>
-                  </div>
-                )}
-                {/* Add content for 'ENACH' and 'UPDATE KYC' tabs */}
-              </div>
-            </div>
-
-            <h2 className="font-semibold text-[18px] text-[#ffffff] bg-purple-500 rounded-lg p-6 m-[20px]">
+          <div className="w-2/3 pl-2">
+            <h2 className="font-semibold text-[18px] text-[#ffffff] bg-purple-500 rounded-lg p-6 m-[10px]">
               Leads-KYC Documents
             </h2>
 
@@ -497,15 +473,15 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                 Additional Document
               </button>
               <button
-                  className={`px-4 py-2 rounded-md ${
-                    activeTabDocs === "upload_pdf"
-                      ? "bg-purple-500 text-white"
-                      : "bg-gray-400"
-                  }`}
-                  onClick={() => setActiveTabDocs("upload_pdf")}
-                >
-                  Upload Cibil Pdf
-                </button>
+                className={`px-4 py-2 rounded-md ${
+                  activeTabDocs === "upload_pdf"
+                    ? "bg-purple-500 text-white"
+                    : "bg-gray-400"
+                }`}
+                onClick={() => setActiveTabDocs("upload_pdf")}
+              >
+                Upload Cibil Pdf
+              </button>
               {/* Add more buttons for 'ENACH' and 'UPDATE KYC' */}
             </div>
 
@@ -520,21 +496,24 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                     onClick={() =>
                       window.open(lead_current_data.pancard_img, "_blank")
                     }
-                    className="h-[100px] w-[100px] rounded-2xl object-cover"
+                    className="h-[450px] w-full rounded-2xl object-fit"
                     src={lead_data.pancard_img}
                   />
                 </div>
               )}
-               {activeTabDocs === "additional" && (
+              {activeTabDocs === "additional" && (
                 <div className="p-4 bg-white  shadow-md m-[10px] border-[2px] rounded-3xl border-amber-500">
                   <h2 className="text-xl font-semibold mb-2 text-gray-400 text-[20px]">
                     Additional Document
                   </h2>
                   <img
                     onClick={() =>
-                      window.open(lead_current_data.additional_document, "_blank")
+                      window.open(
+                        lead_current_data.additional_document,
+                        "_blank"
+                      )
                     }
-                    className="h-[100px] w-[100px] rounded-2xl object-cover"
+                    className="h-[450px] w-full rounded-2xl object-cover"
                     src={lead_data.additional_document}
                   />
                 </div>
@@ -548,7 +527,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                     onClick={() =>
                       window.open(lead_current_data.selfie, "_blank")
                     }
-                    className="h-[100px] w-[100px] rounded-2xl object-cover"
+                    className="h-[450px] w-full rounded-2xl object-cover"
                     src={lead_data.selfie}
                   />
                 </div>
@@ -562,7 +541,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                     onClick={() =>
                       window.open(lead_current_data.aadhar_front, "_blank")
                     }
-                    className="h-[100px] w-[100px] rounded-2xl object-cover"
+                    className="h-[450px] w-full rounded-2xl object-cover"
                     src={lead_data.aadhar_front}
                   />
                 </div>
@@ -576,7 +555,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                     onClick={() =>
                       window.open(lead_current_data.aadhar_back, "_blank")
                     }
-                    className="h-[100px] w-[100px] rounded-2xl object-cover"
+                    className="h-[450px] w-full rounded-2xl object-cover"
                     src={lead_data.aadhar_back}
                   />
                 </div>
@@ -600,18 +579,76 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                     Upload
                   </button>
                   {lead_current_data.cibil_pdf.length !== 0 && (
-  <img
-    onClick={() => window.open(lead_current_data.cibil_pdf, "_blank")}
-    className="h-[100px] w-[100px] rounded-2xl object-cover cursor-pointer" // Added cursor-pointer
-    src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/1667px-PDF_file_icon.svg.png"
-    alt="CIBIL PDF"
-  />
-)}
+                    <img
+                      onClick={() =>
+                        window.open(lead_current_data.cibil_pdf, "_blank")
+                      }
+                      className="h-[100px] w-[100px] rounded-2xl object-cover cursor-pointer" // Added cursor-pointer
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/1667px-PDF_file_icon.svg.png"
+                      alt="CIBIL PDF"
+                    />
+                  )}
                 </div>
               )}
               {/* Add content for 'ENACH' and 'UPDATE KYC' tabs */}
             </div>
           </div>
+        </div>
+      </div>
+      <div className="Loan Detail Component ">
+        <h2 className="font-semibold text-[18px] text-[#ffffff] bg-blue-500 rounded-lg p-6 m-[20px]">
+          Loan Details
+        </h2>
+        <div className="flex space-x-4 mb-4 ml-[20px]">
+          <button
+            className={`px-4 py-2 rounded-md ${
+              activeTab === "approveLoans"
+                ? "bg-blue-500 text-white"
+                : "bg-gray-400"
+            }`}
+            onClick={() => setActiveTab("approveLoans")}
+          >
+            Approve Loans
+          </button>
+          <button
+            className={`px-4 py-2 rounded-md ${
+              activeTab === "ongoing" ? "bg-blue-500 text-white" : "bg-gray-400"
+            }`}
+            onClick={() => setActiveTab("ongoing")}
+          >
+            Ongoing
+          </button>
+          <button
+            className={`px-4 py-2 rounded-md ${
+              activeTab === "closed" ? "bg-blue-500 text-white" : "bg-gray-400"
+            }`}
+            onClick={() => setActiveTab("closed")}
+          >
+            Closed
+          </button>
+          {/* Add more buttons for 'ENACH' and 'UPDATE KYC' */}
+        </div>
+        <div className="ml-[20px]">
+          {activeTab === "approveLoans" && (
+            <div className="p-4 bg-white rounded-md shadow-md">
+              <h2 className="text-xl font-semibold mb-2">
+                User Approved Loans
+              </h2>
+            </div>
+          )}
+          {activeTab === "ongoing" && (
+            <div className="p-4 bg-white rounded-md shadow-md">
+              <h2 className="text-xl font-semibold mb-2">
+                User On-going loans
+              </h2>
+            </div>
+          )}
+          {activeTab === "closed" && (
+            <div className="p-4 bg-white rounded-md shadow-md">
+              <h2 className="text-xl font-semibold mb-2">User Closed loans</h2>
+            </div>
+          )}
+          {/* Add content for 'ENACH' and 'UPDATE KYC' tabs */}
         </div>
       </div>
 

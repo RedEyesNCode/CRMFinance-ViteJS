@@ -6,20 +6,29 @@ import {
   deleteUserCollection,
   getAllCollection,
   getAllUsers,
+  getCollectionData,
+  updateCollection,
 } from "../../../apis/apiInterface";
 import CollectionDetailsComponent from "./CollectionDetailsComponent";
 
 const UserCollectionTable = () => {
   const [UserData, setUserData] = useState(null);
+  const [AllCollection, setAllCollection] = useState(null)
   const [CollectionData, setCollectionData] = useState(null);
   const [CurrentUser, setCurrentUser] = useState(null);
   const [isUserDeleteFrame, setUserDeleteFrame] = useState(null);
   const [isUserDetailsFrame, setUserDetailFrame] = useState(null);
   const [addCollection, setaddCollection] = useState(false);
-  const [isUpdateCollection, setisUpdateCollection] = useState(null)
+  const [isUpdateCollection, setisUpdateCollection] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     telephoneNumber: "",
+  });
+  const [UpdateFormData, setUpdateFormData] = useState({
+    userId: "",
+    collection_id: "",
+    status: "",
+    approved_collection_amount: "",
   });
   const deleteCurrentUser = async (CurrentUser) => {
     try {
@@ -83,8 +92,8 @@ const UserCollectionTable = () => {
       }
     };
     CollectionData();
-  }, [addCollection, isUserDeleteFrame]);
-  useEffect(()=>{
+  }, [addCollection, isUserDeleteFrame, isUpdateCollection]);
+  useEffect(() => {
     const UsersData = async () => {
       try {
         const response = await getAllUsers();
@@ -99,13 +108,38 @@ const UserCollectionTable = () => {
       }
     };
     UsersData();
-  },[addCollection, isUserDeleteFrame])
-
-
+  }, [addCollection, isUserDeleteFrame]);
+ const collforSelect = (user) =>
+ {
+  const fetchAllCollection = async () => {
+    try {
+      const json = { userId: user._id};
+      const response = await getCollectionData(json);
+      if (response.code === 200) {
+        setAllCollection(response.data);
+      } else {
+        setAllCollection(null);
+      }
+      console.log("Collection Fetched response -> ", response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  fetchAllCollection();
+ } 
+    
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+  const handleChangeinupdate = (e) => {
+    const { name, value } = e.target;
+    setUpdateFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
@@ -128,6 +162,31 @@ const UserCollectionTable = () => {
     }
     setaddCollection(false);
   };
+  const handleUpdateSubmit = async (e) => {
+    e.preventDefault();
+    const response = await updateCollection(UpdateFormData);
+    console.log("Collection Updated -> ", response);
+    setUpdateFormData({
+      collection_id: "",
+      status: "",
+      approved_collection_amount: "",
+    });
+    if (response.status === 200) {
+      setCollectionData((prevData) => {
+        return {
+          ...prevData,
+          data: [...prevData.data, response.data],
+        };
+      });
+    }
+    setisUpdateCollection(null);
+  };
+  const updateButton = async (user) => {
+    collforSelect(user);
+    setUpdateFormData({ collection_id: coll._id, userId: user._id });
+    setisUpdateCollection(true);
+  };
+
   if (CollectionData == null) {
     return (
       <main className="w-full bg-blue-800 flex items-center justify-between px-10 py-3 relative">
@@ -232,6 +291,7 @@ const UserCollectionTable = () => {
                   >
                     Actions
                   </th>
+                  
                 </tr>
               </thead>
               <tbody className="bg-white divide-gray-200">
@@ -251,8 +311,8 @@ const UserCollectionTable = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
                         {user.fullName}
                       </td>
-                      <td className="px-6 py-4 bg-green-800 text-white whitespace-nowrap text-sm font-medium  border">
-                        {user.totalCollectionAmount}
+                      <td className="px-6 py-4 whitespace-nowrap text-lg font-bold text-green-800 bg-green-100 border">
+                        ₹ {user.totalCollectionAmount}
                       </td>
 
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
@@ -266,16 +326,22 @@ const UserCollectionTable = () => {
                           View
                         </button>
                         <button
-                          className="outline-none px-4 py-2 bg-yellow-500 text-white rounded-md"
-                          onClick={() => setisUpdateCollection(user)}
-                        >
-                          Update
-                        </button>
-                        <button
                           className="outline-none px-4 py-2 bg-red-500 text-white rounded-md"
                           onClick={() => handleUserDeleteFrame(user)}
                         >
                           Delete
+                        </button>
+                      </td>
+                      <td className="flex justify-between px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                        <select name="" id="" className="border bg-zinc-400 rounded-lg px-2 text-white outline-none">
+                          <option>Select Collection</option>
+
+                        </select>
+                        <button
+                          className="outline-none px-4 py-2 bg-yellow-500 text-white rounded-md"
+                          onClick={() => updateButton(user)}
+                        >
+                          Update
                         </button>
                       </td>
                     </tr>
@@ -326,83 +392,97 @@ const UserCollectionTable = () => {
               onSubmit={handleSubmit}
             >
               <div className="flex gap-6">
-              <select onChange={handleChange} className="px-6 py-2 rounded-md outline-none"  name="userId" id="">
-                <option>Select User</option>
-                {UserData &&
-                  UserData.data &&
-                  UserData.data.map((user, index) => (
-                    <option key={index} value={user._id}>
-                      {user.fullName}
-                    </option>
-                  ))}
-              </select>
-              <input
-                className="px-5 py-2 rounded-md outline-none"
-                onChange={handleChange}
-                type="text"
-                name="fullName"
-                value={formData.fullName}
-                placeholder="Enter name of user"
-              /><select name="collection_status" id="" onChange={handleChange} className="px-16 py-2 rounded-md outline-none">
-              <option>Select Status</option>
-              <option value="EMPTY">EMPTY</option>
-              <option value="PENDING">PENDING</option>
-              <option value="APPROVED">APPROVED</option>
-              <option value="REJECTED">REJECTED</option>
-              <option value="DISBURSED">DISBURSED</option>
-            </select>
+                <select
+                  onChange={handleChange}
+                  className="px-6 py-2 rounded-md outline-none"
+                  name="userId"
+                  id=""
+                >
+                  <option>Select User</option>
+                  {UserData &&
+                    UserData.data &&
+                    UserData.data.map((user, index) => (
+                      <option key={index} value={user._id}>
+                        {user.fullName}
+                      </option>
+                    ))}
+                </select>
+                <input
+                  className="px-5 py-2 rounded-md outline-none"
+                  onChange={handleChange}
+                  type="text"
+                  name="fullName"
+                  value={formData.fullName}
+                  placeholder="Enter name of user"
+                />
+                <select
+                  name="collection_status"
+                  id=""
+                  onChange={handleChange}
+                  className="px-16 py-2 rounded-md outline-none"
+                >
+                  <option>Select Status</option>
+                  <option value="EMPTY">EMPTY</option>
+                  <option value="PENDING">PENDING</option>
+                  <option value="APPROVED">APPROVED</option>
+                  <option value="REJECTED">REJECTED</option>
+                  <option value="DISBURSED">DISBURSED</option>
+                </select>
               </div>
-              <div  className="flex gap-6"><input
-                className="px-5 py-2 rounded-md outline-none"
-                onChange={handleChange}
-                type="text"
-                name="gs_loan_number"
-                value={formData.gs_loan_number}
-                placeholder="Enter Gs Loan Number"
-              />
-              <input
-                className="px-5 py-2 rounded-md outline-none"
-                onChange={handleChange}
-                type="text"
-                name="gs_loan_password"
-                value={formData.gs_loan_password}
-                placeholder="Enter Gs Loan Password"
-              />
-              <input
-                className="px-5 py-2 rounded-md outline-none"
-                onChange={handleChange}
-                type="text"
-                name="gs_loan_userid"
-                value={formData.gs_loan_userid}
-                placeholder="Enter Gs Loan UserId"
-              /></div>
-              <div  className="flex gap-6"> <input
-                className="px-5 py-2 rounded-md outline-none"
-                onChange={handleChange}
-                type="number"
-                name="collection_amount"
-                value={formData.collection_amount}
-                placeholder="Enter Collection Amount"
-              />
-              <input
-                className="px-5 py-2 rounded-md outline-none"
-                onChange={handleChange}
-                type="text"
-                name="collection_location"
-                value={formData.collection_location}
-                placeholder="Enter Collection Location"
-              />
-              <input
-                className="px-5 py-2 rounded-md outline-none"
-                onChange={handleChange}
-                type="text"
-                name="collection_address"
-                value={formData.collection_address}
-                placeholder="Enter Collection Address"
-              /></div>
-              
-             
-              
+              <div className="flex gap-6">
+                <input
+                  className="px-5 py-2 rounded-md outline-none"
+                  onChange={handleChange}
+                  type="text"
+                  name="gs_loan_number"
+                  value={formData.gs_loan_number}
+                  placeholder="Enter Gs Loan Number"
+                />
+                <input
+                  className="px-5 py-2 rounded-md outline-none"
+                  onChange={handleChange}
+                  type="text"
+                  name="gs_loan_password"
+                  value={formData.gs_loan_password}
+                  placeholder="Enter Gs Loan Password"
+                />
+                <input
+                  className="px-5 py-2 rounded-md outline-none"
+                  onChange={handleChange}
+                  type="text"
+                  name="gs_loan_userid"
+                  value={formData.gs_loan_userid}
+                  placeholder="Enter Gs Loan UserId"
+                />
+              </div>
+              <div className="flex gap-6">
+                {" "}
+                <input
+                  className="px-5 py-2 rounded-md outline-none"
+                  onChange={handleChange}
+                  type="number"
+                  name="collection_amount"
+                  value={formData.collection_amount}
+                  placeholder="Enter Collection Amount"
+                />
+                <input
+                  className="px-5 py-2 rounded-md outline-none"
+                  onChange={handleChange}
+                  type="text"
+                  name="collection_location"
+                  value={formData.collection_location}
+                  placeholder="Enter Collection Location"
+                />
+                <input
+                  className="px-5 py-2 rounded-md outline-none"
+                  onChange={handleChange}
+                  type="text"
+                  name="collection_address"
+                  value={formData.collection_address}
+                  placeholder="Enter Collection Address"
+                />
+              </div>
+
               <input
                 type="submit"
                 className="bg-white text-[#3B76EF] font-bold w-1/2 rounded-md px-5 py-2"
@@ -414,94 +494,47 @@ const UserCollectionTable = () => {
       {isUpdateCollection && (
         <div className="absolute top-0 h-full w-full flex items-center justify-center backdrop-blur-lg">
           <div className="flex flex-col  bg-[#3B76EF] p-10 rounded-xl text-white text-xl justify-center gap-8 ">
-            <h1 className="font-bold text-center ">UPDATE USER</h1>
+            <h1 className="font-bold text-center ">UPDATE DETAIL</h1>
             <form
               className="flex flex-col gap-6 items-center text-zinc-700"
-              onSubmit={handleSubmit}
+              onSubmit={handleUpdateSubmit}
             >
               <div className="flex gap-6">
-              <select onChange={handleChange} className="px-6 py-2 rounded-md outline-none"  name="userId" id="">
-                <option>Select User</option>
-                {UserData &&
-                  UserData.data &&
-                  UserData.data.map((user, index) => (
-                    <option key={index} value={user._id}>
-                      {user.fullName}
-                    </option>
-                  ))}
-              </select>
-              <input
-                className="px-5 py-2 rounded-md outline-none"
-                onChange={handleChange}
-                type="text"
-                name="fullName"
-                value={formData.fullName}
-                placeholder="Enter name of user"
-              /><select name="collection_status" id="" onChange={handleChange} className="px-16 py-2 rounded-md outline-none">
-              <option>Select Status</option>
-              <option value="EMPTY">EMPTY</option>
-              <option value="PENDING">PENDING</option>
-              <option value="APPROVED">APPROVED</option>
-              <option value="REJECTED">REJECTED</option>
-              <option value="DISBURSED">DISBURSED</option>
-            </select>
+                <select
+                  name="status"
+                  id=""
+                  onChange={handleChangeinupdate}
+                  className="px-16 py-2 rounded-md outline-none"
+                >
+                  <option>Select Status</option>
+
+                  <option value="APPROVED">APPROVED</option>
+                  <option value="REJECTED">REJECTED</option>
+                </select>
               </div>
-              <div  className="flex gap-6"><input
-                className="px-5 py-2 rounded-md outline-none"
-                onChange={handleChange}
-                type="text"
-                name="gs_loan_number"
-                value={formData.gs_loan_number}
-                placeholder="Enter Gs Loan Number"
-              />
-              <input
-                className="px-5 py-2 rounded-md outline-none"
-                onChange={handleChange}
-                type="text"
-                name="gs_loan_password"
-                value={formData.gs_loan_password}
-                placeholder="Enter Gs Loan Password"
-              />
-              <input
-                className="px-5 py-2 rounded-md outline-none"
-                onChange={handleChange}
-                type="text"
-                name="gs_loan
-                _userid"
-                value={formData.gs_loan_userid}
-                placeholder="Enter Gs Loan UserId"
-              /></div>
-              <div  className="flex gap-6"> <input
-                className="px-5 py-2 rounded-md outline-none"
-                onChange={handleChange}
-                type="text"
-                name="collection_amount"
-                value={formData.collection_amount}
-                placeholder="Enter Collection Amount"
-              />
-              <input
-                className="px-5 py-2 rounded-md outline-none"
-                onChange={handleChange}
-                type="text"
-                name="collection_location"
-                value={formData.collection_location}
-                placeholder="Enter Collection Location"
-              />
-              <input
-                className="px-5 py-2 rounded-md outline-none"
-                onChange={handleChange}
-                type="text"
-                name="collection_address"
-                value={formData.collection_address}
-                placeholder="Enter Collection Address"
-              /></div>
+              <div className="flex gap-6">
+                <input
+                  className="px-5 py-2 rounded-md outline-none"
+                  onChange={handleChangeinupdate}
+                  type="text"
+                  name="approved_collection_amount"
+                  value={UpdateFormData.approved_collection_amount}
+                  placeholder="Enter Approved Amount"
+                />
+              </div>
+
               <input
                 type="submit"
                 className="bg-white text-[#3B76EF] font-bold w-1/2 rounded-md px-5 py-2"
               />
             </form>
           </div>
-          <button className="absolute top-5 right-5" onClick={()=>  setisUpdateCollection(null)}>❌</button>
+          <button
+            className="absolute top-5 right-5"
+            onClick={() => setisUpdateCollection(false)}
+          >
+            ❌
+          </button>
         </div>
       )}
     </main>

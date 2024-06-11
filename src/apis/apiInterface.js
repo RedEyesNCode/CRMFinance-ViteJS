@@ -45,7 +45,6 @@ export const getAllCollection = async () => {
 };
 export const getCollectionData = async (data) => {
   try {
-    console.log(data);
     const response = await apiService("get-user-collection", "POST", data);
     return response;
   } catch (error) {
@@ -590,9 +589,20 @@ export const filterLeadsbyDateStatusName = async (
     const response = await apiService("filter-leads-Date_Status_Name", "POST", {
       fromDate,
       toDate,
-      lead_status: leadStatus,
-      firstName: leadFirstName,
+      lead_status: leadFirstName,
+      firstName: leadStatus ,
     });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 11-06-24
+export const updateCollection = async (data) => {
+  try {
+    console.log(data);
+    const response = await apiService("update-user-collection", "POST", data);
     return response;
   } catch (error) {
     throw error;
