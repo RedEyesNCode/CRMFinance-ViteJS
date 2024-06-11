@@ -52,7 +52,7 @@ const Maindashboarddiv = () => {
         setAttendanceData(responseAttendance.data);
         setVisitData(responseVisits.data);
         setUsersData(responseAllUsers.data);
-        setLeadData(responseLeads.data);
+        setLeadData(responseLeads);
 
       } catch (error) {
         console.log(error);
@@ -85,7 +85,8 @@ const Maindashboarddiv = () => {
           <div className="Boxes w-full flex justify-between  px-5">
             <div className="box1 pt-4 pl-10  bg-[#3C76ED]  h-52 w-80 rounded-[30px]">
               <h1 className="text-[20px] font-semibold">
-                Overall Leads : {LeadData && LeadData.length}
+                Overall Leads : {LeadData && LeadData.totalCount}
+                
               </h1>
 
               <img className="h-32 w-32 " src={image1} alt="" />
