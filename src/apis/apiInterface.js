@@ -8,7 +8,36 @@ export const getAllLeads = async (data) => {
     throw error;
   }
 };
+export const getAllLeadCards = async () => {
+  try {
+    const response = await apiService("get-all-lead-card", "GET");
+    return response;
+  } catch (error) {
+    throw error;
+  }
 
+
+}
+export const createLeadCard = async (data) => {
+  try {
+    const response = await apiService("create-lead-card", "POST",data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+
+
+}
+export const deleteLeadCard = async (data) => {
+  try {
+    const response = await apiService("delete-lead-card", "POST",data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+
+
+}
 export const updateUser = async (data) => {
   try {
     const response = await apiService("update-user", "POST", data);

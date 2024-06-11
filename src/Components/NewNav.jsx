@@ -22,6 +22,7 @@ import FilterDashboardData from "./FilterDashboardData";
 import LoanOngoingTable from "./page/ongoing/LoanOngoingTable";
 import LoanClosedTable from "./page/closed/LoanClosedTable";
 import UserCollectionTable from "./page/user/UserCollectionTable";
+import LeadCardTemplate from "./page/lead_card/LeadCardTemplate";
 
 const NewNav = () => {
   const [selected, setSelected] = useState("Home");
@@ -55,7 +56,8 @@ const NewNav = () => {
 
       ],
     },
-    { component: <BiLogoPostgresql />, name: "Banners" },
+    { component: <BiLogoPostgresql />, name: "Lead Card" },
+
     {
       component: <MdReport />,
       name: "Reports",
@@ -165,6 +167,7 @@ const NewNav = () => {
         {selected === "Disbursal Loan" && <LoanDisburseTable />}
         {selected === "Rejected Loans" && <LoanRejectTable />}
         {selected === "Collections" && (<UserCollectionTable/>)}
+        {selected === "Lead Card" && (<LeadCardTemplate/>)}
       </div>
     </div>
   );
