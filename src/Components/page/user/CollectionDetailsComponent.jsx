@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getCollectionData } from "../../../apis/apiInterface";
 
-const CollectionDetailsComponent = ({ user_data }) => {
+const CollectionDetailsComponent = ({ user_data ,handleCloseUserDetails}) => {
   const [collectionData, setCollectionData] = useState(null);
 
   useEffect(() => {
@@ -25,6 +25,7 @@ const CollectionDetailsComponent = ({ user_data }) => {
 
   return (
     <div className="collection-details h-full w-full absolute top-0 left-0 p-4">
+      <button className="bg-red-500 text-white p-2 rounded-lg " onClick={handleCloseUserDetails}>Close</button>
       {collectionData ? (
         <div className="grid grid-cols-4 gap-4">
           {collectionData.map((collection, index) => (

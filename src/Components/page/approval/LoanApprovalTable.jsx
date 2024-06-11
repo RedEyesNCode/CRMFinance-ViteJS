@@ -230,9 +230,9 @@ function LoanApprovalTable({ handle }) {
 
           <div className="bg-[#86af49] w-full">
             <div className="flex">
-              <div class="date-input">
+              <div className="date-input">
                 <label
-                  for="fromDate"
+                  htmlFor="fromDate"
                   className="text-white text-[18px] font-mono p-1 m-1"
                 >
                   From Date :{" "}
@@ -248,7 +248,7 @@ function LoanApprovalTable({ handle }) {
               </div>
               <div>
                 <label
-                  for="toDate"
+                  htmlFor="toDate"
                   className="text-white text-[18px] font-mono p-1 m-1"
                 >
                   To Date :
