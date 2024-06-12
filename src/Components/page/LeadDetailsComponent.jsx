@@ -353,6 +353,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                     ₹{lead_current_data.customerLoanAmount}
                   </td>
                 </tr>
+                
                 <tr className="border-b">
                   <td className="p-2 font-semibold">
                     Employee Approved Amount
@@ -377,6 +378,12 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                   <td className="p-2 font-semibold">Fees Amount</td>
                   <td className="p-2 font-semibold">
                     ₹{lead_current_data.feesAmount}
+                  </td>
+                </tr>
+                <tr className="border-b bg-indigo-300 text-black font-mono">
+                  <td className="p-2 font-semibold">Lead Amount</td>
+                  <td className="p-2 font-semibold">
+                    ₹{lead_current_data.leadAmount}
                   </td>
                 </tr>
               </tbody>
