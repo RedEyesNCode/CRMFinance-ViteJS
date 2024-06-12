@@ -6,6 +6,7 @@ import image3 from "../assets/immigration.png";
 import image4 from "../assets/app_traffic.png";
 import image5 from "../assets/ic_collections.png";
 import {
+  getAdminDashboardApi,
   getAllAttendance,
   getAllLeads,
   getAllUsers,
@@ -16,10 +17,9 @@ import FilterDashboardData from "./FilterDashboardData";
 import apiService from "../apis/apiService";
 
 const Maindashboarddiv = () => {
-  const [LeadData, setLeadData] = useState([]);
-  const [visitsData, setVisitData] = useState([]);
-  const [attendanceData, setAttendanceData] = useState([]);
-  const [usersData, setUsersData] = useState([]);
+
+  const [dashboardData,setDashboardData] = useState(null);
+
 
   //Code for Date timer
   const [dateTime, setDateTime] = useState(new Date());
@@ -45,15 +45,10 @@ const Maindashboarddiv = () => {
   useEffect(() => {
     const LeadsData = async () => {
       try {
-        const responseLeads = await getAllLeads({page : 1 , limit : 100});
-        const responseVisits = await getAllVisits();
-        const responseAttendance = await getAllAttendance();
-        const responseAllUsers = await getAllUsers();
-        setAttendanceData(responseAttendance.data);
-        setVisitData(responseVisits.data);
-        setUsersData(responseAllUsers.data);
-        setLeadData(responseLeads.data);
+        const responseDashboard = await getAdminDashboardApi();
+        setDashboardData(responseDashboard);
 
+        
       } catch (error) {
         console.log(error);
       }
@@ -85,7 +80,7 @@ const Maindashboarddiv = () => {
           <div className="Boxes w-full flex justify-between  px-5">
             <div className="box1 pt-4 pl-10  bg-[#3C76ED]  h-52 w-80 rounded-[30px]">
               <h1 className="text-[20px] font-semibold">
-                Overall Leads : {LeadData && LeadData.length}
+                Overall Leads : {dashboardData && dashboardData.data.totalLeads}
               </h1>
 
               <img className="h-32 w-32 " src={image1} alt="" />
@@ -93,7 +88,7 @@ const Maindashboarddiv = () => {
             </div>
             <div className="box2 pt-5 pl-6  bg-[#63C7FF]  h-52 w-80 rounded-[30px]">
               <h1 className="text-[20px] font-semibold">
-                Overall Visits : {visitsData && visitsData.length}
+                Overall Visits : {dashboardData && dashboardData.data.totalVisits}
               </h1>
 
               <img className="h-32 w-32 " src={image2} alt="" />
@@ -101,7 +96,7 @@ const Maindashboarddiv = () => {
             </div>
             <div className="box3 pt-5 pl-6  bg-[#A66CD4]  h-52 w-80 rounded-[30px]">
               <h1 className="text-[20px] font-semibold">
-                Overall Attendence : {attendanceData && attendanceData.length}
+                Overall Attendence : {dashboardData && dashboardData.data.totalAttendance}
               </h1>
 
               <img className="h-32 w-32 " src={image3} alt="" />
@@ -124,7 +119,7 @@ const Maindashboarddiv = () => {
             </div>
             <div className="box3 pt-5 pl-6  bg-blue-900  h-56 w-80 rounded-[30px]">
               <h1 className="text-[20px] font-semibold">
-                Overall Employees : {usersData && usersData.length}
+                Overall Employees : {dashboardData && dashboardData.data.totalCollections}
               </h1>
 
               <img
@@ -133,16 +128,7 @@ const Maindashboarddiv = () => {
                 alt=""
               />
             </div>
-            <div className="box3 pt-5 pl-6  bg-[#eea29a]  h-56 w-80 rounded-[30px]">
-              <h1 className="text-[20px] font-semibold">App Traffic : </h1>
-
-              <img
-                className="h-32 w-32 rounded-[30px] m-2"
-                src={image4}
-                alt=""
-              />
-              <p className="text-lg font-semibold ">Last Last Logged User : </p>
-            </div>
+            
           </div>
         </main>
         <AsideDivForDashBoard />

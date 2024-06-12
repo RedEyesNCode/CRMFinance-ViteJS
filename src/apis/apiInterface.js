@@ -28,6 +28,15 @@ export const createLeadCard = async (data) => {
 
 
 }
+export const getAdminDashboardApi = async () => {
+
+  try {
+    const response = await apiService("get-admin-dashboard", "GET");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
 export const deleteLeadCard = async (data) => {
   try {
     const response = await apiService("delete-lead-card", "POST",data);
