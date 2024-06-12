@@ -426,7 +426,7 @@ const UserCollectionTable = () => {
                   value={formData.fullName}
                   placeholder="Enter name of user"
                 />
-                <select
+                {/* <select
                   name="collection_status"
                   id=""
                   onChange={handleChange}
@@ -436,7 +436,7 @@ const UserCollectionTable = () => {
 
                   <option value="APPROVED">APPROVED</option>
                   <option value="REJECTED">REJECTED</option>
-                </select>
+                </select> */}
               </div>
               {/* <div className="flex gap-6">
                 <input
@@ -474,14 +474,14 @@ const UserCollectionTable = () => {
                   value={formData.collection_amount}
                   placeholder="Enter Collection Amount"
                 />
-                <input
+                {/* <input
                   className="px-5 py-2 rounded-md outline-none"
                   onChange={handleChange}
                   type="text"
                   name="collection_location"
                   value={formData.collection_location}
                   placeholder="Enter Collection Location"
-                />
+                /> */}
               </div>
 
               <input
