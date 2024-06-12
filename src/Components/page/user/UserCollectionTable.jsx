@@ -134,12 +134,33 @@ const UserCollectionTable = () => {
       [name]: value,
     }));
   };
+  const [maxAmount, setMaxAmount] = useState(0);
   const handleChangeinupdate = (e) => {
     const { name, value } = e.target;
-    setUpdateFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    
+    if (name === "collection_id") {
+      const selectedCollection = AllCollection.find(coll => coll._id === value);
+      setMaxAmount(selectedCollection ? selectedCollection.collection_amount : 0);
+      setUpdateFormData({
+        ...UpdateFormData,
+        [name]: value,
+        approved_collection_amount: ""
+      });
+    } else if (name === "approved_collection_amount") {
+      if (Number(value) > maxAmount) {
+        alert(`Approved amount cannot exceed ₹${maxAmount}`);
+        return;
+      }
+      setUpdateFormData({
+        ...UpdateFormData,
+        [name]: value
+      });
+    } else {
+      setUpdateFormData({
+        ...UpdateFormData,
+        [name]: value
+      });
+    }
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -480,7 +501,7 @@ const UserCollectionTable = () => {
       {isUpdateCollection && (
         <div className="absolute top-0 h-full w-full flex items-center justify-center backdrop-blur-lg">
           <div className="flex flex-col bg-[#3B76EF] p-10 rounded-xl text-white text-xl justify-center gap-8">
-            <h1 className="font-bold text-center">UPDATE DETAIL</h1>
+            <h1 className="font-bold text-center">UPDATE COLLECTION DETAIL</h1>
             <form
               className="flex flex-col gap-6 items-center text-zinc-700"
               onSubmit={handleUpdateSubmit}
@@ -513,7 +534,9 @@ const UserCollectionTable = () => {
               </div>
               <div className="flex gap-6">
                 <input
-                  className="px-5 py-2 rounded-md outline-none"
+                  className={`px-5 py-2 rounded-md outline-none ${
+                    UpdateFormData.status === "REJECTED" ? "hidden" : ""
+                  }`}
                   onChange={handleChangeinupdate}
                   type="text"
                   name="approved_collection_amount"
