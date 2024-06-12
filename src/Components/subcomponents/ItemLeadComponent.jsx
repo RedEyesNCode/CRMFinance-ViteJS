@@ -257,7 +257,6 @@ function ItemLeadComponent({ userData }) {
       }
     };
     LeadsData();
-    
   }, [addLead]);
 
   const closeleadform = () => {
@@ -319,14 +318,14 @@ function ItemLeadComponent({ userData }) {
             </div>
             <div className="flex flex-row">
               <label className="items-center mt-1 font-mono font-semibold ">
-                Search By First Name
+                Search By Name or Number
               </label>
               <input
                 type="text"
                 value={FirstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 className="text-black text-[18px] font-mono p-2 m-1 rounded-md outline-none"
-                placeholder="Enter name here"
+                placeholder="Enter name or number"
               ></input>
 
               <select
@@ -454,11 +453,8 @@ function ItemLeadComponent({ userData }) {
               {leadsData &&
                 leadsData.status != "fail" &&
                 leadsData.data
-                  .filter((lead) =>
-                    lead.firstName
-                      .toLowerCase()
-                      .includes(FirstName.toLowerCase())
-                  )
+                  .filter((lead) => (lead.firstName.toLowerCase().includes(FirstName.toLowerCase())) || 
+                  (lead.mobileNumber.includes(FirstName)))
                   .map((user, index) => (
                     <tr
                       key={index}
