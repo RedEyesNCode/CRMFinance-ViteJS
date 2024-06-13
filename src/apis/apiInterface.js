@@ -646,3 +646,13 @@ export const updateCollection = async (data) => {
     throw error;
   }
 };
+
+export const updateUserCollectionAmount = async (data) => {
+  try {
+    console.log(data);
+    const response = await apiService("update-user-collection-amount", "POST", data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

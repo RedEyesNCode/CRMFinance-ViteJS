@@ -8,8 +8,10 @@ import {
   getAllUsers,
   getCollectionData,
   updateCollection,
+  updateUserCollectionAmount,
 } from "../../../apis/apiInterface";
 import CollectionDetailsComponent from "./CollectionDetailsComponent";
+import { ToastContainer, toast } from "react-toastify";
 
 const UserCollectionTable = () => {
   const [UserData, setUserData] = useState(null);
@@ -26,9 +28,7 @@ const UserCollectionTable = () => {
   });
   const [UpdateFormData, setUpdateFormData] = useState({
     userId: "",
-    collection_id: "",
-    status: "",
-    approved_collection_amount: "",
+    collection_amount: "",
   });
   const deleteCurrentUser = async (CurrentUser) => {
     try {
@@ -70,7 +70,7 @@ const UserCollectionTable = () => {
   };
   const callGetUsersAPI = async () => {
     try {
-      const response = await getAllCollection();
+      const response = await getAllUsers();
       setCollectionData(response);
       console.log("Collection Fetched response -> ", response);
     } catch (error) {
@@ -80,7 +80,7 @@ const UserCollectionTable = () => {
   useEffect(() => {
     const CollectionData = async () => {
       try {
-        const response = await getAllCollection();
+        const response = await getAllUsers();
         if (response.code == 200) {
           setCollectionData(response);
         } else {
@@ -137,34 +137,11 @@ const UserCollectionTable = () => {
   const [maxAmount, setMaxAmount] = useState(0);
   const handleChangeinupdate = (e) => {
     const { name, value } = e.target;
-
-    if (name === "collection_id") {
-      const selectedCollection = AllCollection.find(
-        (coll) => coll._id === value
-      );
-      setMaxAmount(
-        selectedCollection ? selectedCollection.collection_amount : 0
-      );
-      setUpdateFormData({
-        ...UpdateFormData,
-        [name]: value,
-        approved_collection_amount: "",
-      });
-    } else if (name === "approved_collection_amount") {
-      if (Number(value) > maxAmount) {
-        alert(`Approved amount cannot exceed ₹${maxAmount}`);
-        return;
-      }
-      setUpdateFormData({
-        ...UpdateFormData,
-        [name]: value,
-      });
-    } else {
-      setUpdateFormData({
-        ...UpdateFormData,
-        [name]: value,
-      });
-    }
+    
+    setUpdateFormData({
+      ...UpdateFormData,
+      [name]: value,
+    });
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -186,25 +163,35 @@ const UserCollectionTable = () => {
   };
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
-    const response = await updateCollection(UpdateFormData);
+    const response = await updateUserCollectionAmount(UpdateFormData);
     console.log("Collection Updated -> ", response);
+    toast.success(response.message);
+
     setUpdateFormData({
-      collection_id: "",
-      status: "",
-      approved_collection_amount: "",
+      userId : UpdateFormData.userId,
+      collection_amount: UpdateFormData.collection_amount,
     });
     if (response.status === 200) {
+      toast.info(response.message);
+      callGetUsersAPI();
+
+
       setCollectionData((prevData) => {
         return {
           ...prevData,
           data: [...prevData.data, response.data],
         };
       });
+    }else{
+      toast.error(response.error);
+
     }
     setisUpdateCollection(null);
   };
   const updateButton = async (user) => {
     collforSelect(user);
+    setCurrentUser(user);
+
     setUpdateFormData({ userId: user._id });
     setisUpdateCollection(true);
   };
@@ -259,6 +246,7 @@ const UserCollectionTable = () => {
 
   return (
     <main className="h-full w-full">
+      <ToastContainer/>
       <div className="  border border-gray-300 relative">
         {!isUserDetailsFrame && CollectionData && (
           <div className="relative overflow-auto h-fill">
@@ -356,7 +344,7 @@ const UserCollectionTable = () => {
                           className="outline-none px-4 py-2 bg-yellow-500 text-white rounded-md"
                           onClick={() => updateButton(user)}
                         >
-                          Update
+                          Update Collection Amount
                         </button>
                       </td>
                     </tr>
@@ -503,49 +491,23 @@ const UserCollectionTable = () => {
         </div>
       )}
       {isUpdateCollection && (
-        <div className="absolute top-0 h-full w-full flex items-center justify-center backdrop-blur-lg">
+        <div className="absolute top-0 h-full w-full flex items-center justify-center ">
           <div className="flex flex-col bg-[#3B76EF] p-10 rounded-xl text-white text-xl justify-center gap-8">
-            <h1 className="font-bold text-center">UPDATE COLLECTION DETAIL</h1>
+            <h1 className="font-bold text-center">UPDATE EMPLOYEE COLLECTION AMOUNT</h1>
+            <h2 className="font-mono text-center bg-indigo-500 rounded-lg"> INR {CurrentUser && CurrentUser.totalCollectionAmount}</h2>
             <form
               className="flex flex-col gap-6 items-center text-zinc-700"
               onSubmit={handleUpdateSubmit}
             >
-              <div className="flex gap-6 flex-col">
-                <select
-                  name="collection_id"
-                  id=""
-                  onChange={handleChangeinupdate}
-                  className="px-2 py-2 rounded-md outline-none"
-                >
-                  <option>Select Collection</option>
-                  {AllCollection &&
-                    AllCollection.map((coll, index) => (
-                      <option key={index} value={coll._id}>
-                        {coll.fullName} - ₹{coll.collection_amount}
-                      </option>
-                    ))}
-                </select>
-                <select
-                  name="status"
-                  id=""
-                  onChange={handleChangeinupdate}
-                  className="px-2 py-2 rounded-md outline-none"
-                >
-                  <option>Select Status</option>
-                  <option value="APPROVED">APPROVED</option>
-                  <option value="REJECTED">REJECTED</option>
-                </select>
-              </div>
-              <div className="flex gap-6">
+              
+              <div className="flex">
                 <input
-                  className={`px-5 py-2 rounded-md outline-none ${
-                    UpdateFormData.status === "REJECTED" ? "hidden" : ""
-                  }`}
+                  className={`px-5 py-2 rounded-md outline-none`}
                   onChange={handleChangeinupdate}
                   type="text"
-                  name="approved_collection_amount"
-                  value={UpdateFormData.approved_collection_amount}
-                  placeholder="Enter Approved Amount"
+                  name="collection_amount"
+                  value={UpdateFormData.collection_amount}
+                  placeholder="Enter Received Collection Amount"
                 />
               </div>
               <input
