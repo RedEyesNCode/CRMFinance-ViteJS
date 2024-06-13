@@ -165,7 +165,7 @@ function LoanOngoingTable({ handle }) {
         toDate,
         leadFirstName
       );
-      if(response.code != 200){
+      if (response.code != 200) {
         toast.warn(response.message);
         return;
       }
@@ -182,7 +182,7 @@ function LoanOngoingTable({ handle }) {
       toDate: "",
       leadFirstName: "",
     });
-    callLeadApi()
+    callLeadApi();
   };
 
   const handleChange = (e) => {
@@ -193,8 +193,6 @@ function LoanOngoingTable({ handle }) {
     });
   };
 
-
-
   if (leadsData == null) {
     return (
       <h2 className="text-white text-[21px] font-semibold m-5 font-mono bg-orange-500 rounded-md p-2">
@@ -204,14 +202,14 @@ function LoanOngoingTable({ handle }) {
   }
 
   return (
-    <div className="overflow-hidden border border-gray-300 relative ">
-      <ToastContainer/>
+    <div className="border border-gray-300 relative ">
+      <ToastContainer />
       {!isLeadDetailFrame && (
-        <div className="relative overflow-auto max-h-[680px] ">
+        <div className="relative h-[85%] overflow-hidden">
           <h2 className="text-lg  px-5 py-4   font-sans font-bold  text-white p-2  border-amber-800 bg-amber-600">
             Ongoing Loans
           </h2>
-          
+
           <div className="bg-amber-700 p-2 w-full">
             <div className="flex">
               <div class="date-input">
@@ -262,126 +260,132 @@ function LoanOngoingTable({ handle }) {
             </div>
           </div>
           <div className="bg-amber-800">
-            <button onClick={filterOngoingLoans} className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
+            <button
+              onClick={filterOngoingLoans}
+              className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]"
+            >
               Filter Ongoing Loans
             </button>
-            <button onClick={resetFilters}  className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
+            <button
+              onClick={resetFilters}
+              className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]"
+            >
               Reset Filter
             </button>
           </div>
+          <div className="max-h-[406px] overflow-scroll">
+            <table className="min-w-full p-1">
+              <thead className="border">
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border bg-[#F3F4F7]"
+                  >
+                    SNO.
+                  </th>
 
-          <table className="min-w-full table-auto p-1">
-            <thead className="border">
-              <tr>
-                <th
-                  scope="col"
-                  className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border bg-[#F3F4F7]"
-                >
-                  SNO.
-                </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    Ongoing Loan ID
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    User Info
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    First Name
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    Last Name
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    Mobile Number
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    Gender
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    Status
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    Amount
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    Created At
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    Disbursement Date
+                  </th>
 
-                <th
-                  scope="col"
-                  className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                >
-                  Ongoing Loan ID
-                </th>
-                <th
-                  scope="col"
-                  className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                >
-                  User Info
-                </th>
-                <th
-                  scope="col"
-                  className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                >
-                  First Name
-                </th>
-                <th
-                  scope="col"
-                  className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                >
-                  Last Name
-                </th>
-                <th
-                  scope="col"
-                  className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                >
-                  Mobile Number
-                </th>
-                <th
-                  scope="col"
-                  className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                >
-                  Gender
-                </th>
-                <th
-                  scope="col"
-                  className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                >
-                  Status
-                </th>
-                <th
-                  scope="col"
-                  className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                >
-                  Amount
-                </th>
-                <th
-                  scope="col"
-                  className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                >
-                  Created At
-                </th>
-                <th
-                  scope="col"
-                  className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                >
-                  Disbursement Date
-                </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider border text-center"
+                  >
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white  divide-gray-200">
+                {leadsData != null &&
+                  leadsData.data
+                    .filter((user) => user.lead_status === "ACTIVE")
+                    .map((user, index) => (
+                      <tr
+                        key={index}
+                        className={`${index % 2 != 0 ? "bg-[#F4FAFF]" : ""}`}
+                      >
+                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border bg-[#F3F4F7]">
+                          {index + 1}.
+                        </td>
 
-                <th
-                  scope="col"
-                  className="px-2 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider border text-center"
-                >
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white  divide-gray-200">
-              {leadsData != null &&
-                leadsData.data
-                  .filter((user) => user.lead_status === "ACTIVE")
-                  .map((user, index) => (
-                    <tr
-                      key={index}
-                      className={`${index % 2 != 0 ? "bg-[#F4FAFF]" : ""}`}
-                    >
-                      <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border bg-[#F3F4F7]">
-                        {index + 1}.
-                      </td>
-
-                      <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                        {user._id}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                        {user.user}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                        {user.firstName}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                        {user.lastName}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                        {user.mobileNumber}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                        {user.gender}
-                      </td>
-                      <td
-                        className={`px-2 py-2 whitespace-nowrap text-[11px] font-medium border 
+                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                          {user._id}
+                        </td>
+                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                          {user.user}
+                        </td>
+                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                          {user.firstName}
+                        </td>
+                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                          {user.lastName}
+                        </td>
+                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                          {user.mobileNumber}
+                        </td>
+                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                          {user.gender}
+                        </td>
+                        <td
+                          className={`px-2 py-2 whitespace-nowrap text-[11px] font-medium border 
                 ${
                   user.lead_status === "PENDING"
                     ? "bg-yellow-500 text-center text-white"
@@ -408,42 +412,43 @@ function LoanOngoingTable({ handle }) {
                     ? "bg-red-500 text-white "
                     : ""
                 }`}
-                      >
-                        {user.lead_status}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                        {user.leadAmount}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                        {parseUTCtoIST(user.createdAt)}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                        {unixToIST(Number(user.disbursementDate))}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
-                        <button
-                          onClick={() => handleOpenLeadDetail(user)}
-                          className="text-white bg-yellow-500 px-3 py-2 rounded-xl font-mono border-2"
                         >
-                          Loan Details
-                        </button>
-                        <button
-                          onClick={() => handleOpenLeadUser(user)}
-                          className="text-white bg-blue-900 px-3 py-2 rounded-md"
-                        >
-                          View User
-                        </button>
-                        <button
-                          onClick={() => handleOpenDeleteLead(user)}
-                          className="text-white bg-[#fa4845] px-3 py-2 rounded-md"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-            </tbody>
-          </table>
+                          {user.lead_status}
+                        </td>
+                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                          {user.leadAmount}
+                        </td>
+                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                          {parseUTCtoIST(user.createdAt)}
+                        </td>
+                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                          {unixToIST(Number(user.disbursementDate))}
+                        </td>
+                        <td className="px-2 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">
+                          <button
+                            onClick={() => handleOpenLeadDetail(user)}
+                            className="text-white bg-yellow-500 px-3 py-2 rounded-xl font-mono border-2"
+                          >
+                            Loan Details
+                          </button>
+                          <button
+                            onClick={() => handleOpenLeadUser(user)}
+                            className="text-white bg-blue-900 px-3 py-2 rounded-md"
+                          >
+                            View User
+                          </button>
+                          <button
+                            onClick={() => handleOpenDeleteLead(user)}
+                            className="text-white bg-[#fa4845] px-3 py-2 rounded-md"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
       {isLeadDetailFrame && (

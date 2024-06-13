@@ -110,7 +110,10 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
         setLeadStatusDialog(false);
       } else {
         setLeadCurrentData(lead_data);
-        toast.error(responseJson.message);
+        toast.info(responseJson.message);
+        toast.info('Your Lead Amount was updated !')
+
+
       }
     } catch (error) {
       console.log(error);

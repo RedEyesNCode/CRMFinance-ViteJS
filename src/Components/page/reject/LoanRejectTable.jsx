@@ -102,6 +102,7 @@ function LoanRejectTable({ handle }) {
     const LeadsData = async () => {
       try {
         const response = await getAllRejectedLoans();
+        console.log("kllklklk", response);
         if (response.status == "success") {
           setLeadsData(response);
           console.log(response);
@@ -140,7 +141,7 @@ function LoanRejectTable({ handle }) {
         toDate,
         leadFirstName
       );
-      if(response.code != 200){
+      if (response.code != 200) {
         toast.warn(response.message);
         return;
       }
@@ -157,7 +158,7 @@ function LoanRejectTable({ handle }) {
       toDate: "",
       leadFirstName: "",
     });
-    callLeadApi()
+    callLeadApi();
   };
 
   const handleChange = (e) => {
@@ -177,10 +178,10 @@ function LoanRejectTable({ handle }) {
   }
 
   return (
-    <div className="overflow-hidden border border-gray-300 relative">
-      <ToastContainer/>
+    <div className=" border border-gray-300 relative">
+      <ToastContainer />
       {!isLeadDetailFrame && (
-        <div className="relative overflow-auto max-h-[680px] ">
+        <div className="relative h-[85%] overflow-hidden">
           <h2 className=" text-[16px]  font-sans font-bold  text-white p-4 rounded-md border bg-red-600">
             All Rejected Loans
           </h2>
@@ -235,13 +236,20 @@ function LoanRejectTable({ handle }) {
             </div>
           </div>
           <div className="bg-red-800">
-            <button onClick={filterRejectLoans} className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
+            <button
+              onClick={filterRejectLoans}
+              className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]"
+            >
               Filter Rejected Loans
             </button>
-            <button onClick={resetFilters} className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]">
+            <button
+              onClick={resetFilters}
+              className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]"
+            >
               Reset Filter
             </button>
           </div>
+          <div className="max-h-[406px] overflow-scroll">
           <table className="min-w-full rounded-3xl table-auto p-1">
             <thead className="border">
               <tr>
@@ -401,6 +409,8 @@ function LoanRejectTable({ handle }) {
                 ))}
             </tbody>
           </table>
+          </div>
+          
         </div>
       )}
       {isLeadDetailFrame && (
