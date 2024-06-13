@@ -139,6 +139,7 @@ function ItemLeadComponent({ userData }) {
       const response = await getAllLeads(rawJson);
       if (response.status == "success") {
         setLeadsData(response);
+        
       } else {
         setLeadsData(null);
       }

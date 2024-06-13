@@ -58,6 +58,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
       const leadDetailsResponse = await getLeadDetails(rawJson);
       if (leadDetailsResponse.code == 200) {
         setLeadCurrentData(leadDetailsResponse.data);
+        console.log("by me -> " , leadDetailsResponse);
       } else {
         setLeadCurrentData(lead_data);
       }
@@ -353,7 +354,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                     ₹{lead_current_data.customerLoanAmount}
                   </td>
                 </tr>
-                
+
                 <tr className="border-b">
                   <td className="p-2 font-semibold">
                     Employee Approved Amount

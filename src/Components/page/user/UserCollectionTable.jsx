@@ -137,14 +137,18 @@ const UserCollectionTable = () => {
   const [maxAmount, setMaxAmount] = useState(0);
   const handleChangeinupdate = (e) => {
     const { name, value } = e.target;
-    
+
     if (name === "collection_id") {
-      const selectedCollection = AllCollection.find(coll => coll._id === value);
-      setMaxAmount(selectedCollection ? selectedCollection.collection_amount : 0);
+      const selectedCollection = AllCollection.find(
+        (coll) => coll._id === value
+      );
+      setMaxAmount(
+        selectedCollection ? selectedCollection.collection_amount : 0
+      );
       setUpdateFormData({
         ...UpdateFormData,
         [name]: value,
-        approved_collection_amount: ""
+        approved_collection_amount: "",
       });
     } else if (name === "approved_collection_amount") {
       if (Number(value) > maxAmount) {
@@ -153,12 +157,12 @@ const UserCollectionTable = () => {
       }
       setUpdateFormData({
         ...UpdateFormData,
-        [name]: value
+        [name]: value,
       });
     } else {
       setUpdateFormData({
         ...UpdateFormData,
-        [name]: value
+        [name]: value,
       });
     }
   };
