@@ -438,7 +438,7 @@ function ItemLeadComponent({ userData }) {
                 </th>
                 <th
                   scope="col"
-                  className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border whitespace-nowrap"
+                  className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border whitespace-wrap"
                 >
                   Disbursement Date
                 </th>
@@ -471,7 +471,7 @@ function ItemLeadComponent({ userData }) {
                       <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
                         {user.generated_loan_id}
                       </td>
-                      <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border table-cell">
+                      <td className="px-2 py-2 whitespace-wrap text-sm font-medium text-gray-900 border table-cell">
                         {user && user.user ? (
                           <>
                             {user.user.fullName} <br /> {user.user.employeeId}
@@ -480,10 +480,10 @@ function ItemLeadComponent({ userData }) {
                           "N/A" // Or any appropriate placeholder for missing data
                         )}
                       </td>
-                      <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                      <td className="px-2 py-2 whitespace-wrap text-sm font-medium text-gray-900 border">
                         {user.firstName}
                       </td>
-                      <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                      <td className="px-2 py-2 whitespace-wrap text-sm font-medium text-gray-900 border">
                         {user.lastName}
                       </td>
                       <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border">
