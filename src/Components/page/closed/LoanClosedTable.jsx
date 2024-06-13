@@ -181,10 +181,10 @@ function LoanClosedTable({ handle }) {
   }
 
   return (
-    <div className="overflow-hidden border border-gray-300 relative">
+    <div className=" border border-gray-300 relative">
       <ToastContainer/>
       {!isLeadDetailFrame && (
-        <div className="relative overflow-auto max-h-[680px] ">
+        <div className="relative h-[85%] overflow-hidden">
           <h2 className="text-[16px]  font-sans font-bold  text-white p-4 rounded-md border-red-800 bg-black">
             All Closed Loans
           </h2>
@@ -247,7 +247,8 @@ function LoanClosedTable({ handle }) {
               Reset Filter
             </button>
           </div>
-          <table className="min-w-full rounded-3xl table-auto p-1">
+          <div className="max-h-[425px] overflow-scroll">
+          <table className="min-w-full  p-1">
             <thead className="border">
               <tr>
                 <th
@@ -411,6 +412,7 @@ function LoanClosedTable({ handle }) {
                 ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
       {isLeadDetailFrame && (
