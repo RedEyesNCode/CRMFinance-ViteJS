@@ -1,12 +1,15 @@
 // apiService.js
-// const BASE_URL = "https://megmab2b.com:3000/";
-const BASE_URL = "http://localhost:3000/";
+const BASE_URL = "https://megmagroup.co:3000/";
+// const BASE_URL = "http://localhost:3000/";
 // const BASE_URL = "https://192.168.1.3:3000/";
 
 // you can pass endpoint, method and data to this javascript function.
 
 import LocalStorageManager from '../session/LocalStorageManager';
 import { LOCAL_STORAGE_KEY } from '../session/Constants';
+
+
+
 
 async function apiService(endpoint, method, data = null) {
     const url = BASE_URL + endpoint; // Assuming API endpoints are relative
