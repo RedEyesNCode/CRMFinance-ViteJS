@@ -33,45 +33,91 @@ const CollectionDetailsComponent = ({ user_data, handleCloseUserDetails }) => {
       </button>
       {collectionData ? (
         <div className="grid grid-cols-4 gap-4">
-          {collectionData.map((collection, index) => (
-            <div
-              key={index}
-              className="collection-card relative shadow-lg text-white rounded-lg p-6  bg-blue-500"
-            >
-              <h2 className="text-2xl font-bold mb-4">Collection Details</h2>
-              <p>
-                <strong>Full Name:</strong> {collection.fullName}
-              </p>
-              <p>
-                <strong>Address:</strong> {collection.collection_address}
-              </p>
-              <p>
-                <strong>Amount:</strong> {collection.collection_amount}
-              </p>
-              <p>
-                <strong>Location:</strong> {collection.collection_location}
-              </p>
-              <p>
-                <strong>Status:</strong> {collection.collection_status}
-              </p>
-              <p>
-                <strong>Created At:</strong>{" "}
-                {new Date(collection.createdAt).toLocaleString()}
-              </p>
-              <p>
-                <strong>Updated At:</strong>{" "}
-                {new Date(collection.updatedAt).toLocaleString()}
-              </p>
-              <p>
-                <strong>User:</strong> {collection.user}
-              </p>
-              <div className="absolute top-5 right-4 border p-2 rounded-md hover:shadow-lg">
-                <a href={`${collection.generated_emi_bill}`} target="_blank">
-                  VIEW BILL
-                </a>
-              </div>
-            </div>
-          ))}
+          <table className="min-w-full rounded-3xl  p-1">
+            <thead className="border">
+              <tr>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border bg-[#F3F4F7]"
+                >
+                  SNO.
+                </th>
+
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                >
+                  Collection ID
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                >
+                  Collection Address
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                >
+                  Collection Location
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                >
+                  Collection Amount
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                >
+                  Customer Mobile
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                >
+                  Customer Penalty
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                >
+                  Customer Full Name
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                >
+                  Status
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                >
+                  Amount
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                >
+                  Created At
+                </th>
+                <th
+                  scope="col"
+                  className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border whitespace-nowrap"
+                >
+                  Disbursement Date
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider border text-center"
+                >
+                  Action
+                </th>
+              </tr>
+            </thead>
+            </table>
         </div>
       ) : (
         <p>Loading...</p>

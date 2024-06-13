@@ -111,9 +111,9 @@ const LeadCardTemplate = ({  }) => {
             className="px-5 py-2 rounded-md border outline-none m-2 p-1"
             onChange={handleChange}
             value={formData.telephoneNumber}
-            type="text"
+            type="number"
             name="telephoneNumber"
-            placeholder="Enter customerName"
+            placeholder="Enter Telephone number"
           />
           <input
             className="px-5 py-2 rounded-md border outline-none"
