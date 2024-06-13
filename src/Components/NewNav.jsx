@@ -23,6 +23,8 @@ import LoanOngoingTable from "./page/ongoing/LoanOngoingTable";
 import LoanClosedTable from "./page/closed/LoanClosedTable";
 import UserCollectionTable from "./page/user/UserCollectionTable";
 import LeadCardTemplate from "./page/lead_card/LeadCardTemplate";
+import CollectionApproveComponent from "./page/collections/CollectionApproveComponent";
+import CollectionRejectedComponent from "./page/collections/CollectionRejectedComponent";
 
 const NewNav = () => {
   const [selected, setSelected] = useState("Home");
@@ -39,6 +41,8 @@ const NewNav = () => {
         { name: "Visit", component: <LiaDotCircle /> },
         { name: "Attendence", component: <LiaDotCircle /> },
         { name: "Collections", component: <LiaDotCircle /> },
+        { name: "Approved Collections", component: <LiaDotCircle /> },
+        { name: "Rejected Collections", component: <LiaDotCircle /> },
 
         { name: "CRM Employee", component: <LiaDotCircle /> },
       ],
@@ -168,6 +172,9 @@ const NewNav = () => {
         {selected === "Rejected Loans" && <LoanRejectTable />}
         {selected === "Collections" && (<UserCollectionTable/>)}
         {selected === "Lead Card" && (<LeadCardTemplate/>)}
+        {selected === "Approved Collections" && (<CollectionApproveComponent/>)}
+        {selected === "Rejected Collections" && (<CollectionRejectedComponent/>)}
+
       </div>
     </div>
   );

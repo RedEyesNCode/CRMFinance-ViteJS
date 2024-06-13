@@ -250,16 +250,11 @@ const UserCollectionTable = () => {
       <div className="  border border-gray-300 relative">
         {!isUserDetailsFrame && CollectionData && (
           <div className="relative overflow-auto h-fill">
-            <div className="flex justify-between px-5 py-2 items-center bg-cyan-400 text-black">
+            <div className="flex justify-between px-5 py-2 items-center bg-cyan-900 text-white">
               <h2 className="m-[10px] text-[20px] font-mono font-bold">
                 Users Collection
               </h2>
-              <button
-                onClick={() => setaddCollection(true)}
-                className="border  px-3 h-10 rounded-xl font-semibold bg-white"
-              >
-                ADD COLLECTION
-              </button>
+             
             </div>
 
             <table className="min-w-full  table-auto p-1">
@@ -327,21 +322,16 @@ const UserCollectionTable = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
                         {user.employeeId}
                       </td>
-                      <td className=" flex justify-between px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                      <td className=" flex flex-row px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
                         <button
-                          className="outline-none px-4 py-2 bg-blue-500 text-white rounded-md"
+                          className="outline-none m-2 px-4 py-2 bg-blue-500 text-white rounded-md"
                           onClick={() => handleOpenUserDetails(user)}
                         >
                           View
                         </button>
+                       
                         <button
-                          className="outline-none px-4 py-2 bg-red-500 text-white rounded-md"
-                          onClick={() => handleUserDeleteFrame(user)}
-                        >
-                          Delete
-                        </button>
-                        <button
-                          className="outline-none px-4 py-2 bg-yellow-500 text-white rounded-md"
+                          className="m-2 outline-none px-4 py-2 bg-yellow-500 text-white rounded-md"
                           onClick={() => updateButton(user)}
                         >
                           Update Collection Amount

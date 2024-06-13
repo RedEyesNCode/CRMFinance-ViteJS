@@ -81,6 +81,44 @@ export const getAllCollection = async () => {
     throw error;
   }
 };
+export const getApprovedCollections = async () => {
+  try {
+    const response = await apiService("get-approved-collections", "GET");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+
+}
+export const deleteApprovedCollection = async (data) => {
+  try {
+    const response = await apiService("delete-approved-collection", "POST",data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+
+
+}
+export const deleteRejectedCollection = async (data) => {
+  try {
+    const response = await apiService("delete-rejected-collection", "POST",data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+
+
+}
+export const getRejectedCollections = async () => {
+  try {
+    const response = await apiService("get-rejected-collections", "GET");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+
+}
 export const getCollectionData = async (data) => {
   try {
     const response = await apiService("get-user-collection", "POST", data);
