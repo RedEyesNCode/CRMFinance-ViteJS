@@ -18,6 +18,15 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
 
   const [leads_status, setLeadsStatus] = useState(lead_data.lead_status);
 
+  const [openLeadHistoryDialog,setLeadHistoryDialog] = useState(false);
+
+
+  const handleOpenLeadHistoryDialog = () => {
+    setLeadHistoryDialog(true);
+
+  }
+
+
   const [lead_current_data, setLeadCurrentData] = useState(lead_data);
 
   const [openLeadStatusDialog, setLeadStatusDialog] = useState(false);
@@ -85,6 +94,12 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
       [name]: value,
     }));
   };
+  function parseUTCtoIST(utcString) {
+    const utcDate = new Date(utcString);
+    const options = { timeZone: "Asia/Kolkata", timeZoneName: "short" };
+    const istString = utcDate.toLocaleString("en-US", options);
+    return istString;
+  }
 
   const handleOpen = () => setLeadStatusDialog(true);
   const handleClose = () => {
@@ -223,6 +238,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
         >
           Update Lead Status
         </button>
+        
 
         <button
           onClick={HandleopenDeleteLeadDialog}
@@ -241,6 +257,9 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
         >
           UPDATE LEAD
         </button>
+        <h2 className="text-ls m-2 bg-indigo-200 w-fit h-fit p-2 border-2 font-mono font-semibold mb-4 text-gray-800" onClick={handleOpenLeadHistoryDialog}>
+                  View Lead Status History
+        </h2>
 
         <div className="flex">
           <div className="w-1/3 m-[5px] border-r pr-4 rounded-lg shadow-lg p-6 text-gray-700 text-[12px] bg-blue-500">
@@ -425,7 +444,12 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                 </tr>
               </tbody>
             </table>
+            
+          
+          
+          
           </div>
+          
 
           <div className="w-2/3 pl-2">
             <h2 className="font-semibold text-[18px] text-[#ffffff] bg-purple-500 rounded-lg p-6 m-[10px]">
@@ -671,6 +695,7 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                 <h2 className="text-xl font-semibold mb-4 text-gray-800">
                   Update Lead Status
                 </h2>
+                
                 <div className="mb-4">
                   <label className="block text-gray-500 font-bold mb-2">
                     Lead ID
@@ -753,10 +778,46 @@ function LeadDetailsComponent({ lead_data, handleCloseCallback }) {
                     Save
                   </button>
                 </div>
+                
               </div>
             </div>
           </div>
         </div>
+      )}
+      {openLeadHistoryDialog && (
+        <div className="absolute w-full h-full top-0 left-0 flex items-center justify-center shadow-md">
+        <div>
+          <div className="fixed inset-0 flex items-center justify-center z-150">
+          <div className="overflow-x-auto flex flex-col">
+            <div className="w-full text-white font-sans text-[21px] bg-indigo-600 p-2 justify-center text-center rounded-xl mb-2">Lead Status History</div>
+            <div className="w-full text-black font-mono text-[11px] bg-emerald-300 p-2 justify-center text-left rounded-xl mb-2">Everytime you update lead status it is recorded here </div>
+
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead className="bg-gray-50 border-2">
+          <tr>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lead Status</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {lead_data.leadStatusHistory.map((entry, index) => (
+            <tr key={index}>
+              <td className="px-6 py-4 whitespace-nowrap">{entry.leadStatus}</td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                {parseUTCtoIST(entry.createdAt)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div className="bg-red-400 text-white text-center font-mono text-[18px] p-2" onClick={() => setLeadHistoryDialog(false)}> Close</div>
+      
+    </div>
+            </div>
+            </div>
+            </div>
+
+
       )}
       {openDeleteLeadDialog && (
         <div className="fixed z-10 inset-0 overflow-y-auto flex items-center justify-center">
