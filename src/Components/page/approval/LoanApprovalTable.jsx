@@ -21,6 +21,7 @@ function LoanApprovalTable({ handle }) {
   const [openLeadDetailCompo, setopenLeadDetailCompo] = useState(false);
 
   const [isChecked, setIsChecked] = useState(false);
+  const [FirstName, setFirstName] = useState("");
 
   const handleSwitchChange = (event) => {
     setIsChecked(event.target.checked);
@@ -198,7 +199,7 @@ function LoanApprovalTable({ handle }) {
       <ToastContainer />
       {!isLeadDetailFrame && (
         <div className="relative h-[85%] overflow-hidden">
-          <div className="border-green-900 bg-[#86af49] flex flex-row justify-items-start items-center">
+          <div className="border-green-900 bg-gradient-to-r from-[#e43364] to-[#3858f9] flex flex-row justify-items-start items-center">
             <h2 className=" text-lg  font-sans font-bold  text-white p-4  ">
               Pending for Approval Loans
             </h2>
@@ -230,7 +231,7 @@ function LoanApprovalTable({ handle }) {
             <div className="flex flex-row"></div>
           </div>
 
-          <div className="bg-[#86af49] w-full">
+          <div className="bg-gradient-to-r from-[#e43364] to-[#3858f9] w-full">
             <div className="flex">
               <div className="date-input">
                 <label
@@ -265,17 +266,24 @@ function LoanApprovalTable({ handle }) {
                 />
               </div>
               <div>
-                <label className="items-center mt-1 font-mono font-semibold text-white mt-1">
-                  Search By First Name
-                </label>
-                <input
-                  type="text"
-                  id="leadFirstName"
-                  value={searchForm.leadFirstName}
-                  name="leadFirstName"
-                  onChange={handleChange}
-                  className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
-                ></input>
+               
+                <label className="items-center mt-1 font-mono font-semibold text-white m-2">
+                Search By Name or Number 
+              </label>
+              <div className="flex flex-col">
+              <input
+                type="text"
+                value={FirstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="text-black text-[18px] font-mono p-2 m-1 rounded-md outline-none border-[3px] border-red-600"
+                placeholder="Name or Number"
+              ></input>
+                <label className="items-center mt-1 font-mono font-semibold text-white m-2 text-sm">
+                This is as you type filter 
+              </label>
+
+              </div>
+             
               </div>
             </div>
           </div>
@@ -360,6 +368,8 @@ function LoanApprovalTable({ handle }) {
                   isChecked == false &&
                   leadsData.data
                     .filter((user) => user.lead_status === "APPROVED")
+                    .filter((lead) => (lead.firstName.toLowerCase().includes(FirstName.toLowerCase())) || 
+                  (lead.mobileNumber.includes(FirstName)))
                     .map((user, index) => (
                       <tr
                         key={index}

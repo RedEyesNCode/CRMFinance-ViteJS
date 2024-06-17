@@ -6,6 +6,15 @@ import UserAttendanceCalender from "./UserAttendanceCalender";
 const UserAttendanceTable = ({current_user_id,current_user_name}) => {
   const [AttendenceData, setAttendenceData] = useState(null);
   const [CurrentAttendence, setCurrentAttendence] = useState(null);
+  const [showCalender,setShowCalender] = useState(null);
+  
+
+  const handleShowCalender = async ()=> {
+    setShowCalender(true);
+    
+
+
+  }
 
   useEffect(() => {
     const AttendenceData = async () => {
@@ -69,12 +78,14 @@ const UserAttendanceTable = ({current_user_id,current_user_name}) => {
   }
 
   return (
-    <main className="h-full px-4 pt-4 bg-[#F4FAFF] rounded-[50px] ">
+    <div>
+                                  <h2 className=" bg-gradient-to-r from-[#e43364] to-[#3858f9]  p-1  m-[10px] text-[20px] text-white rounded-xl font-mono font-bold">View All Attendance by {current_user_name}</h2>
+
+       <main className="h-full px-4 pt-4 bg-[#F4FAFF] rounded-[50px]  flex">
       {AttendenceData!=undefined && (
                         <UserAttendanceCalender attendanceData={AttendenceData.data} />
 
           )}
-                                  <h2 className=" bg-gradient-to-r from-[#e43364] to-[#3858f9]  p-2   m-[10px] text-[20px] text-white rounded-xl font-mono font-bold">View All Attendance by {current_user_name}</h2>
 
 
     <div className="rounded-3xl border border-gray-300 relative ">
@@ -249,6 +260,8 @@ const UserAttendanceTable = ({current_user_id,current_user_name}) => {
         </div>
       )}
   </main>
+    </div>
+   
   
   );
 };

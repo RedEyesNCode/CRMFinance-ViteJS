@@ -1,48 +1,33 @@
 import React, { useState } from 'react';
-import Calendar from 'react-calendar';
+import FullCalendar from '@fullcalendar/react'; 
+import dayGridPlugin from '@fullcalendar/daygrid';
 
-function UserAttendanceCalender({ attendanceData }) {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+function UserAttendanceCalender({ attendanceData  }) {
+  // Event data transformation (same logic as before)
+  const events = attendanceData.map(item => ({
+    title: item.status,
+    start: new Date(item.createdAt),
+    // Additional event properties if needed (e.g., location from item.address)
+  }));
 
-  const attendanceByDate = attendanceData.reduce((acc, item) => {
-    const date = new Date(item.createdAt).toDateString();
-    acc[date] = item.status; // Store just the status for each date
-    return acc;
-  }, {});
-
-  // Custom tile content for each day
-  function tileContent({ date, view }) {
-    if (view === 'month') {
-      const dateString = date.toDateString();
-      const status = attendanceByDate[dateString] || 'UNKNOWN';
-
-      return (
-        <div className="flex justify-center items-center h-full">
-          <p>{date.getDate()}</p>
-          {status === 'PRESENT' && <span className="bg-green-500 w-2 h-2 rounded-full ml-1 inline-block"></span>}
-          {status === 'ABSENT' && <span className="bg-red-500 w-2 h-2 rounded-full ml-1 inline-block"></span>}
-        </div>
-      );
-    }
-  }
+  // Event rendering customization
+  const eventContent = ({ event }) => (
+    <div className={`fc-event-main ${event.title === 'PRESENT' ? 'bg-green-500' : 'bg-red-500'}`}>
+      {event.title}
+    </div>
+  );
 
   return (
-    <div className="w-full">
-      <h2 className="text-xl font-semibold mb-4">User Attendance Calendar</h2>
-
-      <Calendar
-        onChange={setSelectedDate}
-        value={selectedDate}
-        view="month"
-        tileContent={tileContent} // Custom content for each day
+    <div className="w-[650px] h-fit justify-center items-center bg-white p-2 rounded-xl">
+      <h2 className="text-xl font-semibold mb-4 rounded-md bg-indigo-400 text-white p-2">User Attendance Calendar</h2>
+      <FullCalendar
+        plugins={[dayGridPlugin]} // Add necessary plugins
+        initialView="dayGridMonth"
+        events={events} 
+        height={650} // Example: set height to 500px
+        eventContent={eventContent} // Custom event rendering
+        // Other FullCalendar options (e.g., headerToolbar, eventClick, etc.)
       />
-
-      {/* Optionally display additional info for selected date */}
-      {attendanceByDate[selectedDate.toDateString()] && (
-        <p className="mt-2">
-          Status on {selectedDate.toLocaleDateString()}: {attendanceByDate[selectedDate.toDateString()]}
-        </p>
-      )}
     </div>
   );
 }
