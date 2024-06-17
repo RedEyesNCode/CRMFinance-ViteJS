@@ -81,7 +81,7 @@ const UserAttendanceTable = ({current_user_id,current_user_name}) => {
     <div>
                                   <h2 className=" bg-gradient-to-r from-[#e43364] to-[#3858f9]  p-1  m-[10px] text-[20px] text-white rounded-xl font-mono font-bold">View All Attendance by {current_user_name}</h2>
 
-       <main className="h-full px-4 pt-4 bg-[#F4FAFF] rounded-[50px]  flex">
+       <main className="h-full px-4 pt-4 bg-[#F4FAFF] rounded-[50px]  flex flex-col">
       {AttendenceData!=undefined && (
                         <UserAttendanceCalender attendanceData={AttendenceData.data} />
 
