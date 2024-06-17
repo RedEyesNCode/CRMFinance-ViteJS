@@ -15,6 +15,12 @@ function UserDetailsComponent({ user_data, handleCloseUserDetails }) {
     setVisitFrame(false);
     setLeadFrame(true);
   };
+  function parseUTCtoIST(utcString) {
+    const utcDate = new Date(utcString);
+    const options = { timeZone: "Asia/Kolkata", timeZoneName: "short" };
+    const istString = utcDate.toLocaleString("en-US", options);
+    return istString;
+  }
   const handleVisitFrame = () => {
     setAttendanceFrame(false);
     setVisitFrame(true);
@@ -31,16 +37,16 @@ function UserDetailsComponent({ user_data, handleCloseUserDetails }) {
 
   return (
     <main className="flex  flex-col">
-      <div className='flex flex-row gap-[400px] items-center font-semibold rounded-md bg-blue-600 text-white'>
+      <div className='flex flex-row  text-cent items-center font-semibold rounded-md bg-gradient-to-r from-[#e43364] to-[#3858f9] text-white'>
         <GiFastBackwardButton onClick={() => handleBackpress()} className='text-[50px]  m-[10px] text-white'  />
-        <h2 className='text-2xl'>Employee {user_data.fullName} Details </h2>
+        <h2 className='text-2xl text-center'>Employee {user_data.fullName} Details </h2>
 
 
         </div>
       <div className="flex flex-row">
       
         <div className="w-1/3">
-          <div className="bg-white p-4 rounded-md shadow-md w-80 m-[10px]">
+          <div className="bg-white p-4 rounded-md shadow-md w-80 m-[10px] border-2 border-amber-500">
             <h2 className="text-xl font-semibold mb-2  rounded-lg border-2 bg-blue-700 p-2 text-white">
               User Information
             </h2>
@@ -52,7 +58,7 @@ function UserDetailsComponent({ user_data, handleCloseUserDetails }) {
 
             <div className="mb-2">
               <p className="text-gray-600">Telephone Number</p>
-              <p className="font-medium">{user_data.telephone}</p>
+              <p className="font-medium">{user_data.telephoneNumber}</p>
             </div>
 
             <div className="mb-2">
@@ -61,13 +67,13 @@ function UserDetailsComponent({ user_data, handleCloseUserDetails }) {
             </div>
 
             <div className="mb-2">
-              <p className="text-gray-600">Created @</p>
-              <p className="font-medium">{user_data.created}</p>
+              <p className="text-gray-600">Created At :</p>
+              <p className="font-medium">{parseUTCtoIST(user_data.createdAt)}</p>
             </div>
 
             <div>
               <p className="text-gray-600">MPass</p>
-              <p className="font-medium">{user_data.mPass}</p>
+              <p className="font-medium">{user_data.mpass}</p>
             </div>
           </div>
         </div>
@@ -96,9 +102,9 @@ function UserDetailsComponent({ user_data, handleCloseUserDetails }) {
         </div>
       </div>
       <div >
-      {isLeadFrame && <UserLeadTable current_user_id={user_data._id} />}
-          {isAttendanceFrame && <UserAttendanceTable current_user_id={user_data._id}/> }
-          {isVisitFrame && <UserVisitTable current_user_id={user_data._id}/>}
+      {isLeadFrame && <UserLeadTable current_user_id={user_data._id} current_user_name={user_data.fullName} />}
+          {isAttendanceFrame && <UserAttendanceTable current_user_id={user_data._id} current_user_name={user_data.fullName}/> }
+          {isVisitFrame && <UserVisitTable current_user_id={user_data._id} current_user_name={user_data.fullName}/>}
       </div>
     </main>
   );
