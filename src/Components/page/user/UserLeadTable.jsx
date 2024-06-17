@@ -9,6 +9,7 @@ function UserLeadTable({ current_user_id,current_user_name }) {
   const [currentLead, setcurrentLead] = useState(null)
   const [isLeadDetailFrame,setLeadDetailFrame] = useState(false);
   const navigate = useNavigate(); // Initialize useHistory
+  const [FirstName, setFirstName] = useState("");
 
   const handleOpenLeadDetail = (lead_data) => {
     setcurrentLead(lead_data);
@@ -90,8 +91,20 @@ function UserLeadTable({ current_user_id,current_user_name }) {
 
       {!isLeadDetailFrame && (
         <div className="relative max-h-[680px] ">
-                            <h2 className=" bg-gradient-to-r from-[#e43364] to-[#3858f9]  p-1  m-[10px] text-[20px] text-white rounded-xl font-mono font-bold">View All Leads by {current_user_name}</h2>
-
+          <div className="flex flex-row">
+          <h2 className=" bg-gradient-to-r from-[#e43364] to-[#3858f9]  p-1  m-[10px] text-[20px] w-fit text-white rounded-xl font-mono font-bold">View All Leads by {current_user_name}</h2>
+                            <label className="items-center mt-5 font-mono font-semibold  text-center ">
+                As you type filter  :
+              </label>
+              <input
+                type="text"
+                value={FirstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="text-black text-[18px] font-mono p-2 m-1 rounded-md outline-none border-2 border-indigo-800"
+                placeholder="Enter name or number"
+              ></input>
+          </div>
+                            
                             <table className="min-w-full rounded-3xl  p-1">
             <thead className="border">
               <tr>
@@ -175,6 +188,8 @@ function UserLeadTable({ current_user_id,current_user_name }) {
               {leadsData &&
                 leadsData.status != "fail" &&
                 leadsData.data
+                .filter((lead) => (lead.firstName.toLowerCase().includes(FirstName.toLowerCase())) || 
+                  (lead.mobileNumber.includes(FirstName)))
                   .map((user, index) => (
                     <tr
                       key={index}

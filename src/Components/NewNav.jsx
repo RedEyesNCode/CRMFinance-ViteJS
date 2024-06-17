@@ -144,6 +144,7 @@ const NewNav = () => {
                                 <h2 className="text-[16px]">{sub.name}</h2>
                               </div>
                             </li>
+                            
                           ))}
                         </ul>
                       )}

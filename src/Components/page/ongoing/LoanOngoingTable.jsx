@@ -24,6 +24,9 @@ function LoanOngoingTable({ handle }) {
 
   const [isLeadUserFrame, setLeadUserFrame] = useState(false);
 
+  const [FirstName, setFirstName] = useState("");
+
+
   function parseUTCtoIST(utcString) {
     const utcDate = new Date(utcString);
     const options = { timeZone: "Asia/Kolkata", timeZoneName: "short" };
@@ -205,12 +208,12 @@ function LoanOngoingTable({ handle }) {
     <div className="border border-gray-300 relative ">
       <ToastContainer />
       {!isLeadDetailFrame && (
-        <div className="relative h-[85%] overflow-hidden">
-          <h2 className="text-lg  px-5 py-4   font-sans font-bold  text-white p-2  border-amber-800 bg-amber-600">
+        <div className="relative h-[85%] overflow-hidden ">
+          <h2 className="text-lg  px-5 py-4   font-sans font-bold  text-white p-2  bg-gradient-to-r from-[#e43364] to-[#3858f9]">
             Ongoing Loans
           </h2>
 
-          <div className="bg-amber-700 p-2 w-full">
+          <div className="bg-gradient-to-r from-[#e43364] to-[#3858f9] p-2 w-full">
             <div className="flex">
               <div class="date-input">
                 <label
@@ -245,21 +248,20 @@ function LoanOngoingTable({ handle }) {
                 />
               </div>
               <div>
-                <label className="items-center mt-1 font-mono font-semibold text-white mt-1">
-                  Search By First Name
-                </label>
-                <input
-                  type="text"
-                  id="leadFirstName"
-                  value={searchForm.leadFirstName}
-                  name="leadFirstName"
-                  onChange={handleChange}
-                  className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
-                ></input>
+              <label className="items-center mt-5 font-mono font-semibold  text-center text-white">
+                As you type filter  :
+              </label>
+              <input
+                type="text"
+                value={FirstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="text-black text-[18px] font-mono p-2 m-1 rounded-md outline-none border-[3px] border-indigo-200"
+                placeholder="Enter name or number"
+              ></input>
               </div>
             </div>
           </div>
-          <div className="bg-amber-800">
+          <div className="bg-gradient-to-r from-[#e43364] to-[#3858f9]">
             <button
               onClick={filterOngoingLoans}
               className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]"
@@ -273,7 +275,7 @@ function LoanOngoingTable({ handle }) {
               Reset Filter
             </button>
           </div>
-          <div className="max-h-[406px] overflow-scroll">
+          <div className="m-4">
             <table className="min-w-full p-1">
               <thead className="border">
                 <tr>
@@ -326,12 +328,7 @@ function LoanOngoingTable({ handle }) {
                   >
                     Status
                   </th>
-                  <th
-                    scope="col"
-                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                  >
-                    Amount
-                  </th>
+                 
                   <th
                     scope="col"
                     className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
@@ -357,6 +354,8 @@ function LoanOngoingTable({ handle }) {
                 {leadsData != null &&
                   leadsData.data
                     .filter((user) => user.lead_status === "ACTIVE")
+                    .filter((lead) => (lead.firstName.toLowerCase().includes(FirstName.toLowerCase())) || 
+                  (lead.mobileNumber.includes(FirstName)))
                     .map((user, index) => (
                       <tr
                         key={index}
@@ -415,9 +414,7 @@ function LoanOngoingTable({ handle }) {
                         >
                           {user.lead_status}
                         </td>
-                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                          {user.leadAmount}
-                        </td>
+                       
                         <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
                           {parseUTCtoIST(user.createdAt)}
                         </td>

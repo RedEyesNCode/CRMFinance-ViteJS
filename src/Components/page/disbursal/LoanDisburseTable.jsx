@@ -21,6 +21,9 @@ function LoanDisburseTable({ handle }) {
 
   const [isLeadUserFrame, setLeadUserFrame] = useState(false);
 
+  const [FirstName, setFirstName] = useState("");
+
+
   const handleOpenLeadUser = (lead_data) => {
     setLeadDeleteFrame(false);
     setcurrentLead(lead_data);
@@ -201,12 +204,12 @@ function LoanDisburseTable({ handle }) {
     <div className="border border-gray-300 relative">
       <ToastContainer />
       {!isLeadDetailFrame && (
-        <div className="relative h-[85%] overflow-hidden">
-          <h2 className=" text-[16px]  font-sans font-bold  text-white p-4 rounded-md border-blue-400 bg-blue-600">
+        <div className="relative">
+          <h2 className=" text-[16px]  font-sans font-bold  text-white p-4  bg-gradient-to-r from-[#e43364] to-[#3858f9]">
             Pending for Disburment Loans
           </h2>
 
-          <div className="bg-indigo-700 p-1 w-full">
+          <div className="bg-gradient-to-r from-[#e43364] to-[#3858f9] p-1 w-full">
             <div className="flex">
               <div class="date-input">
                 <label
@@ -241,21 +244,20 @@ function LoanDisburseTable({ handle }) {
                 />
               </div>
               <div>
-                <label className="items-center mt-1 font-mono font-semibold text-white mt-1">
-                  Search By First Name
-                </label>
-                <input
-                  type="text"
-                  id="leadFirstName"
-                  value={searchForm.leadFirstName}
-                  name="leadFirstName"
-                  onChange={handleChange}
-                  className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
-                ></input>
+              <label className="items-center mt-5 font-mono font-semibold  text-center text-white">
+                As you type filter  :
+              </label>
+              <input
+                type="text"
+                value={FirstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="text-black text-[18px] font-mono p-2 m-1 rounded-md outline-none border-[3px] border-indigo-200"
+                placeholder="Enter name or number"
+              ></input>
               </div>
             </div>
           </div>
-          <div className="bg-indigo-800">
+          <div className="bg-gradient-to-r from-[#e43364] to-[#3858f9]">
             <button
               onClick={filterDisbursalLoans}
               className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]"
@@ -269,7 +271,7 @@ function LoanDisburseTable({ handle }) {
               Reset Filter
             </button>
           </div>
-          <div className="max-h-[417px] overflow-scroll">
+          <div className="m-4">
             <table className="min-w-full  p-1">
               <thead className="border">
                 <tr>
@@ -350,7 +352,10 @@ function LoanDisburseTable({ handle }) {
               </thead>
               <tbody className="bg-white  divide-gray-200">
                 {leadsData != null &&
-                  leadsData.data.map((user, index) => (
+                  leadsData.data
+                  .filter((lead) => (lead.firstName.toLowerCase().includes(FirstName.toLowerCase())) || 
+                  (lead.mobileNumber.includes(FirstName)))
+                  .map((user, index) => (
                     <tr
                       key={index}
                       className={`${index % 2 != 0 ? "bg-[#F4FAFF]" : ""}`}
