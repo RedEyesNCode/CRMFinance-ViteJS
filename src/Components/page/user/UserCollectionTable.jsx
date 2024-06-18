@@ -137,7 +137,7 @@ const UserCollectionTable = () => {
   const [maxAmount, setMaxAmount] = useState(0);
   const handleChangeinupdate = (e) => {
     const { name, value } = e.target;
-    
+
     setUpdateFormData({
       ...UpdateFormData,
       [name]: value,
@@ -168,13 +168,12 @@ const UserCollectionTable = () => {
     toast.success(response.message);
 
     setUpdateFormData({
-      userId : UpdateFormData.userId,
+      userId: UpdateFormData.userId,
       collection_amount: UpdateFormData.collection_amount,
     });
     if (response.status === 200) {
       toast.info(response.message);
       callGetUsersAPI();
-
 
       setCollectionData((prevData) => {
         return {
@@ -182,9 +181,8 @@ const UserCollectionTable = () => {
           data: [...prevData.data, response.data],
         };
       });
-    }else{
+    } else {
       toast.error(response.error);
-
     }
     setisUpdateCollection(null);
   };
@@ -245,16 +243,15 @@ const UserCollectionTable = () => {
   }
 
   return (
-    <main className="h-full w-full">
-      <ToastContainer/>
-      <div className="  border border-gray-300 relative">
+    <main className=" w-full ">
+      <ToastContainer />
+      <div className="border border-gray-300 relative ">
         {!isUserDetailsFrame && CollectionData && (
           <div className="relative overflow-auto h-fill">
             <div className="flex justify-between px-5 py-2 items-center bg-cyan-900 text-white">
               <h2 className="m-[10px] text-[20px] font-mono font-bold">
                 Users Collection
               </h2>
-             
             </div>
 
             <table className="min-w-full  table-auto p-1">
@@ -329,7 +326,7 @@ const UserCollectionTable = () => {
                         >
                           View
                         </button>
-                       
+
                         <button
                           className="m-2 outline-none px-4 py-2 bg-yellow-500 text-white rounded-md"
                           onClick={() => updateButton(user)}
@@ -483,13 +480,17 @@ const UserCollectionTable = () => {
       {isUpdateCollection && (
         <div className="absolute top-0 h-full w-full flex items-center justify-center ">
           <div className="flex flex-col bg-[#3B76EF] p-10 rounded-xl text-white text-xl justify-center gap-8">
-            <h1 className="font-bold text-center">UPDATE EMPLOYEE COLLECTION AMOUNT</h1>
-            <h2 className="font-mono text-center bg-indigo-500 rounded-lg"> INR {CurrentUser && CurrentUser.totalCollectionAmount}</h2>
+            <h1 className="font-bold text-center">
+              UPDATE EMPLOYEE COLLECTION AMOUNT
+            </h1>
+            <h2 className="font-mono text-center bg-indigo-500 rounded-lg">
+              {" "}
+              INR {CurrentUser && CurrentUser.totalCollectionAmount}
+            </h2>
             <form
               className="flex flex-col gap-6 items-center text-zinc-700"
               onSubmit={handleUpdateSubmit}
             >
-              
               <div className="flex">
                 <input
                   className={`px-5 py-2 rounded-md outline-none`}

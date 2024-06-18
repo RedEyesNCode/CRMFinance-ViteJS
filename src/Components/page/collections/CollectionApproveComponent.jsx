@@ -137,7 +137,7 @@ const CollectionApproveComponent = () => {
   const [maxAmount, setMaxAmount] = useState(0);
   const handleChangeinupdate = (e) => {
     const { name, value } = e.target;
-    
+
     setUpdateFormData({
       ...UpdateFormData,
       [name]: value,
@@ -168,13 +168,12 @@ const CollectionApproveComponent = () => {
     toast.success(response.message);
 
     setUpdateFormData({
-      userId : UpdateFormData.userId,
+      userId: UpdateFormData.userId,
       collection_amount: UpdateFormData.collection_amount,
     });
     if (response.status === 200) {
       toast.info(response.message);
       callGetUsersAPI();
-
 
       setCollectionData((prevData) => {
         return {
@@ -182,9 +181,8 @@ const CollectionApproveComponent = () => {
           data: [...prevData.data, response.data],
         };
       });
-    }else{
+    } else {
       toast.error(response.error);
-
     }
     setisUpdateCollection(null);
   };
@@ -195,128 +193,127 @@ const CollectionApproveComponent = () => {
     setUpdateFormData({ userId: user._id });
     setisUpdateCollection(true);
   };
-  if(CollectionData==null){
+  if (CollectionData == null) {
     return (
-        <h2 className="text-white text-[21px] font-semibold font-mono  rounded-md p-2">
-        No Approved Collections Found  !!
+      <h2 className="text-white text-[21px] font-semibold font-mono  rounded-md p-2">
+        No Approved Collections Found !!
       </h2>
-    )
+    );
   }
- 
 
   return (
-    <main className="h-full w-full">
-      <ToastContainer/>
+    <main className=" w-full">
+      <ToastContainer />
       <div className="  border border-gray-300 relative">
         {!isUserDetailsFrame && CollectionData && (
-            <div className="overflow-auto max-h-96 relative">
-           <table className="min-w-full rounded-3xl  p-1">
-             <thead className="border">
-               <tr>
-                 <th
-                   scope="col"
-                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border bg-[#F3F4F7]"
-                 >
-                   SNO.
-                 </th>
- 
-                 <th
-                   scope="col"
-                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                 >
-                   Collection ID
-                 </th>
-                 <th
-                   scope="col"
-                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                 >
-                   Collection Address
-                 </th>
-                 <th
-                   scope="col"
-                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                 >
-                   Collection Location
-                 </th>
-                 <th
-                   scope="col"
-                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                 >
-                   Collection Amount
-                 </th>
-                 <th
-                   scope="col"
-                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                 >
-                   Customer Mobile
-                 </th>
-                 <th
-                   scope="col"
-                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                 >
-                   Customer Penalty
-                 </th>
-                 <th
-                   scope="col"
-                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                 >
-                   Customer Full Name
-                 </th>
-                 <th
-                   scope="col"
-                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                 >
-                   Status
-                 </th>
- 
-                 <th
-                   scope="col"
-                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
-                 >
-                   Created At
-                 </th>
- 
-                 <th
-                   scope="col"
-                   className="px-6 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider border text-center"
-                 >
-                   Action
-                 </th>
-               </tr>
-             </thead>
-             <tbody className="bg-white divide-gray-200">
-               {CollectionData &&
-                 CollectionData.data &&
-                 CollectionData.data.map((user, index) => (
-                   <tr
-                     key={index}
-                     className={`${index % 2 != 0 ? "bg-[#F4FAFF]" : ""}`}
-                   >
-                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border bg-[#F3F4F7]">
-                       {index + 1}.
-                     </td>
-                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                       {user._id.substring(20)}
-                     </td>
-                     <td className="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 border">
-                       {user.collection_address}
-                     </td>
-                     <td className="px-6 py-4 whitespace-nowrap text-xs font-bold text-black border">
-                       {user.collection_location}
-                     </td>
-                     <td className="px-6 py-4 whitespace-nowrap text-xs font-bold text-green-800 bg-green-100 border">
-                       INR {user.collection_amount}
-                     </td>
-                     <td className="px-6 py-4 whitespace-nowrap text-xs font-bold text-black border">
-                       +91 {user.customer_mobile}
-                     </td>
-                     <td className="px-6 py-4 whitespace-nowrap text-xs font-bold text-black border bg-red-100">
-                       INR {user.customer_penalty}
-                     </td>
-                     <td className="px-6 py-4 whitespace-nowrap text-xs font-bold text-black border">
-                       {user.customer_name}
-                     </td>
-                     <td
+          <div className="overflow-auto h-[615px] relative">
+            <table className="min-w-full rounded-3xl  p-1">
+              <thead className="border">
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border bg-[#F3F4F7]"
+                  >
+                    SNO.
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    Collection ID
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    Collection Address
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    Collection Location
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    Collection Amount
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    Customer Mobile
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    Customer Penalty
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    Customer Full Name
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    Status
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
+                  >
+                    Created At
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="px-6 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider border text-center"
+                  >
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-gray-200">
+                {CollectionData &&
+                  CollectionData.data &&
+                  CollectionData.data.map((user, index) => (
+                    <tr
+                      key={index}
+                      className={`${index % 2 != 0 ? "bg-[#F4FAFF]" : ""}`}
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border bg-[#F3F4F7]">
+                        {index + 1}.
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                        {user._id.substring(20)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 border">
+                        {user.collection_address}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-xs font-bold text-black border">
+                        {user.collection_location}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-xs font-bold text-green-800 bg-green-100 border">
+                        INR {user.collection_amount}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-xs font-bold text-black border">
+                        +91 {user.customer_mobile}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-xs font-bold text-black border bg-red-100">
+                        INR {user.customer_penalty}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-xs font-bold text-black border">
+                        {user.customer_name}
+                      </td>
+                      <td
                         className={`px-2 py-2 whitespace-nowrap text-sm font-medium border 
                 ${
                   user.collection_status === "PENDING"
@@ -342,26 +339,23 @@ const CollectionApproveComponent = () => {
                       >
                         {user.collection_status}
                       </td>
-                     <td className="px-6 py-4 whitespace-nowrap text-xs font-bold text-black border">
-                       {user.createdAt}
-                     </td>
-                     <td className=" flex justify-between px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                       
-                       <button
-                         className="outline-none px-4 py-2 bg-red-500 text-white rounded-md"
-                         onClick={() => handleUserDeleteFrame(user)}
-                       >
-                         Delete Approved Collection
-                       </button>
-                     </td>
-                   </tr>
-                 ))}
-             </tbody>
-           </table>
-          
-         </div>
+                      <td className="px-6 py-4 whitespace-nowrap text-xs font-bold text-black border">
+                        {user.createdAt}
+                      </td>
+                      <td className=" flex justify-between px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                        <button
+                          className="outline-none px-4 py-2 bg-red-500 text-white rounded-md"
+                          onClick={() => handleUserDeleteFrame(user)}
+                        >
+                          Delete Approved Collection
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         )}
-        
       </div>
       {isUserDeleteFrame && (
         <div className="fixed z-10 inset-0 overflow-y-auto flex items-center justify-center">
@@ -389,8 +383,6 @@ const CollectionApproveComponent = () => {
           </div>
         </div>
       )}
-     
-     
     </main>
   );
 };

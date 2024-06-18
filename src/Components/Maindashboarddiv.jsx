@@ -100,7 +100,7 @@ const Maindashboarddiv = () => {
               </h1>
 
               <img className="h-32 w-32 " src={image2} alt="" />
-              <p className="text-lg font-semibold animate-pulse">last Visited Person : {dashboardData && parseUTCtoIST(dashboardData.data.latestVisitEntry.createdAt)}</p>
+              <p className="text-lg font-semibold animate-pulse">last Visited Person : {dashboardData && dashboardData.data.latestVisitEntry && parseUTCtoIST(dashboardData.data.latestVisitEntry.createdAt) || 0}</p>
             </div>
             <div className="box3 pt-5 pl-6  bg-[rgb(166,108,212)]  h-52 w-80 rounded-[30px] ">
               <h1 className="text-[20px] font-semibold animate-[pulse_2s_ease-in-out_infinite]">
@@ -122,7 +122,7 @@ const Maindashboarddiv = () => {
                 src={image5}
                 alt=""
               />
-              <p className="text-lg font-semibold animate-pulse">Last Collected Person : {dashboardData && parseUTCtoIST(dashboardData.data.latestCollectionEntry.createdAt)}</p>
+              <p className="text-lg font-semibold animate-pulse">Last Collected Person : {dashboardData && dashboardData.data.latestCollectionEntry && parseUTCtoIST(dashboardData.data.latestCollectionEntry.createdAt)}</p>
             </div>
             <div className="box3 pt-5 pl-6  bg-blue-900  h-56 w-80 rounded-[30px] ">
               <h1 className="text-[20px] font-semibold animate-[pulse_2s_ease-in-out_infinite]">

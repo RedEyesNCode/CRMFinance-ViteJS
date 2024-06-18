@@ -1,6 +1,7 @@
 // apiService.js
-const BASE_URL = "https://megmab2b.com:3000/";
-// const BASE_URL = "http://localhost:3000/";
+// const BASE_URL = "https://megmab2b.com:3000/";//production
+const BASE_URL = "https://megmagroup.co:3000/";//Developement
+  //  const BASE_URL = "https://localhost:3000/";
 // const BASE_URL = "https://192.168.1.3:3000/";
 
 // you can pass endpoint, method and data to this javascript function.

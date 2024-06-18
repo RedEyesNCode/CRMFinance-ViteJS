@@ -26,7 +26,6 @@ function LoanOngoingTable({ handle }) {
 
   const [FirstName, setFirstName] = useState("");
 
-
   function parseUTCtoIST(utcString) {
     const utcDate = new Date(utcString);
     const options = { timeZone: "Asia/Kolkata", timeZoneName: "short" };
@@ -208,74 +207,72 @@ function LoanOngoingTable({ handle }) {
     <div className="border border-gray-300 relative ">
       <ToastContainer />
       {!isLeadDetailFrame && (
-        <div className="relative h-[85%] overflow-hidden ">
-          <h2 className="text-lg  px-5 py-4   font-sans font-bold  text-white p-2  bg-gradient-to-r from-[#e43364] to-[#3858f9]">
-            Ongoing Loans
-          </h2>
+        <div className="relative h-[85%] overflow-hidden">
+          <div className="px-4 bg-gradient-to-r from-[#e43364] to-[#3858f9] flex flex-row justify-items-start items-center">
+            <h2 className="text-lg  px-5 py-4   font-sans font-bold  text-white p-2  ">
+              Ongoing Loans
+            </h2>
 
-          <div className="bg-gradient-to-r from-[#e43364] to-[#3858f9] p-2 w-full">
-            <div className="flex">
-              <div class="date-input">
-                <label
-                  for="fromDate"
-                  className="text-white text-[18px] font-mono p-1 m-1"
-                >
-                  From Date :{" "}
-                </label>
-                <input
-                  type="date"
-                  id="fromDate"
-                  onChange={handleChange}
-                  value={searchForm.fromDate}
-                  name="fromDate"
-                  className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
-                />
-              </div>
-              <div>
-                <label
-                  for="toDate"
-                  className="text-white text-[18px] font-mono p-1 m-1"
-                >
-                  To Date :
-                </label>
-                <input
-                  type="date"
-                  id="toDate"
-                  onChange={handleChange}
-                  value={searchForm.toDate}
-                  className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
-                  name="toDate"
-                />
-              </div>
-              <div>
+            <div class="date-input">
+              <label
+                for="fromDate"
+                className="text-white text-[18px] font-mono p-1 m-1"
+              >
+                From Date :{" "}
+              </label>
+              <input
+                type="date"
+                id="fromDate"
+                onChange={handleChange}
+                value={searchForm.fromDate}
+                name="fromDate"
+                className="text-black text-[18px] font-mono p-1 m-1 rounded-md "
+              />
+            </div>
+            <div>
+              <label
+                for="toDate"
+                className="text-white text-[18px] font-mono p-1 m-1"
+              >
+                To Date :
+              </label>
+              <input
+                type="date"
+                id="toDate"
+                onChange={handleChange}
+                value={searchForm.toDate}
+                className="text-black text-[18px] font-mono p-1 m-1 rounded-md "
+                name="toDate"
+              />
+            </div>
+            <div>
               <label className="items-center mt-5 font-mono font-semibold  text-center text-white">
-                As you type filter  :
+               Search by name or number :
               </label>
               <input
                 type="text"
                 value={FirstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                className="text-black text-[18px] font-mono p-2 m-1 rounded-md outline-none border-[3px] border-indigo-200"
+                className="text-black text-[18px] h-10 font-mono p-2 m-1 rounded-md outline-none border-[3px] border-indigo-200"
                 placeholder="Enter name or number"
               ></input>
-              </div>
             </div>
-          </div>
-          <div className="bg-gradient-to-r from-[#e43364] to-[#3858f9]">
+
             <button
               onClick={filterOngoingLoans}
-              className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]"
+              className="m-6 border-2 border-white rounded-md shadow-2xl hover:shadow-none p-2 text-white font-mono text-[16px]"
             >
-              Filter Ongoing Loans
+              Filter Loans
             </button>
             <button
               onClick={resetFilters}
-              className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]"
+              className="m-6 border-2 border-white rounded-md shadow-2xl hover:shadow-none p-2 text-white font-mono text-[16px]"
             >
               Reset Filter
             </button>
           </div>
-          <div className="m-4">
+
+          <div className="max-h-[503px] overflow-auto">
             <table className="min-w-full p-1">
               <thead className="border">
                 <tr>
@@ -328,7 +325,7 @@ function LoanOngoingTable({ handle }) {
                   >
                     Status
                   </th>
-                 
+
                   <th
                     scope="col"
                     className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border"
@@ -354,37 +351,42 @@ function LoanOngoingTable({ handle }) {
                 {leadsData != null &&
                   leadsData.data
                     .filter((user) => user.lead_status === "ACTIVE")
-                    .filter((lead) => (lead.firstName.toLowerCase().includes(FirstName.toLowerCase())) || 
-                  (lead.mobileNumber.includes(FirstName)))
+                    .filter(
+                      (lead) =>
+                        lead.firstName
+                          .toLowerCase()
+                          .includes(FirstName.toLowerCase()) ||
+                        lead.mobileNumber.includes(FirstName)
+                    )
                     .map((user, index) => (
                       <tr
                         key={index}
                         className={`${index % 2 != 0 ? "bg-[#F4FAFF]" : ""}`}
                       >
-                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border bg-[#F3F4F7]">
+                        <td className="px-2 py-4 whitespace-nowrap text-[15px] font-medium text-gray-900 border bg-[#F3F4F7]">
                           {index + 1}.
                         </td>
 
-                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                        <td className="px-2 py-4 whitespace-nowrap text-[15px] font-medium text-gray-900 border">
                           {user._id}
                         </td>
-                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                        <td className="px-2 py-4 whitespace-nowrap text-[15px] font-medium text-gray-900 border">
                           {user.user}
                         </td>
-                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                        <td className="px-2 py-4 whitespace-nowrap text-[15px] font-medium text-gray-900 border">
                           {user.firstName}
                         </td>
-                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                        <td className="px-2 py-4 whitespace-wrap text-[15px] font-medium text-gray-900 border">
                           {user.lastName}
                         </td>
-                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                        <td className="px-2 py-4 whitespace-nowrap text-[15px] font-medium text-gray-900 border">
                           {user.mobileNumber}
                         </td>
-                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                        <td className="px-2 py-4 whitespace-nowrap text-[15px] font-medium text-gray-900 border">
                           {user.gender}
                         </td>
                         <td
-                          className={`px-2 py-2 whitespace-nowrap text-[11px] font-medium border 
+                          className={`px-2 py- w-20 h-16 whitespace-nowrap text-[15px] font-medium border 
                 ${
                   user.lead_status === "PENDING"
                     ? "bg-yellow-500 text-center text-white"
@@ -414,11 +416,11 @@ function LoanOngoingTable({ handle }) {
                         >
                           {user.lead_status}
                         </td>
-                       
-                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+
+                        <td className="px-2 py-4 whitespace-wrap text-[15px] font-medium text-gray-900 border">
                           {parseUTCtoIST(user.createdAt)}
                         </td>
-                        <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
+                        <td className="px-2 py-4 whitespace-wrap text-[15px] font-medium text-gray-900 border">
                           {unixToIST(Number(user.disbursementDate))}
                         </td>
                         <td className="px-2 py-4 whitespace-nowrap text-right text-sm font-medium flex gap-2">

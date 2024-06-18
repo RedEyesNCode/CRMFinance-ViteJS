@@ -139,7 +139,6 @@ function ItemLeadComponent({ userData }) {
       const response = await getAllLeads(rawJson);
       if (response.status == "success") {
         setLeadsData(response);
-        
       } else {
         setLeadsData(null);
       }
@@ -454,8 +453,13 @@ function ItemLeadComponent({ userData }) {
               {leadsData &&
                 leadsData.status != "fail" &&
                 leadsData.data
-                  .filter((lead) => (lead.firstName.toLowerCase().includes(FirstName.toLowerCase())) || 
-                  (lead.mobileNumber.includes(FirstName)))
+                  .filter(
+                    (lead) =>
+                      lead.firstName
+                        .toLowerCase()
+                        .includes(FirstName.toLowerCase()) ||
+                      lead.mobileNumber.includes(FirstName)
+                  )
                   .map((user, index) => (
                     <tr
                       key={index}

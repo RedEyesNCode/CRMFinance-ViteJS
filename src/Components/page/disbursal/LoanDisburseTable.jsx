@@ -23,7 +23,6 @@ function LoanDisburseTable({ handle }) {
 
   const [FirstName, setFirstName] = useState("");
 
-
   const handleOpenLeadUser = (lead_data) => {
     setLeadDeleteFrame(false);
     setcurrentLead(lead_data);
@@ -204,74 +203,69 @@ function LoanDisburseTable({ handle }) {
     <div className="border border-gray-300 relative">
       <ToastContainer />
       {!isLeadDetailFrame && (
-        <div className="relative">
-          <h2 className=" text-[16px]  font-sans font-bold  text-white p-4  bg-gradient-to-r from-[#e43364] to-[#3858f9]">
-            Pending for Disburment Loans
-          </h2>
-
-          <div className="bg-gradient-to-r from-[#e43364] to-[#3858f9] p-1 w-full">
-            <div className="flex">
-              <div class="date-input">
-                <label
-                  for="fromDate"
-                  className="text-white text-[18px] font-mono p-1 m-1"
-                >
-                  From Date :{" "}
-                </label>
-                <input
-                  type="date"
-                  id="fromDate"
-                  onChange={handleChange}
-                  value={searchForm.fromDate}
-                  name="fromDate"
-                  className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
-                />
-              </div>
-              <div>
-                <label
-                  for="toDate"
-                  className="text-white text-[18px] font-mono p-1 m-1"
-                >
-                  To Date :
-                </label>
-                <input
-                  type="date"
-                  id="toDate"
-                  onChange={handleChange}
-                  value={searchForm.toDate}
-                  className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
-                  name="toDate"
-                />
-              </div>
-              <div>
+        <div className="relative h-[85%] overflow-hidden">
+          <div className="bg-gradient-to-r from-[#e43364] to-[#3858f9] flex flex-row justify-items-start items-center">
+            <h2 className="text-lg font-sans font-bold  text-white p-4">
+              Pending for Disburment Loans
+            </h2>
+            <div class="date-input">
+              <label
+                for="fromDate"
+                className="text-white text-[18px] font-mono p-1 m-1"
+              >
+                From Date :{" "}
+              </label>
+              <input
+                type="date"
+                id="fromDate"
+                onChange={handleChange}
+                value={searchForm.fromDate}
+                name="fromDate"
+                className="text-black text-[18px] font-mono p-1 m-1 rounded-md"
+              />
+            </div>
+            <div className="to date input">
+              <label
+                for="toDate"
+                className="text-white text-[18px] font-mono p-1 m-1"
+              >
+                To Date :
+              </label>
+              <input
+                type="date"
+                id="toDate"
+                onChange={handleChange}
+                value={searchForm.toDate}
+                className="text-black text-[18px] font-mono p-1 m-1 rounded-md"
+                name="toDate"
+              />
+            </div>
+            <div>
               <label className="items-center mt-5 font-mono font-semibold  text-center text-white">
-                As you type filter  :
+                Search by name or number:
               </label>
               <input
                 type="text"
                 value={FirstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                className="text-black text-[18px] font-mono p-2 m-1 rounded-md outline-none border-[3px] border-indigo-200"
+                className="text-black text-[18px] h-10 p-2 m-1 rounded-md outline-none border-[3px] border-indigo-200"
                 placeholder="Enter name or number"
               ></input>
-              </div>
             </div>
-          </div>
-          <div className="bg-gradient-to-r from-[#e43364] to-[#3858f9]">
             <button
               onClick={filterDisbursalLoans}
-              className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]"
+              className="m-6 border-2 border-white shadow-2xl hover:shadow-none p-2 h-16 w-40 rounded-md  text-white font-mono text-[16px]"
             >
-              Filter Disbursal Loans
+              Filter Loans
             </button>
             <button
               onClick={resetFilters}
-              className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]"
+              className="m-6 border-2 border-white shadow-2xl hover:shadow-none p-2 h-16 w-40 rounded-md  text-white font-mono text-[16px]"
             >
               Reset Filter
             </button>
           </div>
-          <div className="m-4">
+          <div className="max-h-[505px] overflow-auto">
             <table className="min-w-full  p-1">
               <thead className="border">
                 <tr>
@@ -353,49 +347,54 @@ function LoanDisburseTable({ handle }) {
               <tbody className="bg-white  divide-gray-200">
                 {leadsData != null &&
                   leadsData.data
-                  .filter((lead) => (lead.firstName.toLowerCase().includes(FirstName.toLowerCase())) || 
-                  (lead.mobileNumber.includes(FirstName)))
-                  .map((user, index) => (
-                    <tr
-                      key={index}
-                      className={`${index % 2 != 0 ? "bg-[#F4FAFF]" : ""}`}
-                    >
-                      <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border bg-[#F3F4F7]">
-                        {index + 1}.
-                      </td>
+                    .filter(
+                      (lead) =>
+                        lead.firstName
+                          .toLowerCase()
+                          .includes(FirstName.toLowerCase()) ||
+                        lead.mobileNumber.includes(FirstName)
+                    )
+                    .map((user, index) => (
+                      <tr
+                        key={index}
+                        className={`${index % 2 != 0 ? "bg-[#F4FAFF]" : ""}`}
+                      >
+                        <td className="px-2 py-4 whitespace-nowrap text-[15px] font-medium text-gray-900 border bg-[#F3F4F7]">
+                          {index + 1}.
+                        </td>
 
-                      <td className="px-6 py-4 text-sm font-medium text-gray-900 border relative group">
-                        <div className="whitespace-nowrap overflow-hidden text-ellipsis rounded-lg bg-indigo-800 text-white p-1">
-                          {user._id.substring(20)}
-                        </div>
-                        <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10">
-                          {user._id}
-                        </div>
-                      </td>
-                      <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border table-cell">
-                        {user && user.user ? (
-                          <>
-                            {user.user.fullName} <br /> {user.user.employeeId}
-                          </>
-                        ) : (
-                          "N/A" // Or any appropriate placeholder for missing data
-                        )}
-                      </td>
+                        <td className="px-6 py-4 text-sm font-medium text-gray-900 border relative group">
+                          <div className="whitespace-nowrap overflow-hidden text-ellipsis rounded-lg bg-indigo-800 text-white p-1">
+                            {user._id.substring(20)}
+                          </div>
+                          <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10">
+                            {user._id}
+                          </div>
+                        </td>
+                        <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 border table-cell">
+                          {user && user.user ? (
+                            <>
+                              {user.user.fullName} <br /> {user.user.employeeId}
+                            </>
+                          ) : (
+                            "N/A" // Or any appropriate placeholder for missing data
+                          )}
+                        </td>
 
-                      <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
-                        {user.firstName}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
-                        {user.lastName}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
-                        {user.mobileNumber}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
-                        {user.gender}
-                      </td>
-                      <td
-                        className={`px-2 py-2 whitespace-nowrap text-[11px] font-medium border 
+                        <td className="px-2 py-4 whitespace-nowrap text-[15px] font-medium text-gray-900 border">
+                          {user.firstName}
+                        </td>
+                        <td className="px-2 py-4 whitespace-nowrap text-[15px] font-medium text-gray-900 border">
+                          {user.lastName}
+                        </td>
+                        <td className="px-2 py-4 whitespace-nowrap text-[15px] font-medium text-gray-900 border">
+                          {user.mobileNumber}
+                        </td>
+                        <td className="px-2 py-4 whitespace-nowrap text-[15px] font-medium text-gray-900 border">
+                          {user.gender}
+                        </td>
+                        <td
+                          className={`px-2 py-2 whitespace-nowrap text-[15px] font-medium border 
                 ${
                   user.lead_status === "PENDING"
                     ? "bg-yellow-500 text-center text-white"
@@ -417,40 +416,40 @@ function LoanDisburseTable({ handle }) {
                     ? "bg-red-500 text-white "
                     : ""
                 }`}
-                      >
-                        {user.lead_status}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
-                        {user.leadAmount}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
-                        {parseUTCtoIST(user.createdAt)}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-[11px] font-medium text-gray-900 border">
-                        {unixToIST(Number(user.disbursementDate))}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap text-right text-[11px] font-medium flex gap-2">
-                        <button
-                          onClick={() => handleOpenLeadDetail(user)}
-                          className="text-white bg-yellow-500 px-3 py-2 rounded-lg font-mono border-2 "
                         >
-                          Loan Details
-                        </button>
-                        <button
-                          onClick={() => handleOpenLeadUser(user)}
-                          className="text-white bg-blue-900 px-3 py-2 rounded-md"
-                        >
-                          View User
-                        </button>
-                        <button
-                          onClick={() => handleOpenDeleteLead(user)}
-                          className="text-white bg-[#fa4845] px-3 py-2 rounded-md"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                          {user.lead_status}
+                        </td>
+                        <td className="px-2 py-4 whitespace-nowrap text-[15px] font-medium text-gray-900 border">
+                          {user.leadAmount}
+                        </td>
+                        <td className="px-2 py-4 whitespace-wrap text-[15px] font-medium text-gray-900 border">
+                          {parseUTCtoIST(user.createdAt)}
+                        </td>
+                        <td className="px-2 py-4 whitespace-wrap text-[15px] font-medium text-gray-900 border">
+                          {unixToIST(Number(user.disbursementDate))}
+                        </td>
+                        <td className="px-2 py-4 whitespace-nowrap text-right text-[15px] font-medium flex gap-2">
+                          <button
+                            onClick={() => handleOpenLeadDetail(user)}
+                            className="text-white bg-yellow-500 px-3 py-2 rounded-lg font-mono border-2 "
+                          >
+                            Loan Details
+                          </button>
+                          <button
+                            onClick={() => handleOpenLeadUser(user)}
+                            className="text-white bg-blue-900 px-3 py-2 rounded-md"
+                          >
+                            View User
+                          </button>
+                          <button
+                            onClick={() => handleOpenDeleteLead(user)}
+                            className="text-white bg-[#fa4845] px-3 py-2 rounded-md"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
               </tbody>
             </table>
           </div>

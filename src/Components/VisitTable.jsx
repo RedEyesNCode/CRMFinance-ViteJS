@@ -69,8 +69,8 @@ const VisitTable = () => {
   }, [addVisit]);
 
   return (
-    <main className="h-full w-full">
-      <div className="rounded-2xl border border-gray-300 border-r-0 h-full w-full  relative overflow-x h-fill">
+    <main className=" w-full">
+      <div className="rounded-2xl border border-gray-300 border-r-0 h-full w-full  relative ">
         {VisitData ? (
           <div className="w-full text-[20px] font-mono font-bold bg-sky-500 text-white px-5 py-3  flex justify-between items-center">
             View All Visits in DB.
@@ -94,8 +94,8 @@ const VisitTable = () => {
         )}
 
         {VisitData && (
-          <div className="relative  max-h-full">
-            <table className="min-w-full rounded-3xl table-auto p-1">
+          <div className="relative overflow-scroll max-h-[555px]">
+            <table className="">
               <thead className="border">
                 <tr>
                   <th
@@ -183,28 +183,28 @@ const VisitTable = () => {
                         {index + 1}.
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                      {Visit._id.substring(20)}
+                        {Visit._id.substring(20)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                      {Visit && Visit.user ? (
-                        <>
-                          {Visit.user.fullName} <br /> {Visit.user.employeeId}
-                        </>
-                      ) : (
-                        "N/A" // Or any appropriate placeholder for missing data
-                      )}
+                        {Visit && Visit.user ? (
+                          <>
+                            {Visit.user.fullName} <br /> {Visit.user.employeeId}
+                          </>
+                        ) : (
+                          "N/A" // Or any appropriate placeholder for missing data
+                        )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
                         {Visit.customerName}
                       </td>
                       <td className="px-6 py-4 text-sm font-medium text-gray-900 border relative group">
-                      <div className="whitespace-nowrap overflow-hidden text-ellipsis rounded-lg bg-indigo-800 text-white p-1">
-                        View Address
-                      </div>
-                      <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10">
-                        {Visit.address}
-                      </div>
-                    </td>
+                        <div className="whitespace-nowrap overflow-hidden text-ellipsis rounded-lg bg-indigo-800 text-white p-1">
+                          View Address
+                        </div>
+                        <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10">
+                          {Visit.address}
+                        </div>
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm  font-medium border ">
                         {Visit.latitude}
                       </td>
@@ -215,12 +215,12 @@ const VisitTable = () => {
                         {parseUTCtoIST(Visit.createdAt)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                        <img 
-                        
-                        onClick={() =>
-                          window.open(Visit.photo, "_blank")
-                        }
-                        src={Visit.photo} alt="Visit Image" className="rounded-xl" />
+                        <img
+                          onClick={() => window.open(Visit.photo, "_blank")}
+                          src={Visit.photo}
+                          alt="Visit Image"
+                          className="rounded-xl"
+                        />
                       </td>
 
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium border">

@@ -200,95 +200,85 @@ function LoanApprovalTable({ handle }) {
       {!isLeadDetailFrame && (
         <div className="relative h-[85%] overflow-hidden">
           <div className="border-green-900 bg-gradient-to-r from-[#e43364] to-[#3858f9] flex flex-row justify-items-start items-center">
-            <h2 className=" text-lg  font-sans font-bold  text-white p-4  ">
+            <h2 className="text-lg font-sans font-bold  text-white p-4  ">
               Pending for Approval Loans
             </h2>
+            <div className="from date-input">
+              <label
+                htmlFor="fromDate"
+                className="text-white text-[18px] font-mono p-1 m-1"
+              >
+                From Date :{" "}
+              </label>
+              <input
+                type="date"
+                id="fromDate"
+                onChange={handleChange}
+                value={searchForm.fromDate}
+                name="fromDate"
+                className="text-black text-[18px] font-mono p-1 m-1 rounded-md"
+              />
+            </div>
+            <div className="to date">
+              <label
+                htmlFor="toDate"
+                className="text-white text-[18px] font-mono p-1 m-1"
+              >
+                To Date :
+              </label>
+              <input
+                type="date"
+                id="toDate"
+                onChange={handleChange}
+                value={searchForm.toDate}
+                className="text-black text-[18px] font-mono p-1 m-1 rounded-md"
+                name="toDate"
+              />
+            </div>
+            <div className="Search flex flex-wrap">
+              <label className="items-center mt-1 font-mono font-semibold text-white m-2">
+                Search By Name or Number
+              </label>
+              <div className="flex">
+                <input
+                  type="text"
+                  value={FirstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="text-black h-9 text-[18px] font-mono p-2 m-1 rounded-md outline-none "
+                  placeholder="Name or Number"
+                ></input>
+                {/* <label className="items-center mt-1 font-mono font-semibold text-white m-2 text-sm">
+                  This is as you type filter
+                </label> */}
+              </div>
+            </div>
 
             <button
-              onClick={(e) => setIsChecked(true)}
-              className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]"
-            >
-              All Approval Loans
-            </button>
-            <button
-              onClick={(e) => setIsChecked(false)}
-              className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]"
-            >
-              Only Active Approval Loans
-            </button>
-            <button
               onClick={filterApprovalLoans}
-              className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]"
+              className="m-6 border-2 border-white shadow-2xl hover:shadow-none p-2 text-white font-semibold tracking-wider rounded-md text-[16px] h-16 w-40"
             >
-              Filter Approval Loans
+              Filter Loans
             </button>
             <button
               onClick={resetFilters}
-              className="m-6 border-2 border-white rounded-sm p-2 text-white font-mono text-[16px]"
+              className="m-6 border-2 border-white shadow-2xl hover:shadow-none p-2 text-white font-semibold tracking-wider rounded-md text-[16px] h-16 w-40"
             >
               Reset Filter
             </button>
-            <div className="flex flex-row"></div>
+            <button
+              onClick={(e) => setIsChecked(true)}
+              className="m-6 border-2 border-white shadow-2xl hover:shadow-none p-2 text-white font-semibold tracking-wider rounded-md text-[14px] h-16 w-40"
+            >
+              All Approved Loans
+            </button>
+            <button
+              onClick={(e) => setIsChecked(false)}
+              className="m-6 border-2 border-white shadow-2xl hover:shadow-none p-2 text-white font-semibold tracking-wider rounded-md text-[16px] h-16 w-40"
+            >
+              Active Loans
+            </button>
           </div>
-
-          <div className="bg-gradient-to-r from-[#e43364] to-[#3858f9] w-full">
-            <div className="flex">
-              <div className="date-input">
-                <label
-                  htmlFor="fromDate"
-                  className="text-white text-[18px] font-mono p-1 m-1"
-                >
-                  From Date :{" "}
-                </label>
-                <input
-                  type="date"
-                  id="fromDate"
-                  onChange={handleChange}
-                  value={searchForm.fromDate}
-                  name="fromDate"
-                  className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="toDate"
-                  className="text-white text-[18px] font-mono p-1 m-1"
-                >
-                  To Date :
-                </label>
-                <input
-                  type="date"
-                  id="toDate"
-                  onChange={handleChange}
-                  value={searchForm.toDate}
-                  className="text-black text-[18px] font-mono p-1 m-1 rounded-xl"
-                  name="toDate"
-                />
-              </div>
-              <div>
-               
-                <label className="items-center mt-1 font-mono font-semibold text-white m-2">
-                Search By Name or Number 
-              </label>
-              <div className="flex flex-col">
-              <input
-                type="text"
-                value={FirstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                className="text-black text-[18px] font-mono p-2 m-1 rounded-md outline-none border-[3px] border-red-600"
-                placeholder="Name or Number"
-              ></input>
-                <label className="items-center mt-1 font-mono font-semibold text-white m-2 text-sm">
-                This is as you type filter 
-              </label>
-
-              </div>
-             
-              </div>
-            </div>
-          </div>
-
-          <div className="max-h-[481px] overflow-scroll">
+          <div className="max-h-[507px] overflow-scroll">
             <table className="min-w-full  p-1">
               <thead className="border">
                 <tr className="text-sm">
@@ -368,8 +358,13 @@ function LoanApprovalTable({ handle }) {
                   isChecked == false &&
                   leadsData.data
                     .filter((user) => user.lead_status === "APPROVED")
-                    .filter((lead) => (lead.firstName.toLowerCase().includes(FirstName.toLowerCase())) || 
-                  (lead.mobileNumber.includes(FirstName)))
+                    .filter(
+                      (lead) =>
+                        lead.firstName
+                          .toLowerCase()
+                          .includes(FirstName.toLowerCase()) ||
+                        lead.mobileNumber.includes(FirstName)
+                    )
                     .map((user, index) => (
                       <tr
                         key={index}

@@ -1,21 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getUserVisits } from "../../../apis/apiInterface";
-import image from "../../../assets/download.jpeg"
+import image from "../../../assets/download.jpeg";
 
-const UserVisitTable = ({current_user_id,current_user_name}) => {
+const UserVisitTable = ({ current_user_id, current_user_name }) => {
   const [VisitData, setVisitData] = useState(null);
   const [CurrentVisit, setCurrentVisit] = useState(null);
 
   useEffect(() => {
     const VisitData = async () => {
       try {
-        const rawJson = {userId : current_user_id}
+        const rawJson = { userId: current_user_id };
         const response = await getUserVisits(rawJson);
-        if(response.code==200){
-            setVisitData(response);
-
-        }else{
-            setVisitData(null);
+        if (response.code == 200) {
+          setVisitData(response);
+        } else {
+          setVisitData(null);
         }
         console.log("User Visit Fetched response -> ", response);
       } catch (error) {
@@ -53,19 +52,22 @@ const UserVisitTable = ({current_user_id,current_user_name}) => {
 
     return date.toLocaleString("en-IN", options);
   }
-  if(VisitData==null){
+  if (VisitData == null) {
     return (
-        <h2 className="text-white text-[21px] font-semibold font-mono bg-cyan-800 rounded-md p-2">No visits found !!</h2>
-    )
-
+      <h2 className="text-white text-[21px] font-semibold font-mono bg-cyan-800 rounded-md p-2">
+        No visits found !!
+      </h2>
+    );
   }
 
   return (
     <main className="h-full px-4 pt-4 bg-[#F4FAFF] rounded-[50px] ">
-                                  <h2 className=" bg-gradient-to-r from-[#e43364] to-[#3858f9]  p-1  m-[10px] text-[20px] text-white rounded-xl font-mono font-bold">View All Visits by {current_user_name}</h2>
+      <h2 className=" bg-gradient-to-r from-[#e43364] to-[#3858f9]  p-1  m-[10px] text-[20px] text-white rounded-xl font-mono font-bold">
+        View All Visits by {current_user_name}
+      </h2>
 
-    <div className="overflow-hidden rounded-3xl border border-gray-300 relative">
-    {VisitData && (
+      <div className="overflow-hidden rounded-3xl border border-gray-300 relative">
+        {VisitData && (
           <div className="relative  max-h-full">
             <table className="min-w-full rounded-3xl table-auto p-1">
               <thead className="border">
@@ -155,28 +157,28 @@ const UserVisitTable = ({current_user_id,current_user_name}) => {
                         {index + 1}.
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                      {Visit._id.substring(20)}
+                        {Visit._id.substring(20)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                      {Visit && Visit.user ? (
-                        <>
-                          {Visit.user.fullName} <br /> {Visit.user.employeeId}
-                        </>
-                      ) : (
-                        "N/A" // Or any appropriate placeholder for missing data
-                      )}
+                        {Visit && Visit.user ? (
+                          <>
+                            {Visit.user.fullName} <br /> {Visit.user.employeeId}
+                          </>
+                        ) : (
+                          "N/A" // Or any appropriate placeholder for missing data
+                        )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
                         {Visit.customerName}
                       </td>
                       <td className="px-6 py-4 text-sm font-medium text-gray-900 border relative group">
-                      <div className="whitespace-nowrap overflow-hidden text-ellipsis rounded-lg bg-indigo-800 text-white p-1">
-                        View Address
-                      </div>
-                      <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10">
-                        {Visit.address}
-                      </div>
-                    </td>
+                        <div className="whitespace-nowrap overflow-hidden text-ellipsis rounded-lg bg-indigo-800 text-white p-1">
+                          View Address
+                        </div>
+                        <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10">
+                          {Visit.address}
+                        </div>
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm  font-medium border ">
                         {Visit.latitude}
                       </td>
@@ -187,12 +189,12 @@ const UserVisitTable = ({current_user_id,current_user_name}) => {
                         {parseUTCtoIST(Visit.createdAt)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border">
-                        <img 
-                        
-                        onClick={() =>
-                          window.open(Visit.photo, "_blank")
-                        }
-                        src={Visit.photo} alt="Visit Image" className="rounded-xl" />
+                        <img
+                          onClick={() => window.open(Visit.photo, "_blank")}
+                          src={Visit.photo}
+                          alt="Visit Image"
+                          className="rounded-xl"
+                        />
                       </td>
 
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium border">
@@ -225,20 +227,17 @@ const UserVisitTable = ({current_user_id,current_user_name}) => {
             </table>
           </div>
         )}
-      
-    </div>
-    {CurrentVisit && (
+      </div>
+      {CurrentVisit && (
         <div className="text-white fixed top-0 left-0 w-full h-full flex items-center justify-center backdrop-filter backdrop-blur-sm">
-          <div
-            className= "p-8 rounded-lg flex flex-col items-left gap-3 text-[20px] bg-[#5AB2FF]" 
-          >
+          <div className="p-8 rounded-lg flex flex-col items-left gap-3 text-[20px] bg-[#5AB2FF]">
             <h2 className="text-lg font-bold mb-4 text-center">User Details</h2>
             <p>User Id : {CurrentVisit}</p>
             <p>Name : {CurrentVisit.fullName}</p>
-            <p>Mobile : {CurrentVisit.telephoneNumber}</p>  
-            <p>Emp Id : {CurrentVisit.employeeId}</p>  
+            <p>Mobile : {CurrentVisit.telephoneNumber}</p>
+            <p>Emp Id : {CurrentVisit.employeeId}</p>
             <p>Mpass : {CurrentVisit.mpass}</p>
-            <button 
+            <button
               onClick={() => setCurrentVisit(null)}
               className="mt-4 px-4 py-2 bg-[#125c878b] text-white rounded-lg"
             >
@@ -247,8 +246,7 @@ const UserVisitTable = ({current_user_id,current_user_name}) => {
           </div>
         </div>
       )}
-  </main>
-  
+    </main>
   );
 };
 
